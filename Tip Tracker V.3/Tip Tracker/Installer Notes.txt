@@ -1,0 +1,10 @@
+There is a hidden command in Tip Tracker that will allow importing of server from a previously created global data file.  For example, the servers from a Tip Tracker SF global file may be imported into Tip Tracker.  It must be noted, however, that the command may only be used if there are no existing servers in the template.  This is to avoid duplicate assignment of any one server number.  It should also be noted that while this process is fairly simple, it is not meant to be used by the average user.  Therefore, the messages that pop up are straightforward and are not user friendly.
+
+To use this command:
+
+1.  Press <Ctrl> + <Shift> + <I>.
+
+2.  Select the file you wish to import.  The file must be a global data file as any other type will not match the schema of the dataset used to store the global data.
+
+3.  Hit <OK>.  As long as there is no corruption to the file, the servers stored in it will be imported.
+

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Tip Tracker SF Setup", "Tip Tracker SF Setup\Tip Tracker SF Setup.vdproj", "{72CD8CB0-BD6D-490D-AFCB-A21894429DE8}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tip Tracker SF", "..\..\Tip Tracker\Tip Tracker SF\Tip Tracker SF.vbproj", "{B62C9C8C-B9B0-48FE-A372-29C131AA67AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72CD8CB0-BD6D-490D-AFCB-A21894429DE8}.Debug|Any CPU.ActiveCfg = Debug
+		{72CD8CB0-BD6D-490D-AFCB-A21894429DE8}.Debug|Any CPU.Build.0 = Debug
+		{72CD8CB0-BD6D-490D-AFCB-A21894429DE8}.Release|Any CPU.ActiveCfg = Release
+		{72CD8CB0-BD6D-490D-AFCB-A21894429DE8}.Release|Any CPU.Build.0 = Release
+		{B62C9C8C-B9B0-48FE-A372-29C131AA67AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B62C9C8C-B9B0-48FE-A372-29C131AA67AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B62C9C8C-B9B0-48FE-A372-29C131AA67AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B62C9C8C-B9B0-48FE-A372-29C131AA67AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

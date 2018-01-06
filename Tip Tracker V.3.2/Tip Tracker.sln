@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Tip Tracker", "Tip Tracker\Tip Tracker.vbproj", "{C8B8852C-6CBA-4FC6-A342-2B57F110B251}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TT Debug", "TT Debug\TT Debug.vbproj", "{E4750200-B940-4AE1-A0AC-7B9FD90481C8}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Tip Tracker Setup", "Tip Tracker Setup\Tip Tracker Setup.vdproj", "{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Debug|x86.ActiveCfg = Debug|x86
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Debug|x86.Build.0 = Debug|x86
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Release|Mixed Platforms.Build.0 = Release|x86
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Release|x86.ActiveCfg = Release|x86
+		{C8B8852C-6CBA-4FC6-A342-2B57F110B251}.Release|x86.Build.0 = Release|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Debug|x86.ActiveCfg = Debug|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Debug|x86.Build.0 = Debug|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Release|Mixed Platforms.Build.0 = Release|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Release|x86.ActiveCfg = Release|x86
+		{E4750200-B940-4AE1-A0AC-7B9FD90481C8}.Release|x86.Build.0 = Release|x86
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Debug|Any CPU.ActiveCfg = Debug
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Debug|Mixed Platforms.Build.0 = Debug
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Debug|x86.ActiveCfg = Debug
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|Any CPU.ActiveCfg = Release
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|Mixed Platforms.ActiveCfg = Release
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|Mixed Platforms.Build.0 = Release
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|x86.ActiveCfg = Release
+		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|x86.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

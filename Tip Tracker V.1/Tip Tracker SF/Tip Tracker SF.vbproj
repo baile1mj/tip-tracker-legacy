@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B62C9C8C-B9B0-48FE-A372-29C131AA67AD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Tip_Tracker_SF.My.MyApplication</StartupObject>
+    <RootNamespace>Tip_Tracker_SF</RootNamespace>
+    <AssemblyName>Tip Tracker SF</AssemblyName>
+    <MyType>WindowsForms</MyType>
+    <OptionStrict>On</OptionStrict>
+    <ApplicationIcon>TT.ico</ApplicationIcon>
+    <ManifestCertificateThumbprint>A0582D43CE1EBEC2E2877FCBBE8386B2D2C5730A</ManifestCertificateThumbprint>
+    <ManifestKeyFile>Tip Tracker SF_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>true</GenerateManifests>
+    <SignManifests>true</SignManifests>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ProductName>Tip Tracker SF</ProductName>
+    <PublisherName>Tip Tracker</PublisherName>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <BootstrapperComponentsLocation>Relative</BootstrapperComponentsLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>Tip Tracker SF.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>Tip Tracker SF.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.IO" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="frmAboutTipTrackerSF.Designer.vb">
+      <DependentUpon>frmAboutTipTrackerSF.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmAboutTipTrackerSF.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="clsFileEncoder.vb" />
+    <Compile Include="FileDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="frmAddEditServer.designer.vb">
+      <DependentUpon>frmAddEditServer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmAddEditServer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddSpecialFunction.designer.vb">
+      <DependentUpon>frmAddSpecialFunction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmAddSpecialFunction.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConfigurator.designer.vb">
+      <DependentUpon>frmConfigurator.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmConfigurator.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmImportServersComparer.designer.vb">
+      <DependentUpon>frmImportServersComparer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmImportServersComparer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.vb">
+      <DependentUpon>frmMain.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmManageServers.designer.vb">
+      <DependentUpon>frmManageServers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmManageServers.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmManageSpecialFunctions.designer.vb">
+      <DependentUpon>frmManageSpecialFunctions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmManageSpecialFunctions.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmReportByFunction.Designer.vb">
+      <DependentUpon>frmReportByFunction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmReportByFunction.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmReportByServer.Designer.vb">
+      <DependentUpon>frmReportByServer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmReportByServer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GlobalDataSet.Designer.vb">
+      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="GlobalDataSet.vb">
+      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmAboutTipTrackerSF.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmAboutTipTrackerSF.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAddEditServer.resx">
+      <DependentUpon>frmAddEditServer.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAddSpecialFunction.resx">
+      <DependentUpon>frmAddSpecialFunction.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmConfigurator.resx">
+      <DependentUpon>frmConfigurator.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmImportServersComparer.resx">
+      <DependentUpon>frmImportServersComparer.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmManageServers.resx">
+      <DependentUpon>frmManageServers.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmManageSpecialFunctions.resx">
+      <DependentUpon>frmManageSpecialFunctions.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmReportByFunction.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmReportByFunction.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmReportByServer.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmReportByServer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FileDataSet.xsc">
+      <DependentUpon>FileDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="FileDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>FileDataSet.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="FileDataSet.xss">
+      <DependentUpon>FileDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="GlobalDataSet.xsc">
+      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="GlobalDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GlobalDataSet.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="GlobalDataSet.xss">
+      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="Tip Tracker SF_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TT.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
