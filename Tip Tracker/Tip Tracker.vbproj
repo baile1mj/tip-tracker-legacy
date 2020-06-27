@@ -256,7 +256,6 @@
       <DependentUpon>GlobalDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="GlobalFile.vb" />
-    <Compile Include="mdlAuthorizations.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
