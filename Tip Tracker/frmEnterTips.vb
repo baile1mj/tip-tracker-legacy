@@ -54,26 +54,7 @@ Public Class frmEnterTips
         Me.ServersBindingSource.Sort = "LastName"
 
         'Extract the file name then change the text of the form to show the file name.
-        Dim intBegin As Integer = 0
-        Dim intEnd As Integer = 0
-
-        For i As Integer = Len(Me.CurrentFile) To 1 Step -1
-            Dim c As Char = GetChar(Me.CurrentFile, i)
-            If c = "." Then
-                intEnd = i
-            End If
-            If c = "\" Then
-                intBegin = i
-                Exit For
-            End If
-        Next
-
-        If intBegin <> 1 And intEnd <> 1 And intBegin <> 0 And intEnd <> 0 And intBegin < intEnd Then
-            Dim strFileName As String = Mid(Me.CurrentFile, intBegin + 1, intEnd - intBegin - 1)
-            Me.Text = strFileName
-        Else
-            Me.Text = "######"
-        End If
+        Me.Text = Path.GetFileNameWithoutExtension(Me.CurrentFile)
 
         'Call the subroutine to decode the xml file and read it into the dataset.
         If LoadData() = False Then
