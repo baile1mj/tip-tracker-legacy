@@ -50,13 +50,6 @@ Public Class frmEnterTips
         Me.lblSystemDate.Text = "System Date: " & Format(DateTime.Today, "M/d/yyyy")
         Me.WindowState = FormWindowState.Maximized
 
-        'Allow the tip ID columns to be visible so tips can be sorted by order of entry.
-        'Make the tip ID columns invisible.
-        'Me.CCID.Visible = False
-        'Me.RCID.Visible = False
-        'Me.CAID.Visible = False
-        'Me.SFID.Visible = False
-
         'Set the servers binding source sort mode.
         Me.ServersBindingSource.Sort = "LastName"
 
@@ -2308,74 +2301,6 @@ Public Class frmEnterTips
                 Me.FileDataSet.RejectChanges()
         End Select
     End Sub
-
-    'Private Sub mnuSortByOrderEntered_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuSortByOrderEntered.CheckedChanged
-    '    Select Case mnuSortByOrderEntered.Checked
-    '        Case False
-    '            For Each col As DataGridViewColumn In Me.CreditCardDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.Automatic
-    '            Next
-
-    '            For Each col As DataGridViewColumn In Me.RoomChargeDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.Automatic
-    '            Next
-
-    '            For Each col As DataGridViewColumn In Me.CashDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.Automatic
-    '            Next
-
-    '            For Each col As DataGridViewColumn In Me.SpecialFunctionDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.Automatic
-    '            Next
-
-    '            SetSelectionFilters()
-
-    '            UpdateCCTotals()
-    '            UpdateRCTotals()
-    '            UpdateCATotals()
-    '            UpdateSFTotals()
-    '        Case True
-    '            Dim strWorkingDate As String = Format(CDate(Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value")), "M/d/yyyy")
-    '            Me.CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
-    '            Me.CreditCardTipsBindingSource.Sort = "TipID"
-
-    '            Me.RoomChargeTipsBindingSource.Filter = "Description = 'Room Charge' AND WorkingDate = '" & strWorkingDate & "'"
-    '            Me.RoomChargeTipsBindingSource.Sort = "TipID"
-
-    '            Me.CashTipsBindingSource.Filter = "Description = 'Cash'"
-    '            Me.CashTipsBindingSource.Sort = "TipID"
-
-    '            If Me.cboSelectSpecialFunction.SelectedIndex <> -1 Then
-    '                Debug.WriteLine(cboSelectSpecialFunction.SelectedValue.ToString)
-
-    '                Me.SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function' AND SpecialFunction = '" & _
-    '                    cboSelectSpecialFunction.SelectedValue.ToString & "'"
-    '            End If
-
-    '            Me.SpecialFunctionTipsBindingSource.Sort = "TipID"
-
-    '            For Each col As DataGridViewColumn In Me.CreditCardDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.NotSortable
-    '            Next
-
-    '            For Each col As DataGridViewColumn In Me.RoomChargeDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.NotSortable
-    '            Next
-
-    '            For Each col As DataGridViewColumn In Me.CashDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.NotSortable
-    '            Next
-
-    '            For Each col As DataGridViewColumn In Me.SpecialFunctionDataGridView.Columns
-    '                col.SortMode = DataGridViewColumnSortMode.NotSortable
-    '            Next
-
-    '            UpdateCCTotals()
-    '            UpdateRCTotals()
-    '            UpdateCATotals()
-    '            UpdateSFTotals()
-    '    End Select
-    'End Sub
 
     Private Sub CompactTips()
         Dim dvTips As New DataView
