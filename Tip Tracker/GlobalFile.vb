@@ -1,17 +1,15 @@
 ﻿Imports System.IO
-Imports System.IO.File
 
-
-Public Module GlobalFile
+Public Class GlobalFile
     Const _SETTINGS_FILE As String = "GlobalFile.location"
-    Private _directory As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Tip Tracker")
+    Private Shared _directory As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Tip Tracker")
 
     ''' <summary>
     ''' Gets the path to the global data file.
     ''' </summary>
     ''' <returns>a string containing the path to the global file</returns>
     ''' <remarks></remarks>
-    Public Function GetGlobalFilePath() As String
+    Public Shared Function GetGlobalFilePath() As String
         Dim locationFilePath As String = Path.Combine(_directory, _SETTINGS_FILE)
         Dim reader As StreamReader
         Dim location As String = ""
@@ -34,12 +32,12 @@ Public Module GlobalFile
     ''' Sets the global file path.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Sub SetGlobalFilePath(ByVal filePath As String)
+    Public Shared Sub SetGlobalFilePath(ByVal filePath As String)
         If Not Directory.Exists(_directory) Then
             Directory.CreateDirectory(_directory)
         End If
 
-        Dim locationFilePath As String = path.Combine(_directory, _SETTINGS_FILE)
+        Dim locationFilePath As String = Path.Combine(_directory, _SETTINGS_FILE)
         Dim writer As New StreamWriter(locationFilePath, False)
 
         Try
@@ -52,4 +50,4 @@ Public Module GlobalFile
         End Try
     End Sub
 
-End Module
+End Class
