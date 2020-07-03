@@ -5,10 +5,10 @@ Public Class frmConfigurator
     
     Private Property GlobalSettingsFile() As String
         Get
-            Return GlobalFile.GetGlobalFilePath()
+            Return MachineSettings.GetGlobalFilePath()
         End Get
         Set(ByVal value As String)
-            GlobalFile.SetGlobalFilePath(value)
+            MachineSettings.SetGlobalFilePath(value)
         End Set
     End Property
 

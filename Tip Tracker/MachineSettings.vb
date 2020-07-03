@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 
-Public Class GlobalFile
+Public Class MachineSettings
     Const _SETTINGS_FILE As String = "GlobalFile.location"
     Private Shared ReadOnly Directory As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Tip Tracker")
 

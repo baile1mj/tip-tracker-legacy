@@ -6,7 +6,7 @@ Public Class frmMain
 
     Private ReadOnly Property GlobalSettingsFile() As String
         Get
-            Return GlobalFile.GetGlobalFilePath()
+            Return MachineSettings.GetGlobalFilePath()
         End Get
     End Property
 

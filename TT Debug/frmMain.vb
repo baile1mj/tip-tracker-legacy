@@ -159,7 +159,7 @@ Public Class frmMain
             Exit Sub
         End If
 
-        Dim globalFilePath As String = Tip_Tracker.GlobalFile.GetGlobalFilePath()
+        Dim globalFilePath As String = Tip_Tracker.MachineSettings.GetGlobalFilePath()
 
         If Directory.Exists(Dir) Then
             Dim writer As New StreamWriter(globalFilePath, False)
