@@ -3,16 +3,8 @@ Imports System.Drawing.Printing
 
 Public Class frmEnterTips
     Private m_dataFileStream As FileStream
-    Private m_strCurrentFile As String
 
-    Friend Property CurrentFile() As String
-        Get
-            Return m_strCurrentFile
-        End Get
-        Set(ByVal value As String)
-            m_strCurrentFile = value
-        End Set
-    End Property
+    Friend Property CurrentFile As String
 
     Private Sub frmEnterTips_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         'Check for changes in the dataset then prompt the user to save if there are changes.
