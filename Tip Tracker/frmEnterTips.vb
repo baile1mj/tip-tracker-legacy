@@ -176,7 +176,7 @@ Public Class frmEnterTips
             Return True
 
         Catch ex As Exception
-            MessageBox.Show("Could not load the requsted data file.  Contact support.", "Error Loading File", MessageBoxButtons.OK)
+            MessageBox.Show("Could not load the requested data file.  Contact support.", "Error Loading File", MessageBoxButtons.OK)
             Return False
         End Try
     End Function
