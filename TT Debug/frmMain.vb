@@ -1,5 +1,6 @@
 Imports System.IO
 Imports System.IO.File
+Imports Tip_Tracker.Utilities
 
 Public Class frmMain
     Private m_strGlobalFilePath As String = GetGlobalFilePath()
@@ -159,7 +160,7 @@ Public Class frmMain
             Exit Sub
         End If
 
-        Dim globalFilePath As String = Tip_Tracker.MachineSettings.GetGlobalFilePath()
+        Dim globalFilePath As String = MachineSettings.GetGlobalFilePath()
 
         If Directory.Exists(Dir) Then
             Dim writer As New StreamWriter(globalFilePath, False)

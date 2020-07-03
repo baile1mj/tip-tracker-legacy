@@ -1,4 +1,5 @@
 Imports System.IO
+Imports Tip_Tracker.Utilities
 
 Public Class frmMain
     Private m_strCurrentFile As String = ""

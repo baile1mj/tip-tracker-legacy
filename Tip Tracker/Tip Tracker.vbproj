@@ -255,7 +255,7 @@
     <Compile Include="GlobalDataSet.vb">
       <DependentUpon>GlobalDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="MachineSettings.vb" />
+    <Compile Include="Utilities\MachineSettings.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

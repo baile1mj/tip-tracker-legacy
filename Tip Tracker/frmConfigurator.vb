@@ -1,5 +1,5 @@
 Imports System.IO
-Imports System.IO.File
+Imports Tip_Tracker.Utilities
 
 Public Class frmConfigurator
     
