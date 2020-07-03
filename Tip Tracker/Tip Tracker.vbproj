@@ -441,7 +441,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Installer Notes.txt" />
     <Content Include="TT.ico" />
     <Content Include="TTBanner.jpg" />
     <Content Include="TTFile.ico" />
