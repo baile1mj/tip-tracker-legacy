@@ -9,7 +9,7 @@ Public Class frmMain
     ''' Gets the path to the global settings file.
     ''' </summary>
     ''' <returns>The global settings file path.</returns>
-    Private ReadOnly Property GlobalSettingsFile As String
+    Private ReadOnly Property GlobalSettingsFilePath As String
 
     Private Property DefaultDataDirectory() As String
         Get
@@ -34,9 +34,9 @@ Public Class frmMain
         'Disable the menu commands that can only be used if a file is open.
         EnableMenuCommands(False)
 
-        _GlobalSettingsFile = MachineSettings.GetGlobalFilePath()
+        _GlobalSettingsFilePath = MachineSettings.GetGlobalFilePath()
         'If a global settings file has not been created, display the configurator dialog to create one.
-        If Not File.Exists(Me.GlobalSettingsFile) Then
+        If Not File.Exists(Me.GlobalSettingsFilePath) Then
             MessageBox.Show("The global settings file could not be found.  Please create a new file or open an existing file.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 
             If frmConfigurator.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -76,7 +76,7 @@ Public Class frmMain
         Me.GlobalDataSet.Clear()
         Me.GlobalDataSet.AcceptChanges()
 
-        If Not File.Exists(Me.GlobalSettingsFile) Then
+        If Not File.Exists(Me.GlobalSettingsFilePath) Then
             If MessageBox.Show("Global settings file not found.  Do you wish to rebuild the file?.", "File Not Found", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) <> Windows.Forms.DialogResult.Yes Then
                 End
             Else
@@ -94,7 +94,7 @@ Public Class frmMain
         Try
             Dim objFileEncoder As New clsFileEncoder
 
-            Me.GlobalDataSet.ReadXml(objFileEncoder.DecodeFile(Me.GlobalSettingsFile))
+            Me.GlobalDataSet.ReadXml(objFileEncoder.DecodeFile(Me.GlobalSettingsFilePath))
 
             objFileEncoder.Dispose()
             objFileEncoder = Nothing
@@ -102,7 +102,7 @@ Public Class frmMain
             Try
                 Dim objFileEncoder As New clsFileEncoder
 
-                Me.GlobalDataSet.ReadXml(objFileEncoder.LegacyDecodeFile(Me.GlobalSettingsFile))
+                Me.GlobalDataSet.ReadXml(objFileEncoder.LegacyDecodeFile(Me.GlobalSettingsFilePath))
                 SaveGlobalFile()
                 objFileEncoder.Dispose()
                 objFileEncoder = Nothing
@@ -180,7 +180,7 @@ Public Class frmMain
 
             objDSStream.Flush()
 
-            objFileEncoder.EncodeFile(Me.GlobalSettingsFile, objDSStream)
+            objFileEncoder.EncodeFile(Me.GlobalSettingsFilePath, objDSStream)
 
             objDSStream.Close()
             objDSStream.Dispose()
@@ -210,7 +210,7 @@ Public Class frmMain
         Dim strFileContents As String = ""
 
         Try
-            objDSStreamReader = New StreamReader(objFileEncoder.DecodeFile(Me.GlobalSettingsFile))
+            objDSStreamReader = New StreamReader(objFileEncoder.DecodeFile(Me.GlobalSettingsFilePath))
 
             strFileContents = objDSStreamReader.ReadToEnd
 
