@@ -107,10 +107,12 @@ Public Class frmMain
                 objFileEncoder = Nothing
             Catch subEx As Exception
                 MessageBox.Show("The global settings file could not be read.  Contact support.", "Error Converting File", MessageBoxButtons.OK)
+                'TODO: There will be no support for this application.  Provide troubleshooting tips instead.
                 End
             End Try
         Catch ex As Exception
             MessageBox.Show("Cannot load global settings file.  File may be corrupt or its contents may have been changed.  Contact support.", "Error Loading File", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            'TODO: There will be no support for this application.  Provide troubleshooting tips instead.
             End
         End Try
 
@@ -140,6 +142,7 @@ Public Class frmMain
                     End If
                 Case Else
                     MessageBox.Show("The settings table is corrupted and will be rebuilt.", "Invalid Settings", MessageBoxButtons.OK)
+                    'TODO: The user doesn't care if there are extra settings.  As long as there's a default directory, silently remove others.
                     Me.GlobalDataSet.Settings.Clear()
                     SaveGlobalFile()
                     Return False
@@ -147,6 +150,7 @@ Public Class frmMain
         Next
 
         'Check for servers where suppress chit option is null.
+        'TODO: The user doesn't care if there are null values.  Just set them to false.
         Dim blnFoundNull As Boolean = False
 
         For Each row As DataRow In Me.GlobalDataSet.Servers
