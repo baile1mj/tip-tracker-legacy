@@ -5,11 +5,11 @@ Public Class frmMain
     Private m_strCurrentFile As String = ""
     Private m_objGlobalStream As File
 
-    Private ReadOnly Property GlobalSettingsFile() As String
-        Get
-            Return MachineSettings.GetGlobalFilePath()
-        End Get
-    End Property
+    ''' <summary>
+    ''' Gets the path to the global settings file.
+    ''' </summary>
+    ''' <returns>The global settings file path.</returns>
+    Private ReadOnly Property GlobalSettingsFile As String
 
     Private Property DefaultDataDirectory() As String
         Get
@@ -34,6 +34,7 @@ Public Class frmMain
         'Disable the menu commands that can only be used if a file is open.
         EnableMenuCommands(False)
 
+        _GlobalSettingsFile = MachineSettings.GetGlobalFilePath()
         'If a global settings file has not been created, display the configurator dialog to create one.
         If Not File.Exists(Me.GlobalSettingsFile) Then
             MessageBox.Show("The global settings file could not be found.  Please create a new file or open an existing file.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning)
