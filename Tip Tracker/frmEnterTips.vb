@@ -310,14 +310,14 @@ Public Class frmEnterTips
         Dim dtePeriodEnd As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
 
         If dteWorkingDate = dtePeriodEnd Then
-            MessageBox.Show("The current working date is the last day in the pay period.  You cannot " & _
-            "advance the working date any further.  To work on tips for " & _
-            Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), "M/d/yyyy") & " you must start a new file " & _
+            MessageBox.Show("The current working date is the last day in the pay period.  You cannot " &
+            "advance the working date any further.  To work on tips for " &
+            Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), "M/d/yyyy") & " you must start a new file " &
             "for the new pay period.", "Cannot Change Working Date", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        If MessageBox.Show("The working date will be changed to " & Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), "M/d/yyyy") & _
+        If MessageBox.Show("The working date will be changed to " & Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), "M/d/yyyy") &
         ".  Do you wish to continue?", "Confirm Date Change", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
@@ -476,7 +476,7 @@ Public Class frmEnterTips
         Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " & _
+        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
@@ -737,7 +737,7 @@ Public Class frmEnterTips
         Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " & _
+        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
@@ -983,7 +983,7 @@ Public Class frmEnterTips
         Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " & _
+        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
@@ -1274,7 +1274,7 @@ Public Class frmEnterTips
         Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " & _
+        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
@@ -1736,49 +1736,40 @@ Public Class frmEnterTips
     Private Sub mnuAddServer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuAddServer.Click
         Dim blnErrorState As Boolean = True
 
-        frmAddEditServer.Text = "Add Server"
+        Using frmAddEditServer As New frmAddEditServer()
+            frmAddEditServer.Text = "Add Server"
 
-        While blnErrorState = True
-            If frmAddEditServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
-                frmAddEditServer.Dispose()
-                Exit Sub
+            While blnErrorState = True
+                If frmAddEditServer.ShowDialog <> DialogResult.OK Then Exit Sub
+
+                If Not (FileDataSet.Servers.FindByServerNumber(frmAddEditServer.ServerNumber) Is Nothing) Then
+                    MessageBox.Show("The server number you entered already exists in the data file.  Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
+                    frmAddEditServer.ServerNumber = ""
+                Else
+                    blnErrorState = False
+                End If
+            End While
+
+            Dim drNewRow As DataRow = FileDataSet.Servers.NewRow
+
+            drNewRow("ServerNumber") = frmAddEditServer.ServerNumber
+            drNewRow("FirstName") = frmAddEditServer.FirstName
+            drNewRow("LastName") = frmAddEditServer.LastName
+            drNewRow("SuppressChit") = frmAddEditServer.SuppressChit
+
+            FileDataSet.Servers.Rows.Add(drNewRow)
+
+            Dim frmMain As frmMain = DirectCast(MdiParent, frmMain)
+
+            If frmMain.IsServerInTemplate(frmAddEditServer.ServerNumber) Then Exit Sub
+
+            If MessageBox.Show("This server does not exist in the servers template.  Add the server to the template?",
+                "Add Server", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                frmMain.AddServerToTemplate(frmAddEditServer.ServerNumber, frmAddEditServer.FirstName, frmAddEditServer.LastName, frmAddEditServer.SuppressChit)
             End If
-
-            If Not (Me.FileDataSet.Servers.FindByServerNumber(frmAddEditServer.ServerNumber) Is Nothing) Then
-                MessageBox.Show("The server number you entered already exists in the data file.  Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
-                frmAddEditServer.ServerNumber = ""
-            Else
-                blnErrorState = False
-            End If
-        End While
-
-        Dim drNewRow As DataRow = Me.FileDataSet.Servers.NewRow
-
-        drNewRow("ServerNumber") = frmAddEditServer.ServerNumber
-        drNewRow("FirstName") = frmAddEditServer.FirstName
-        drNewRow("LastName") = frmAddEditServer.LastName
-        drNewRow("SuppressChit") = frmAddEditServer.SuppressChit
-
-        Me.FileDataSet.Servers.Rows.Add(drNewRow)
-
-        If frmMain.GlobalDataSet.Servers.FindByServerNumber(frmAddEditServer.ServerNumber) Is Nothing Then
-            If MessageBox.Show("This server does not exist in the servers template.  Add the server to the template?", "Add Server", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
-                frmAddEditServer.Dispose()
-            Else
-                drNewRow = frmMain.GlobalDataSet.Servers.NewRow
-
-                drNewRow("ServerNumber") = frmAddEditServer.ServerNumber
-                drNewRow("FirstName") = frmAddEditServer.FirstName
-                drNewRow("LastName") = frmAddEditServer.LastName
-                drNewRow("SuppressChit") = frmAddEditServer.SuppressChit
-
-                frmMain.GlobalDataSet.Servers.Rows.Add(drNewRow)
-                frmMain.SaveGlobalFile()
-            End If
-        End If
+        End Using
 
         LoadServerCombos()
-        frmAddEditServer.Dispose()
     End Sub
 
     Private Sub mnuEditSelectedServer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuEditSelectedServer.Click, ServersDataGridView.DoubleClick
@@ -1886,7 +1877,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuCopyFromTemplate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuCopyFromTemplate.Click
-        Me.FileDataSet.Servers.Merge(frmMain.GlobalDataSet.Servers)
+        Me.FileDataSet.Servers.Merge(DirectCast(MdiParent, frmMain).GetTemplateServers())
     End Sub
 
     Private Sub mnuPrintTipChits_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPrintRegularTipChits.Click
@@ -2053,14 +2044,14 @@ Public Class frmEnterTips
         'Draw Credit Card total.
         e.Graphics.DrawString("Credit Card", font, Brushes.Black, marginLeft, intPosition)
 
-        intStrLen = CInt(e.Graphics.MeasureString(intCCs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(intCCs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCCs.ToString), 1).Width)
 
         e.Graphics.DrawString(intCCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
         Dim strCCTotal As String = Format(decCCTotal, "0.00")
 
-        intStrLen = CInt(e.Graphics.MeasureString(strCCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strCCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCCs.ToString), 1).Width)
 
         e.Graphics.DrawString(strCCTotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
@@ -2070,14 +2061,14 @@ Public Class frmEnterTips
         'Draw Room Charge total.
         e.Graphics.DrawString("Room Charge", font, Brushes.Black, marginLeft, intPosition)
 
-        intStrLen = CInt(e.Graphics.MeasureString(intRCs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(intRCs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intRCs.ToString), 1).Width)
 
         e.Graphics.DrawString(intRCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
         Dim strRCTotal As String = Format(decRCTotal, "0.00")
 
-        intStrLen = CInt(e.Graphics.MeasureString(strRCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strRCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intRCs.ToString), 1).Width)
 
         e.Graphics.DrawString(strRCTotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
@@ -2087,14 +2078,14 @@ Public Class frmEnterTips
         'Draw Special Function total.
         e.Graphics.DrawString("Special Function", font, Brushes.Black, marginLeft, intPosition)
 
-        intStrLen = CInt(e.Graphics.MeasureString(intSFs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(intSFs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
 
         e.Graphics.DrawString(intSFs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
         Dim strSFTotal As String = Format(decSFTotal, "0.00")
 
-        intStrLen = CInt(e.Graphics.MeasureString(strSFTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strSFTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
 
         e.Graphics.DrawString(strSFTotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
@@ -2105,14 +2096,14 @@ Public Class frmEnterTips
         e.Graphics.DrawString("Total Charge Tips", fontBold, Brushes.Black, marginLeft, intPosition)
 
         Dim strCharges As String = CStr(intCCs + intRCs + intSFs)
-        intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
                     Len(intSFs.ToString), 1).Width)
 
         e.Graphics.DrawString(strCharges, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
         Dim strChargeTotal As String = Format(decChargeTips, "0.00")
 
-        intStrLen = CInt(e.Graphics.MeasureString(strChargeTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strChargeTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
 
         e.Graphics.DrawString(strChargeTotal, fontBold, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
@@ -2122,14 +2113,14 @@ Public Class frmEnterTips
         'Draw Cash total.
         e.Graphics.DrawString("Cash", font, Brushes.Black, marginLeft, intPosition)
 
-        intStrLen = CInt(e.Graphics.MeasureString(intCAs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(intCAs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCAs.ToString), 1).Width)
 
         e.Graphics.DrawString(intCAs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
         Dim strCATotal As String = Format(decCATotal, "0.00")
 
-        intStrLen = CInt(e.Graphics.MeasureString(strCATotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strCATotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCAs.ToString), 1).Width)
 
         e.Graphics.DrawString(strCATotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
@@ -2140,14 +2131,14 @@ Public Class frmEnterTips
         e.Graphics.DrawString("TOTAL TIPS", fontBold, Brushes.Black, marginLeft, intPosition)
 
         Dim strTotal As String = CStr(intCCs + intRCs + intSFs + intCAs)
-        intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
                     Len(intSFs.ToString), 1).Width)
 
         e.Graphics.DrawString(strTotal, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
         Dim strGrandTotal As String = Format(decChargeTips + decCATotal, "0.00")
 
-        intStrLen = CInt(e.Graphics.MeasureString(strGrandTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt, _
+        intStrLen = CInt(e.Graphics.MeasureString(strGrandTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
 
         e.Graphics.DrawString(strGrandTotal, fontBold, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
@@ -2229,10 +2220,10 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuOptimizeFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuOptimizeFile.Click
-        If MessageBox.Show("This function will compact credit card, room charge, and cash tips so that there is only one entry per" & _
-        " server per day.  It will also remove all servers who do not have tips.  It is recommended that this function" & _
-        " only be performed after the pay period is balanced and all reports have been printed.  Optimization may take several" & _
-        " minutes depending on the number of tips and servers in the file.  Do you wish to continue?", "Optimize File", _
+        If MessageBox.Show("This function will compact credit card, room charge, and cash tips so that there is only one entry per" &
+        " server per day.  It will also remove all servers who do not have tips.  It is recommended that this function" &
+        " only be performed after the pay period is balanced and all reports have been printed.  Optimization may take several" &
+        " minutes depending on the number of tips and servers in the file.  Do you wish to continue?", "Optimize File",
         MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
@@ -2249,9 +2240,9 @@ Public Class frmEnterTips
             lblInfo.Text = "Checking " & dvServers.Item(intServer)("FirstName").ToString & " " & dvServers.Item(intServer)("LastName").ToString
 
             dvtips.Table = Me.FileDataSet.Tips
-            dvTips.RowFilter = "ServerNumber = '" & dvServers.Item(intServer)("ServerNumber").ToString & "'"
+            dvtips.RowFilter = "ServerNumber = '" & dvServers.Item(intServer)("ServerNumber").ToString & "'"
 
-            If dvTips.Count = 0 Then
+            If dvtips.Count = 0 Then
                 dvServers.Item(intServer).Delete()
                 Continue Do
             End If

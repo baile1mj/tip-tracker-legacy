@@ -2,24 +2,40 @@ Imports System.IO
 Imports Tip_Tracker.Utilities
 
 Public Class frmMain
+    Private _globalSettingsFile As GlobalSettingsFile
+    Private _globalSettings As GlobalSettings
     Private m_strCurrentFile As String = ""
     Private m_objGlobalStream As File
 
     ''' <summary>
-    ''' Gets the path to the global settings file.
+    ''' Gets a value indicating whether a server is in the template.
     ''' </summary>
-    ''' <returns>The global settings file path.</returns>
-    Private ReadOnly Property GlobalSettingsFilePath As String
+    ''' <param name="serverNumber">The number identifying the server to check.</param>
+    ''' <returns>True if the server is in the template; otherwise, false.</returns>
+    Public Function IsServerInTemplate(ByVal serverNumber As String) As Boolean
+        Return Not IsNothing(_globalSettings.GlobalDataSet.Servers.FindByServerNumber(serverNumber))
+    End Function
 
-    Private Property DefaultDataDirectory() As String
-        Get
-            Return Me.GlobalDataSet.Settings.FindBySetting("DefaultDirectory")("Value").ToString
-        End Get
+    ''' <summary>
+    ''' Adds a new server to the template.
+    ''' </summary>
+    ''' <param name="serverNumber">The new server's number.</param>
+    ''' <param name="firstName">The new server's first name.</param>
+    ''' <param name="lastName">The new server's last name.</param>
+    ''' <param name="suppressChit">True to suppress chit printing for the new server; otherwise false.</param>
+    Public Sub AddServerToTemplate(ByVal serverNumber As String, ByVal firstName As String, ByVal lastName As String, ByVal suppressChit As Boolean)
+        _globalSettings.GlobalDataSet.Servers.AddServersRow(serverNumber, firstName, lastName, suppressChit)
+        _globalSettings.GlobalDataSet.AcceptChanges()
+        _globalSettingsFile.Write(_globalSettings)
+    End Sub
 
-        Set(ByVal value As String)
-            Me.GlobalDataSet.Settings.FindBySetting("DefaultDirectory")("Value") = value
-        End Set
-    End Property
+    ''' <summary>
+    ''' Gets a copy of the template servers.
+    ''' </summary>
+    ''' <returns>A <see cref="DataTable"/> containing the template servers.</returns>
+    Public Function GetTemplateServers() As DataTable
+        Return _globalSettings.GlobalDataSet.Servers.Copy()
+    End Function
 
     Private Property CurrentDataFile() As String
         Get
@@ -34,28 +50,59 @@ Public Class frmMain
         'Disable the menu commands that can only be used if a file is open.
         EnableMenuCommands(False)
 
-        _GlobalSettingsFilePath = MachineSettings.GetGlobalFilePath()
-        'If a global settings file has not been created, display the configurator dialog to create one.
-        If Not File.Exists(Me.GlobalSettingsFilePath) Then
-            MessageBox.Show("The global settings file could not be found.  Please create a new file or open an existing file.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Dim globalFilePath As String = MachineSettings.GetGlobalFilePath()
 
-            If frmConfigurator.ShowDialog <> Windows.Forms.DialogResult.OK Then
-                MessageBox.Show("The global settings file path was not set.  Tip Tracker cannot run without a global settings file.  The application will terminate.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                frmConfigurator.Dispose()
-                End
-            End If
+        'When the global settings file path is missing, the user must either specify it or exit the application.
+        If String.IsNullOrEmpty(globalFilePath) Then
+            Using pathSelector As New frmConfigurator(globalFilePath)
+                If pathSelector.ShowDialog() <> DialogResult.OK Then
+                    MessageBox.Show("The global settings file path was not set.  Tip Tracker cannot run without a global " &
+                        "settings file.  The application will exit.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Application.Exit()
+                    End
+                End If
 
-            frmConfigurator.Dispose()
+                globalFilePath = pathSelector.GlobalSettingsFilePath
+                MachineSettings.SetGlobalFilePath(globalFilePath)
+            End Using
         End If
 
-        'Verify integrity of global settings file.
-        While GlobalFileLoaded() = False
-            Debug.WriteLine("Cannot load global file.")
+        _globalSettingsFile = New GlobalSettingsFile(globalFilePath)
+
+        'Ensure that there is a global settings file to load so we can load it.
+        If Not _globalSettingsFile.Exists() Then
+            Try
+                _globalSettingsFile.CreateNew()
+            Catch ex As Exception
+                'There isn't much we can do if the file fails to create.
+                MessageBox.Show("Failed to initialize the global settings file.  Verify that the file path is correct and that " &
+                    "you have permission to write to the directory.  If the problem persists, contact your organization's " &
+                    "IT support resource.", "Initialization Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Application.Exit()
+                End
+            End Try
+        End If
+
+        'We might fail to read the file if there's some issue with the machine or its permissions.
+        Try
+            _globalSettings = _globalSettingsFile.Read()
+        Catch ex As Exception
+            'There isn't much we can do if the can't be read.
+            MessageBox.Show("Failed to load the global settings file.  Verify that the file path is correct and that " &
+                "you have permission to read the file.  If the problem persists, contact your organization's " &
+                "IT support resource.", "Initialization Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Application.Exit()
+            Return
+        End Try
+
+        'If there's not default directory, require the user to select one.
+        While String.IsNullOrEmpty(_globalSettings.DefaultDataDirectory)
+            MessageBox.Show("You must select a default data directory.", "Select Directory", MessageBoxButtons.OK)
+            mnuSettings.PerformClick()
         End While
 
         'If a file was double-clicked, try to open the file.
         For Each param As String In My.Application.CommandLineArgs
-            Debug.WriteLine(param)
             Try
                 ' pass the file path if it exists
                 OpenFile(param)
@@ -72,222 +119,96 @@ Public Class frmMain
         mnuWindow.Visible = Enabled
     End Sub
 
-    Private Function GlobalFileLoaded() As Boolean
-        Me.GlobalDataSet.Clear()
-        Me.GlobalDataSet.AcceptChanges()
-
-        If Not File.Exists(Me.GlobalSettingsFilePath) Then
-            If MessageBox.Show("Global settings file not found.  Do you wish to rebuild the file?.", "File Not Found", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) <> Windows.Forms.DialogResult.Yes Then
-                End
-            Else
-                Dim blnContinue As Boolean = False
-
-                If frmConfigurator.ShowDialog() <> Windows.Forms.DialogResult.OK Then
-                    frmConfigurator.Dispose()
-                    End
-                End If
-
-                frmConfigurator.Dispose()
-            End If
-        End If
-
-        Try
-            Dim objFileEncoder As New clsFileEncoder
-
-            Me.GlobalDataSet.ReadXml(objFileEncoder.DecodeFile(Me.GlobalSettingsFilePath))
-
-            objFileEncoder.Dispose()
-            objFileEncoder = Nothing
-        Catch ex As FormatException
-            Try
-                Dim objFileEncoder As New clsFileEncoder
-
-                Me.GlobalDataSet.ReadXml(objFileEncoder.LegacyDecodeFile(Me.GlobalSettingsFilePath))
-                SaveGlobalFile()
-                objFileEncoder.Dispose()
-                objFileEncoder = Nothing
-            Catch subEx As Exception
-                MessageBox.Show("The global settings file could not be read.  Contact support.", "Error Converting File", MessageBoxButtons.OK)
-                'TODO: There will be no support for this application.  Provide troubleshooting tips instead.
-                End
-            End Try
-        Catch ex As Exception
-            MessageBox.Show("Cannot load global settings file.  File may be corrupt or its contents may have been changed.  Contact support.", "Error Loading File", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            'TODO: There will be no support for this application.  Provide troubleshooting tips instead.
-            End
-        End Try
-
-        If Me.GlobalDataSet.Servers.Rows.Count = 0 Then
-            MessageBox.Show("There are no servers in the server template table.", "No Servers", MessageBoxButtons.OK)
-        End If
-
-        If Me.GlobalDataSet.Settings.Rows.Count = 0 Then
-            Dim drNewRow As DataRow = Me.GlobalDataSet.Settings.NewRow
-
-            drNewRow("Setting") = "DefaultDirectory"
-            drNewRow("Value") = ""
-
-            Me.GlobalDataSet.Settings.Rows.Add(drNewRow)
-        End If
-
-        For Each row As DataRow In Me.GlobalDataSet.Settings.Rows
-            Select Case row("Setting").ToString
-                Case "DefaultDirectory"
-                    If row("Value").ToString Is Nothing Or row("Value").ToString = "" Then
-                        MessageBox.Show("You must select a default data directory.", "Select Directory", MessageBoxButtons.OK)
-                        frmSettings.btnCancel.Enabled = False
-                        frmSettings.ShowDialog()
-                        row("Value") = frmSettings.DefaultDirectory
-                        frmSettings.Dispose()
-                        SaveGlobalFile()
-                    End If
-                Case Else
-                    MessageBox.Show("The settings table is corrupted and will be rebuilt.", "Invalid Settings", MessageBoxButtons.OK)
-                    'TODO: The user doesn't care if there are extra settings.  As long as there's a default directory, silently remove others.
-                    Me.GlobalDataSet.Settings.Clear()
-                    SaveGlobalFile()
-                    Return False
-            End Select
-        Next
-
-        'Check for servers where suppress chit option is null.
-        'TODO: The user doesn't care if there are null values.  Just set them to false.
-        Dim blnFoundNull As Boolean = False
-
-        For Each row As DataRow In Me.GlobalDataSet.Servers
-            If IsDBNull(row("SuppressChit")) Then
-                row("SuppressChit") = False
-                blnFoundNull = True
-            End If
-        Next
-
-        If blnFoundNull = True Then
-            MessageBox.Show("Null values were found in the 'Suppress Tip Chit' option for some of the template servers.  The option for these servers has been unchecked.", "Null Values Found", MessageBoxButtons.OK)
-            SaveGlobalFile()
-        End If
-
-        Return True
-    End Function
-
-    Friend Function SaveGlobalFile() As Boolean
-        Me.GlobalDataSet.AcceptChanges()
-
-        Try
-            Dim objFileEncoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            Me.GlobalDataSet.WriteXml(objDSStream)
-
-            objDSStream.Flush()
-
-            objFileEncoder.EncodeFile(Me.GlobalSettingsFilePath, objDSStream)
-
-            objDSStream.Close()
-            objDSStream.Dispose()
-
-            objFileEncoder.Dispose()
-        Catch ex As Exception
-            MessageBox.Show("Could not save global settings file.  Contact support", "Error Writing File", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            End
-        End Try
-    End Function
-
-    Private Function GlobalFileChanged() As Boolean
-        Dim strDatasetContents As String = ""
-        Dim objDSStream As New MemoryStream()
-        Dim objDSStreamReader As New StreamReader(objDSStream)
-
-        Try
-            Me.GlobalDataSet.WriteXml(objDSStream)
-
-            objDSStream.Seek(0, SeekOrigin.Begin)
-            strDatasetContents = objDSStreamReader.ReadToEnd()
-        Catch ex As Exception
-            Return True
-        End Try
-
-        Dim objFileEncoder As New clsFileEncoder
-        Dim strFileContents As String = ""
-
-        Try
-            objDSStreamReader = New StreamReader(objFileEncoder.DecodeFile(Me.GlobalSettingsFilePath))
-
-            strFileContents = objDSStreamReader.ReadToEnd
-
-            objFileEncoder.Dispose()
-            objFileEncoder = Nothing
-        Catch ex As Exception
-            Return True
-        End Try
-
-        Return strDatasetContents <> strFileContents
-    End Function
-
     Private Sub mnuExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExit.Click
-        Me.Close()
+        Close()
     End Sub
 
     Private Sub mnuManageTemplateServers_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuManageTemplateServers.Click
-        If GlobalFileChanged() Then
-            If GlobalFileLoaded() = False Then
-                MessageBox.Show("Tip Tracker has encountered an error and needs to close.  Another user has changed the contents of the global settings file and the file cannot be reloaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                For Each form As Windows.Forms.Form In Me.MdiChildren
-                    form.Close()
+        Dim serversTable As DataTable = _globalSettings.GlobalDataSet.Servers.Copy()
+
+        Using serverManager As New frmManageServers(serversTable)
+            'The dialog only has a close button, so we'll assume there are changes.
+            serverManager.ShowDialog()
+
+            'If the file has been updated, the user will need to recreate their changes.  Since the global settings will
+            'be removed in the next version, there's no point in trying to handle concurrency more gracefully.
+            If _globalSettingsFile.IsChanged(_globalSettings) Then
+                _globalSettings = _globalSettingsFile.Read()
+                MessageBox.Show("Another user changed the global settings file and your changes have been lost.  " &
+                    "Please redo your changes.", "Concurrent Changes Detected", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Else
+                _globalSettings.GlobalDataSet.Servers.Rows.Clear()
+
+                For Each row As DataRow In serverManager.ServersTable.Rows
+                    _globalSettings.GlobalDataSet.Servers.ImportRow(row)
                 Next
 
-                End
+                _globalSettings.GlobalDataSet.AcceptChanges()
             End If
-        End If
+        End Using
 
-        frmManageServers.ShowDialog()
-        frmManageServers.Dispose()
-
-        Me.GlobalDataSet.AcceptChanges()
-        SaveGlobalFile()
-    End Sub
-
-    Private Sub mnuSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSettings.Click
-        If GlobalFileChanged() Then
-            If GlobalFileLoaded() = False Then
-                MessageBox.Show("Tip Tracker has encountered an error and needs to close.  Another user has changed the contents of the global settings file and the file cannot be reloaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                For Each form As Windows.Forms.Form In Me.MdiChildren
-                    form.Close()
-                Next
-
-                End
-            End If
-        End If
-
-        frmSettings.DefaultDirectory = Me.DefaultDataDirectory
-
-        If frmSettings.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            frmSettings.Dispose()
+        'There's no point in saving the file if nothing changed.
+        If Not _globalSettingsFile.IsChanged(_globalSettings) Then
             Exit Sub
         End If
 
-        Me.DefaultDataDirectory = frmSettings.DefaultDirectory
+        'If we can't save the settings, the application can still run, but the user should be notified.
+        Try
+            _globalSettingsFile.Write(_globalSettings)
+        Catch ex As Exception
+            MessageBox.Show("Failed to save the updated server list.  It is recommended that you save all open data files " &
+                $"and restart the application.  Verify that you have permission to write to {_globalSettingsFile.FilePath}. " &
+                "If this problem persists, contact your organization's IT support resource.", "Settings Update Failed",
+                MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 
-        SaveGlobalFile()
+    Private Sub mnuSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSettings.Click
+        Dim currentDefaultDirectory As String = _globalSettings.DefaultDataDirectory
+
+        'If the file has been updated, reload it.
+        If _globalSettingsFile.IsChanged(_globalSettings) Then
+            _globalSettings = _globalSettingsFile.Read()
+        End If
+
+        'Prompt the user to select a new default data directory.
+        Using frmSettings As New frmSettings(currentDefaultDirectory)
+            If frmSettings.ShowDialog <> DialogResult.OK Then
+                Exit Sub
+            End If
+
+            _globalSettings.DefaultDataDirectory = frmSettings.DefaultDirectory
+        End Using
+
+        'If we can't save the settings, the application can still run, but the user should be notified.
+        Try
+            _globalSettingsFile.Write(_globalSettings)
+        Catch ex As Exception
+            MessageBox.Show("Failed to save the updated setting.  It is recommended that you save all open data files " &
+                $"and restart the application.  Verify that you have permission to write to {_globalSettingsFile.FilePath}. " &
+                "If this problem persists, contact your organization's IT support resource.", "Settings Update Failed",
+                MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Private Sub mnuMinimizeAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuMinimizeAll.Click
-        For Each form As Windows.Forms.Form In Me.MdiChildren
+        For Each form As Windows.Forms.Form In MdiChildren
             form.WindowState = FormWindowState.Minimized
         Next
     End Sub
 
     Private Sub mnuMaximizeAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuMaximizeAll.Click
-        For Each form As Windows.Forms.Form In Me.MdiChildren
+        For Each form As Windows.Forms.Form In MdiChildren
             form.WindowState = FormWindowState.Maximized
         Next
     End Sub
 
     Private Sub mnuCascade_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuCascade.Click
-        For Each form As Windows.Forms.Form In Me.MdiChildren
+        For Each form As Windows.Forms.Form In MdiChildren
             form.WindowState = FormWindowState.Normal
         Next
 
-        Me.LayoutMdi(MdiLayout.Cascade)
+        LayoutMdi(MdiLayout.Cascade)
     End Sub
 
     Friend Function NumberOfFilesOpen() As Integer
@@ -296,7 +217,7 @@ Public Class frmMain
         'data files.
         Dim intFilesOpen As Integer = 0
 
-        For Each form As Form In Me.MdiChildren
+        For Each form As Form In MdiChildren
             intFilesOpen += 1
         Next
 
@@ -310,19 +231,19 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuClose_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuClose.Click
-        Me.ActiveMdiChild.Close()
+        ActiveMdiChild.Close()
     End Sub
 
     Private Sub mnuSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSave.Click
-        For Each form As frmEnterTips In Me.MdiChildren
-            If form Is Me.ActiveMdiChild Then
+        For Each form As frmEnterTips In MdiChildren
+            If form Is ActiveMdiChild Then
                 form.SaveData()
             End If
         Next
     End Sub
 
     Private Sub mnuSaveAs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSaveAs.Click
-        dlgSaveFile.InitialDirectory = Me.DefaultDataDirectory
+        dlgSaveFile.InitialDirectory = _globalSettings.DefaultDataDirectory
         dlgSaveFile.FileName = ""
 
         If dlgSaveFile.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -332,8 +253,8 @@ Public Class frmMain
 
         Dim strNewFileName As String = dlgSaveFile.FileName
 
-        For Each form As frmEnterTips In Me.MdiChildren
-            If form Is Me.ActiveMdiChild Then
+        For Each form As frmEnterTips In MdiChildren
+            If form Is ActiveMdiChild Then
                 form.SaveDataAs(strNewFileName)
             End If
         Next
@@ -355,7 +276,7 @@ Public Class frmMain
         Dim dtePeriodEnd As Date = frmCreateFile.PeriodEnd
 
         'Prepare dlgSaveFile to be shown.
-        dlgSaveFile.InitialDirectory = Me.DefaultDataDirectory
+        dlgSaveFile.InitialDirectory = _globalSettings.DefaultDataDirectory
         dlgSaveFile.Title = "Create New Data File"
         dlgSaveFile.FileName = Format(dtePeriodStart, "yyyy_MM_dd")
 
@@ -372,53 +293,53 @@ Public Class frmMain
 
         'Store the working date, period start, and period end in the settings table
         'of the file dataset.
-        drNewRow = Me.FileDataSet.Settings.NewRow
+        drNewRow = FileDataSet.Settings.NewRow
         drNewRow("Setting") = "PeriodStart"
         drNewRow("Value") = dtePeriodStart.ToString
-        Me.FileDataSet.Settings.Rows.Add(drNewRow)
+        FileDataSet.Settings.Rows.Add(drNewRow)
 
-        drNewRow = Me.FileDataSet.Settings.NewRow
+        drNewRow = FileDataSet.Settings.NewRow
         drNewRow("Setting") = "PeriodEnd"
         drNewRow("Value") = dtePeriodEnd.ToString
-        Me.FileDataSet.Settings.Rows.Add(drNewRow)
+        FileDataSet.Settings.Rows.Add(drNewRow)
 
-        drNewRow = Me.FileDataSet.Settings.NewRow
+        drNewRow = FileDataSet.Settings.NewRow
         drNewRow("Setting") = "WorkingDate"
         drNewRow("Value") = dtePeriodStart.ToString
-        Me.FileDataSet.Settings.Rows.Add(drNewRow)
+        FileDataSet.Settings.Rows.Add(drNewRow)
 
         drNewRow = Nothing
 
         'Copy the template servers into the file dataset.
-        Me.FileDataSet.Servers.Merge(Me.GlobalDataSet.Servers)
+        FileDataSet.Servers.Merge(_globalSettings.GlobalDataSet.Servers)
 
         Try
             'Encode the dataset then write the file to the selected directory.
             Dim objFileEncoder As New clsFileEncoder
             Dim objDSStream As New MemoryStream
 
-            Me.FileDataSet.WriteXml(objDSStream)
+            FileDataSet.WriteXml(objDSStream)
             objDSStream.Flush()
             objDSStream.Seek(0, SeekOrigin.Begin)
 
             objFileEncoder.EncodeFile(strFileName, objDSStream)
 
             'Clean up the dataset, file encoding object and dataset stream.
-            Me.FileDataSet.Clear()
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.Clear()
+            FileDataSet.AcceptChanges()
 
             objFileEncoder.Dispose()
             objDSStream.Close()
             objDSStream.Dispose()
         Catch ex As IOException
             MessageBox.Show("The file name you entered already exists and is in use.  The file could not be created.", "Error Creating File", MessageBoxButtons.OK)
-            Me.FileDataSet.Clear()
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.Clear()
+            FileDataSet.AcceptChanges()
             Exit Sub
         Catch ex As Exception
             MessageBox.Show("Could not create the requested file.  Please contact support.", "Error Creating File", MessageBoxButtons.OK)
-            Me.FileDataSet.Clear()
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.Clear()
+            FileDataSet.AcceptChanges()
             Exit Sub
         End Try
 
@@ -440,10 +361,10 @@ Public Class frmMain
             .CheckPathExists = True
             .DefaultExt = "*.ttd"
             .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd"
-            If Not Directory.Exists(Me.DefaultDataDirectory) Then
+            If Not Directory.Exists(_globalSettings.DefaultDataDirectory) Then
                 .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
             Else
-                .InitialDirectory = Me.DefaultDataDirectory
+                .InitialDirectory = _globalSettings.DefaultDataDirectory
             End If
             .Multiselect = False
             .RestoreDirectory = True
@@ -471,7 +392,7 @@ Public Class frmMain
             objDSStream.Flush()
             objDSStream.Seek(0, SeekOrigin.Begin)
 
-            Me.FileDataSet.ReadXml(objDSStream)
+            FileDataSet.ReadXml(objDSStream)
 
             objFileDecoder.Dispose()
             objDSStream.Close()
@@ -490,7 +411,7 @@ Public Class frmMain
                 objDSStream.Flush()
                 objDSStream.Seek(0, SeekOrigin.Begin)
 
-                Me.FileDataSet.ReadXml(objDSStream)
+                FileDataSet.ReadXml(objDSStream)
 
                 objFileDecoder.Dispose()
                 objDSStream.Close()
@@ -499,14 +420,14 @@ Public Class frmMain
                 Dim objFileEncoder As New clsFileEncoder
                 objDSStream = New MemoryStream
 
-                Me.FileDataSet.WriteXml(objDSStream)
+                FileDataSet.WriteXml(objDSStream)
 
                 objFileEncoder.EncodeFile(Path, objDSStream)
 
                 objFileEncoder.Dispose()
                 objDSStream.Close()
                 objDSStream.Dispose()
-                Me.FileDataSet.AcceptChanges()
+                FileDataSet.AcceptChanges()
 
             Catch subEx As Exception
                 MessageBox.Show("Could not convert the requested file.  The file may be an invalid type or may be corrupted.", "Error Converting File", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -514,37 +435,37 @@ Public Class frmMain
             End Try
         Catch ex As IOException
             MessageBox.Show("The requested file could not be opened because it is already in use.", "Error Opening File", MessageBoxButtons.OK)
-            Me.FileDataSet.Clear()
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.Clear()
+            FileDataSet.AcceptChanges()
             Exit Sub
         Catch ex As Exception
             MessageBox.Show("Could not open file.  Contact Support", "Error", MessageBoxButtons.OK)
-            Me.FileDataSet.Clear()
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.Clear()
+            FileDataSet.AcceptChanges()
             Exit Sub
         End Try
 
         If ValidateFile() = False Then
             MessageBox.Show("The file you selected is not a valid Tip Tracker data file.", "Invalid File Type", MessageBoxButtons.OK)
-            Me.FileDataSet.Clear()
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.Clear()
+            FileDataSet.AcceptChanges()
             Exit Sub
         End If
 
         'Check for functions not in the pay period.
         Dim lstInvalidFunctions As New List(Of String)
 
-        Dim dtePeriodStart As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Dim dtePeriodStart As Date = CDate(FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dtePeriodEnd As Date = CDate(FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
 
         Dim dvFunctions As New DataView
-        dvFunctions.Table = Me.FileDataSet.SpecialFunctions
+        dvFunctions.Table = FileDataSet.SpecialFunctions
         dvFunctions.RowFilter = "Date < '" & Format(dtePeriodStart, "MM/dd/yyyy") & "' OR Date > '" & Format(dtePeriodEnd, "MM/dd/yyyy") & "'"
 
         If dvFunctions.Count > 0 Then
-            MessageBox.Show("Selected file contains functions that are not in the pay period.  Function dates before" & _
-                 " the period beginning date will be changed to the first day in the pay period and function dates after" & _
-                 " the period ending date will be changed to the last day in the pay period.  Please be patient as the" & _
+            MessageBox.Show("Selected file contains functions that are not in the pay period.  Function dates before" &
+                 " the period beginning date will be changed to the first day in the pay period and function dates after" &
+                 " the period ending date will be changed to the last day in the pay period.  Please be patient as the" &
                  " conversion may take several minutes.", "Invalid Functions Found", MessageBoxButtons.OK)
 
             Dim i As Integer = 0
@@ -560,21 +481,21 @@ Public Class frmMain
                 End If
             Loop
 
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.AcceptChanges()
 
             Try
                 Dim objDSStream As New MemoryStream
                 Dim objFileEncoder As New clsFileEncoder
                 objDSStream = New MemoryStream
 
-                Me.FileDataSet.WriteXml(objDSStream)
+                FileDataSet.WriteXml(objDSStream)
 
                 objFileEncoder.EncodeFile(Path, objDSStream)
 
                 objFileEncoder.Dispose()
                 objDSStream.Close()
                 objDSStream.Dispose()
-                Me.FileDataSet.AcceptChanges()
+                FileDataSet.AcceptChanges()
 
             Catch subEx As Exception
                 MessageBox.Show("Could not convert the requested file.  The file may be an invalid type or may be corrupted.", "Error Converting File", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -585,13 +506,13 @@ Public Class frmMain
 
         'Check for tips not in the pay period.
         Dim dvTips As New DataView
-        dvTips.Table = Me.FileDataSet.Tips
+        dvTips.Table = FileDataSet.Tips
         dvTips.RowFilter = "WorkingDate < '" & Format(dtePeriodStart, "MM/dd/yyyy") & "' OR WorkingDate > '" & Format(dtePeriodEnd, "MM/dd/yyyy") & "'"
 
         If dvTips.Count > 0 Then
-            MessageBox.Show("Selected file contains tips that are not in the pay period.  Tip dates before" & _
-                 " the period beginning date will be changed to the first day in the pay period and function dates after" & _
-                 " the period ending date will be changed to the last day in the pay period.  Please be patient as the" & _
+            MessageBox.Show("Selected file contains tips that are not in the pay period.  Tip dates before" &
+                 " the period beginning date will be changed to the first day in the pay period and function dates after" &
+                 " the period ending date will be changed to the last day in the pay period.  Please be patient as the" &
                  " conversion may take several minutes.", "Invalid Tips Found", MessageBoxButtons.OK)
 
             Dim i As Integer = 0
@@ -607,21 +528,21 @@ Public Class frmMain
                 End If
             Loop
 
-            Me.FileDataSet.AcceptChanges()
+            FileDataSet.AcceptChanges()
 
             Try
                 Dim objDSStream As New MemoryStream
                 Dim objFileEncoder As New clsFileEncoder
                 objDSStream = New MemoryStream
 
-                Me.FileDataSet.WriteXml(objDSStream)
+                FileDataSet.WriteXml(objDSStream)
 
                 objFileEncoder.EncodeFile(Path, objDSStream)
 
                 objFileEncoder.Dispose()
                 objDSStream.Close()
                 objDSStream.Dispose()
-                Me.FileDataSet.AcceptChanges()
+                FileDataSet.AcceptChanges()
 
             Catch subEx As Exception
                 MessageBox.Show("Could not convert the requested file.  The file may be an invalid type or may be corrupted.", "Error Converting File", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -633,7 +554,7 @@ Public Class frmMain
         'Check for servers where suppress chit option is null.
         Dim blnFoundNull As Boolean = False
 
-        For Each row As DataRow In Me.FileDataSet.Servers
+        For Each row As DataRow In FileDataSet.Servers
             If IsDBNull(row("SuppressChit")) Then
                 row("SuppressChit") = False
                 blnFoundNull = True
@@ -648,14 +569,14 @@ Public Class frmMain
                 Dim objFileEncoder As New clsFileEncoder
                 objDSStream = New MemoryStream
 
-                Me.FileDataSet.WriteXml(objDSStream)
+                FileDataSet.WriteXml(objDSStream)
 
                 objFileEncoder.EncodeFile(Path, objDSStream)
 
                 objFileEncoder.Dispose()
                 objDSStream.Close()
                 objDSStream.Dispose()
-                Me.FileDataSet.AcceptChanges()
+                FileDataSet.AcceptChanges()
 
             Catch subEx As Exception
                 MessageBox.Show("Could not save file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -664,8 +585,8 @@ Public Class frmMain
             End Try
         End If
 
-        Me.FileDataSet.Clear()
-        Me.FileDataSet.AcceptChanges()
+        FileDataSet.Clear()
+        FileDataSet.AcceptChanges()
 
         Dim form As New frmEnterTips
         form.CurrentFile = Path
@@ -678,9 +599,9 @@ Public Class frmMain
     End Sub
 
     Private Function ValidateFile() As Boolean
-        If Me.FileDataSet.Settings.Rows.Count = 0 Then Return False
+        If FileDataSet.Settings.Rows.Count = 0 Then Return False
 
-        For Each row As DataRow In Me.FileDataSet.Settings
+        For Each row As DataRow In FileDataSet.Settings
             Select Case row("Setting").ToString
                 Case "PeriodStart"
                     If row("Value").ToString = "" Or row("Value") Is Nothing Then
@@ -723,27 +644,26 @@ Public Class frmMain
     Private Sub mnuExportServerList_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExportServerList.Click
         Dim strFileName As String
 
-        With dlgSaveFile
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.Desktop
-            .RestoreDirectory = True
-            .Title = "Export Server List"
-            .Filter = "XML Files (*.xml)|*.xml"
-            .DefaultExt = "*.xml"
-            .FileName = "Server List"
+        Using dlgSaveFile As New SaveFileDialog()
+            With dlgSaveFile
+                .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.Desktop
+                .RestoreDirectory = True
+                .Title = "Export Server List"
+                .Filter = "XML Files (*.xml)|*.xml"
+                .DefaultExt = "*.xml"
+                .FileName = "Server List"
 
-            If .ShowDialog <> Windows.Forms.DialogResult.OK Then
-                .Dispose()
-                Exit Sub
-            End If
+                If .ShowDialog <> DialogResult.OK Then
+                    Exit Sub
+                End If
 
-            .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd"
-            .DefaultExt = "*.ttd"
-
-            strFileName = .FileName
-        End With
+                strFileName = .FileName
+            End With
+        End Using
 
         Try
-            Me.GlobalDataSet.Servers.WriteXml(strFileName)
+            'TODO: move the file writing functionality into a separate class.
+            _globalSettings.GlobalDataSet.Servers.WriteXml(strFileName)
         Catch ex As Exception
             MessageBox.Show("An error occurred while trying to save the server list.", "Write Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -794,7 +714,7 @@ Public Class frmMain
         End With
 
         Dim dv As New DataView
-        dv.Table = Me.GlobalDataSet.Servers
+        dv.Table = _globalSettings.GlobalDataSet.Servers
         dv.Sort = "ServerNumber"
 
         Static i As Integer = 0

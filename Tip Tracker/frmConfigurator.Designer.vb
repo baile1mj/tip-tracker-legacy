@@ -19,17 +19,13 @@ Partial Class frmConfigurator
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.lblInstructions = New System.Windows.Forms.Label
-        Me.txtGlobalFilePath = New System.Windows.Forms.TextBox
-        Me.lblGlobalFilePath = New System.Windows.Forms.Label
-        Me.btnNew = New System.Windows.Forms.Button
-        Me.btnExisting = New System.Windows.Forms.Button
-        Me.btnOK = New System.Windows.Forms.Button
-        Me.dlgOpenFile = New System.Windows.Forms.OpenFileDialog
-        Me.dlgSaveFile = New System.Windows.Forms.SaveFileDialog
-        Me.GlobalDataSet = New Tip_Tracker.GlobalDataSet
-        Me.btnCancel = New System.Windows.Forms.Button
-        CType(Me.GlobalDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.lblInstructions = New System.Windows.Forms.Label()
+        Me.txtGlobalFilePath = New System.Windows.Forms.TextBox()
+        Me.lblGlobalFilePath = New System.Windows.Forms.Label()
+        Me.btnNew = New System.Windows.Forms.Button()
+        Me.btnExisting = New System.Windows.Forms.Button()
+        Me.btnOK = New System.Windows.Forms.Button()
+        Me.btnCancel = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lblInstructions
@@ -39,13 +35,13 @@ Partial Class frmConfigurator
         Me.lblInstructions.Name = "lblInstructions"
         Me.lblInstructions.Size = New System.Drawing.Size(378, 13)
         Me.lblInstructions.TabIndex = 3
-        Me.lblInstructions.Text = "NOTE: You must either create a new global settings file or open an existing file." & _
-            ""
+        Me.lblInstructions.Text = "NOTE: You must either create a new global settings file or open an existing file." &
+    ""
         '
         'txtGlobalFilePath
         '
         Me.txtGlobalFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtGlobalFilePath.Location = New System.Drawing.Point(12, 54)
         Me.txtGlobalFilePath.Name = "txtGlobalFilePath"
         Me.txtGlobalFilePath.ReadOnly = True
@@ -92,26 +88,6 @@ Partial Class frmConfigurator
         Me.btnOK.Text = "&OK"
         Me.btnOK.UseVisualStyleBackColor = True
         '
-        'dlgOpenFile
-        '
-        Me.dlgOpenFile.DefaultExt = "dat"
-        Me.dlgOpenFile.FileName = "ttgsf.dat"
-        Me.dlgOpenFile.Filter = "DAT Files (*.DAT)|*.dat"
-        Me.dlgOpenFile.Title = "Open Global Settings File"
-        '
-        'dlgSaveFile
-        '
-        Me.dlgSaveFile.FileName = "ttgsf.dat"
-        Me.dlgSaveFile.Filter = "DAT Files (*.dat)|*.dat"
-        Me.dlgSaveFile.SupportMultiDottedExtensions = True
-        Me.dlgSaveFile.Title = "Create Global Settings File"
-        '
-        'GlobalDataSet
-        '
-        Me.GlobalDataSet.CaseSensitive = True
-        Me.GlobalDataSet.DataSetName = "GlobalDataSet"
-        Me.GlobalDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
-        '
         'btnCancel
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -140,7 +116,6 @@ Partial Class frmConfigurator
         Me.MinimizeBox = False
         Me.Name = "frmConfigurator"
         Me.Text = "Set Global File"
-        CType(Me.GlobalDataSet, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -151,8 +126,5 @@ Partial Class frmConfigurator
     Friend WithEvents btnNew As System.Windows.Forms.Button
     Friend WithEvents btnExisting As System.Windows.Forms.Button
     Friend WithEvents btnOK As System.Windows.Forms.Button
-    Friend WithEvents dlgOpenFile As System.Windows.Forms.OpenFileDialog
-    Friend WithEvents dlgSaveFile As System.Windows.Forms.SaveFileDialog
-    Friend WithEvents GlobalDataSet As Tip_Tracker.GlobalDataSet
     Friend WithEvents btnCancel As System.Windows.Forms.Button
 End Class

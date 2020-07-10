@@ -19,52 +19,50 @@ Partial Class frmMain
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
-        Me.strMainMenuStrip = New System.Windows.Forms.MenuStrip
-        Me.mnuFile = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuNew = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuOpen = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuClose = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuSave = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuSaveAs = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuExit = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuTools = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuManageTemplateServers = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuPrintServerList = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuExportServerList = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuRunMaintenanceUtility = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuSettings = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuWindow = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuCascade = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuMinimizeAll = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuMaximizeAll = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuHelp = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuContents = New System.Windows.Forms.ToolStripMenuItem
-        Me.mnuIndex = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator
-        Me.mnuAbout = New System.Windows.Forms.ToolStripMenuItem
+        Me.strMainMenuStrip = New System.Windows.Forms.MenuStrip()
+        Me.mnuFile = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuNew = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuOpen = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuClose = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuSave = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuSaveAs = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuTools = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuManageTemplateServers = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuPrintServerList = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuExportServerList = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuRunMaintenanceUtility = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuSettings = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuWindow = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuCascade = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMinimizeAll = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuMaximizeAll = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuHelp = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuContents = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuIndex = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.FileDataSet = New Tip_Tracker.FileDataSet
+        Me.FileDataSet = New Tip_Tracker.FileDataSet()
         Me.TipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.SpecialFunctionBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.GlobalDataSet = New Tip_Tracker.GlobalDataSet
-        Me.dlgSaveFile = New System.Windows.Forms.SaveFileDialog
-        Me.docServerList = New System.Drawing.Printing.PrintDocument
-        Me.dlgPrint = New System.Windows.Forms.PrintDialog
+        Me.dlgSaveFile = New System.Windows.Forms.SaveFileDialog()
+        Me.docServerList = New System.Drawing.Printing.PrintDocument()
+        Me.dlgPrint = New System.Windows.Forms.PrintDialog()
         Me.strMainMenuStrip.SuspendLayout()
         CType(Me.ServersBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.GlobalDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'strMainMenuStrip
@@ -81,124 +79,124 @@ Partial Class frmMain
         '
         Me.mnuFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuNew, Me.mnuOpen, Me.ToolStripSeparator1, Me.mnuClose, Me.ToolStripSeparator2, Me.mnuSave, Me.mnuSaveAs, Me.ToolStripSeparator8, Me.mnuExit})
         Me.mnuFile.Name = "mnuFile"
-        Me.mnuFile.Size = New System.Drawing.Size(35, 20)
+        Me.mnuFile.Size = New System.Drawing.Size(37, 20)
         Me.mnuFile.Text = "&File"
         '
         'mnuNew
         '
         Me.mnuNew.Name = "mnuNew"
         Me.mnuNew.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
-        Me.mnuNew.Size = New System.Drawing.Size(181, 22)
+        Me.mnuNew.Size = New System.Drawing.Size(178, 22)
         Me.mnuNew.Text = "New..."
         '
         'mnuOpen
         '
         Me.mnuOpen.Name = "mnuOpen"
         Me.mnuOpen.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
-        Me.mnuOpen.Size = New System.Drawing.Size(181, 22)
+        Me.mnuOpen.Size = New System.Drawing.Size(178, 22)
         Me.mnuOpen.Text = "Open..."
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(178, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(175, 6)
         '
         'mnuClose
         '
         Me.mnuClose.Name = "mnuClose"
         Me.mnuClose.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
-                    Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
-        Me.mnuClose.Size = New System.Drawing.Size(181, 22)
+            Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
+        Me.mnuClose.Size = New System.Drawing.Size(178, 22)
         Me.mnuClose.Text = "Close"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(178, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(175, 6)
         '
         'mnuSave
         '
         Me.mnuSave.Name = "mnuSave"
         Me.mnuSave.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.mnuSave.Size = New System.Drawing.Size(181, 22)
+        Me.mnuSave.Size = New System.Drawing.Size(178, 22)
         Me.mnuSave.Text = "Save"
         '
         'mnuSaveAs
         '
         Me.mnuSaveAs.Name = "mnuSaveAs"
-        Me.mnuSaveAs.Size = New System.Drawing.Size(181, 22)
+        Me.mnuSaveAs.Size = New System.Drawing.Size(178, 22)
         Me.mnuSaveAs.Text = "Save As..."
         '
         'ToolStripSeparator8
         '
         Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
-        Me.ToolStripSeparator8.Size = New System.Drawing.Size(178, 6)
+        Me.ToolStripSeparator8.Size = New System.Drawing.Size(175, 6)
         '
         'mnuExit
         '
         Me.mnuExit.Name = "mnuExit"
         Me.mnuExit.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
-        Me.mnuExit.Size = New System.Drawing.Size(181, 22)
+        Me.mnuExit.Size = New System.Drawing.Size(178, 22)
         Me.mnuExit.Text = "Exit"
         '
         'mnuTools
         '
         Me.mnuTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuManageTemplateServers, Me.ToolStripSeparator6, Me.mnuPrintServerList, Me.mnuExportServerList, Me.ToolStripSeparator5, Me.mnuRunMaintenanceUtility, Me.ToolStripSeparator3, Me.mnuSettings})
         Me.mnuTools.Name = "mnuTools"
-        Me.mnuTools.Size = New System.Drawing.Size(44, 20)
+        Me.mnuTools.Size = New System.Drawing.Size(46, 20)
         Me.mnuTools.Text = "&Tools"
         '
         'mnuManageTemplateServers
         '
         Me.mnuManageTemplateServers.Name = "mnuManageTemplateServers"
-        Me.mnuManageTemplateServers.Size = New System.Drawing.Size(222, 22)
+        Me.mnuManageTemplateServers.Size = New System.Drawing.Size(217, 22)
         Me.mnuManageTemplateServers.Text = "Manage Template Servers..."
         '
         'ToolStripSeparator6
         '
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(219, 6)
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(214, 6)
         '
         'mnuPrintServerList
         '
         Me.mnuPrintServerList.Name = "mnuPrintServerList"
-        Me.mnuPrintServerList.Size = New System.Drawing.Size(222, 22)
+        Me.mnuPrintServerList.Size = New System.Drawing.Size(217, 22)
         Me.mnuPrintServerList.Text = "Print Server List"
         '
         'mnuExportServerList
         '
         Me.mnuExportServerList.Name = "mnuExportServerList"
-        Me.mnuExportServerList.Size = New System.Drawing.Size(222, 22)
+        Me.mnuExportServerList.Size = New System.Drawing.Size(217, 22)
         Me.mnuExportServerList.Text = "Export Server List"
         Me.mnuExportServerList.Visible = False
         '
         'ToolStripSeparator5
         '
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(219, 6)
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(214, 6)
         '
         'mnuRunMaintenanceUtility
         '
         Me.mnuRunMaintenanceUtility.Name = "mnuRunMaintenanceUtility"
-        Me.mnuRunMaintenanceUtility.Size = New System.Drawing.Size(222, 22)
+        Me.mnuRunMaintenanceUtility.Size = New System.Drawing.Size(217, 22)
         Me.mnuRunMaintenanceUtility.Text = "Run Maintenance Utility"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(219, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(214, 6)
         '
         'mnuSettings
         '
         Me.mnuSettings.Name = "mnuSettings"
-        Me.mnuSettings.Size = New System.Drawing.Size(222, 22)
+        Me.mnuSettings.Size = New System.Drawing.Size(217, 22)
         Me.mnuSettings.Text = "Settings..."
         '
         'mnuWindow
         '
         Me.mnuWindow.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuCascade, Me.mnuMinimizeAll, Me.mnuMaximizeAll, Me.ToolStripSeparator9})
         Me.mnuWindow.Name = "mnuWindow"
-        Me.mnuWindow.Size = New System.Drawing.Size(57, 20)
+        Me.mnuWindow.Size = New System.Drawing.Size(63, 20)
         Me.mnuWindow.Text = "&Window"
         '
         'mnuCascade
@@ -228,30 +226,30 @@ Partial Class frmMain
         '
         Me.mnuHelp.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuContents, Me.mnuIndex, Me.ToolStripSeparator7, Me.mnuAbout})
         Me.mnuHelp.Name = "mnuHelp"
-        Me.mnuHelp.Size = New System.Drawing.Size(40, 20)
+        Me.mnuHelp.Size = New System.Drawing.Size(44, 20)
         Me.mnuHelp.Text = "&Help"
         '
         'mnuContents
         '
         Me.mnuContents.Name = "mnuContents"
-        Me.mnuContents.Size = New System.Drawing.Size(170, 22)
+        Me.mnuContents.Size = New System.Drawing.Size(166, 22)
         Me.mnuContents.Text = "Contents"
         '
         'mnuIndex
         '
         Me.mnuIndex.Name = "mnuIndex"
-        Me.mnuIndex.Size = New System.Drawing.Size(170, 22)
+        Me.mnuIndex.Size = New System.Drawing.Size(166, 22)
         Me.mnuIndex.Text = "Index"
         '
         'ToolStripSeparator7
         '
         Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New System.Drawing.Size(167, 6)
+        Me.ToolStripSeparator7.Size = New System.Drawing.Size(163, 6)
         '
         'mnuAbout
         '
         Me.mnuAbout.Name = "mnuAbout"
-        Me.mnuAbout.Size = New System.Drawing.Size(170, 22)
+        Me.mnuAbout.Size = New System.Drawing.Size(166, 22)
         Me.mnuAbout.Text = "About Tip Tracker"
         '
         'ServersBindingSource
@@ -274,12 +272,6 @@ Partial Class frmMain
         '
         Me.SpecialFunctionBindingSource.DataMember = "SpecialFunctions"
         Me.SpecialFunctionBindingSource.DataSource = Me.FileDataSet
-        '
-        'GlobalDataSet
-        '
-        Me.GlobalDataSet.CaseSensitive = True
-        Me.GlobalDataSet.DataSetName = "GlobalDataSet"
-        Me.GlobalDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
         '
         'dlgSaveFile
         '
@@ -316,7 +308,6 @@ Partial Class frmMain
         CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.GlobalDataSet, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -344,7 +335,6 @@ Partial Class frmMain
     Friend WithEvents mnuIndex As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator7 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuAbout As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents GlobalDataSet As Tip_Tracker.GlobalDataSet
     Friend WithEvents mnuSettings As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents dlgSaveFile As System.Windows.Forms.SaveFileDialog
     Friend WithEvents mnuWindow As System.Windows.Forms.ToolStripMenuItem

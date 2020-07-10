@@ -1,9 +1,9 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmSettings
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -17,21 +17,20 @@ Partial Class frmSettings
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.grpDefaultDataDirectory = New System.Windows.Forms.GroupBox
-        Me.btnSetDefaultDirectory = New System.Windows.Forms.Button
-        Me.txtDefaultDataDirectory = New System.Windows.Forms.TextBox
-        Me.btnOK = New System.Windows.Forms.Button
-        Me.btnCancel = New System.Windows.Forms.Button
-        Me.dlgBrowseFolders = New System.Windows.Forms.FolderBrowserDialog
+        Me.grpDefaultDataDirectory = New System.Windows.Forms.GroupBox()
+        Me.btnSetDefaultDirectory = New System.Windows.Forms.Button()
+        Me.txtDefaultDataDirectory = New System.Windows.Forms.TextBox()
+        Me.btnOK = New System.Windows.Forms.Button()
+        Me.btnCancel = New System.Windows.Forms.Button()
         Me.grpDefaultDataDirectory.SuspendLayout()
         Me.SuspendLayout()
         '
         'grpDefaultDataDirectory
         '
         Me.grpDefaultDataDirectory.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpDefaultDataDirectory.Controls.Add(Me.btnSetDefaultDirectory)
         Me.grpDefaultDataDirectory.Controls.Add(Me.txtDefaultDataDirectory)
         Me.grpDefaultDataDirectory.Location = New System.Drawing.Point(12, 12)
@@ -53,7 +52,7 @@ Partial Class frmSettings
         'txtDefaultDataDirectory
         '
         Me.txtDefaultDataDirectory.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDefaultDataDirectory.Location = New System.Drawing.Point(6, 30)
         Me.txtDefaultDataDirectory.Name = "txtDefaultDataDirectory"
         Me.txtDefaultDataDirectory.ReadOnly = True
@@ -81,10 +80,6 @@ Partial Class frmSettings
         Me.btnCancel.Text = "&Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
         '
-        'dlgBrowseFolders
-        '
-        Me.dlgBrowseFolders.Description = "Select the folder to be used for storing the data files."
-        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -111,5 +106,4 @@ Partial Class frmSettings
     Friend WithEvents btnCancel As System.Windows.Forms.Button
     Friend WithEvents txtDefaultDataDirectory As System.Windows.Forms.TextBox
     Friend WithEvents btnSetDefaultDirectory As System.Windows.Forms.Button
-    Friend WithEvents dlgBrowseFolders As System.Windows.Forms.FolderBrowserDialog
 End Class
