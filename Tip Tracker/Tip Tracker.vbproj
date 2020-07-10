@@ -280,11 +280,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="UsersLookupDataSet.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UsersLookupDataSet.xsd</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmAbout.resx">
@@ -432,17 +427,6 @@
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </None>
     <None Include="tthelp.chm" />
-    <None Include="UsersLookupDataSet.xsc">
-      <DependentUpon>UsersLookupDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="UsersLookupDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>UsersLookupDataSet.Designer.vb</LastGenOutput>
-    </None>
-    <None Include="UsersLookupDataSet.xss">
-      <DependentUpon>UsersLookupDataSet.xsd</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TT.ico" />
