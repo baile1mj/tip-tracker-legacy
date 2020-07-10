@@ -44,7 +44,6 @@ Partial Class frmEnterTips
         Me.mnuPayrollBalancingReport = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnTools = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.mnuImportTips = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuExportTips = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuManageSpecialFunctions = New System.Windows.Forms.ToolStripMenuItem()
@@ -383,18 +382,11 @@ Partial Class frmEnterTips
         'btnTools
         '
         Me.btnTools.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.btnTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuImportTips, Me.mnuExportTips, Me.ToolStripSeparator5, Me.mnuManageSpecialFunctions, Me.ToolStripSeparator10, Me.mnuAutoAddServers, Me.ToolStripSeparator11, Me.mnuOptimizeFile})
+        Me.btnTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuExportTips, Me.ToolStripSeparator5, Me.mnuManageSpecialFunctions, Me.ToolStripSeparator10, Me.mnuAutoAddServers, Me.ToolStripSeparator11, Me.mnuOptimizeFile})
         Me.btnTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnTools.Name = "btnTools"
         Me.btnTools.Size = New System.Drawing.Size(78, 22)
         Me.btnTools.Text = "Operations"
-        '
-        'mnuImportTips
-        '
-        Me.mnuImportTips.Name = "mnuImportTips"
-        Me.mnuImportTips.Size = New System.Drawing.Size(221, 22)
-        Me.mnuImportTips.Text = "Import Tips..."
-        Me.mnuImportTips.Visible = False
         '
         'mnuExportTips
         '
@@ -1364,40 +1356,40 @@ Partial Class frmEnterTips
         '
         Me.mnuServersContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuAddServer, Me.mnuEditSelectedServer, Me.ToolStripSeparator7, Me.mnuMergeDuplicate, Me.ToolStripSeparator8, Me.mnuCopyFromTemplate})
         Me.mnuServersContextMenu.Name = "mnuServersContextMenu"
-        Me.mnuServersContextMenu.Size = New System.Drawing.Size(187, 104)
+        Me.mnuServersContextMenu.Size = New System.Drawing.Size(185, 104)
         '
         'mnuAddServer
         '
         Me.mnuAddServer.Name = "mnuAddServer"
-        Me.mnuAddServer.Size = New System.Drawing.Size(186, 22)
+        Me.mnuAddServer.Size = New System.Drawing.Size(184, 22)
         Me.mnuAddServer.Text = "Add..."
         '
         'mnuEditSelectedServer
         '
         Me.mnuEditSelectedServer.Name = "mnuEditSelectedServer"
-        Me.mnuEditSelectedServer.Size = New System.Drawing.Size(186, 22)
+        Me.mnuEditSelectedServer.Size = New System.Drawing.Size(184, 22)
         Me.mnuEditSelectedServer.Text = "Edit Selected..."
         '
         'ToolStripSeparator7
         '
         Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New System.Drawing.Size(183, 6)
+        Me.ToolStripSeparator7.Size = New System.Drawing.Size(181, 6)
         '
         'mnuMergeDuplicate
         '
         Me.mnuMergeDuplicate.Name = "mnuMergeDuplicate"
-        Me.mnuMergeDuplicate.Size = New System.Drawing.Size(186, 22)
+        Me.mnuMergeDuplicate.Size = New System.Drawing.Size(184, 22)
         Me.mnuMergeDuplicate.Text = "Merge Duplicate"
         '
         'ToolStripSeparator8
         '
         Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
-        Me.ToolStripSeparator8.Size = New System.Drawing.Size(183, 6)
+        Me.ToolStripSeparator8.Size = New System.Drawing.Size(181, 6)
         '
         'mnuCopyFromTemplate
         '
         Me.mnuCopyFromTemplate.Name = "mnuCopyFromTemplate"
-        Me.mnuCopyFromTemplate.Size = New System.Drawing.Size(186, 22)
+        Me.mnuCopyFromTemplate.Size = New System.Drawing.Size(184, 22)
         Me.mnuCopyFromTemplate.Text = "Copy From Template"
         '
         'DataGridView1
@@ -1831,7 +1823,6 @@ Partial Class frmEnterTips
     Friend WithEvents lblCurrentTipType As System.Windows.Forms.ToolStripLabel
     Friend WithEvents SpecialFunctionBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents btnTools As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents mnuImportTips As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuExportTips As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuManageSpecialFunctions As System.Windows.Forms.ToolStripMenuItem
