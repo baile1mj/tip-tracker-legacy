@@ -168,12 +168,6 @@
     <Compile Include="frmExportTips.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmImportServersComparer.Designer.vb">
-      <DependentUpon>frmImportServersComparer.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmImportServersComparer.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -315,10 +309,6 @@
     <EmbeddedResource Include="frmExportTips.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmExportTips.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmImportServersComparer.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmImportServersComparer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <SubType>Designer</SubType>
