@@ -50,7 +50,6 @@ Partial Class frmMain
         Me.mnuIndex = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuAbout = New System.Windows.Forms.ToolStripMenuItem()
-        Me.docServerList = New System.Drawing.Printing.PrintDocument()
         Me.strMainMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -241,10 +240,6 @@ Partial Class frmMain
         Me.mnuAbout.Size = New System.Drawing.Size(166, 22)
         Me.mnuAbout.Text = "About Tip Tracker"
         '
-        'docServerList
-        '
-        Me.docServerList.DocumentName = "Server List"
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -293,7 +288,6 @@ Partial Class frmMain
     Friend WithEvents mnuExportServerList As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuPrintServerList As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents docServerList As System.Drawing.Printing.PrintDocument
     Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuRunMaintenanceUtility As System.Windows.Forms.ToolStripMenuItem

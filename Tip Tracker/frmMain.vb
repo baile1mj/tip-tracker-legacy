@@ -1,3 +1,4 @@
+Imports System.Drawing.Printing
 Imports System.IO
 Imports Tip_Tracker.Utilities
 
@@ -450,25 +451,27 @@ Public Class frmMain
         End Try
     End Sub
 
-    Private Sub mnuPrintServerList_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPrintServerList.Click
-        With docServerList.DefaultPageSettings
-            .Margins.Top = 50
-            .Margins.Bottom = 50
-            .Margins.Left = 50
-            .Margins.Right = 50
+    Private Sub mnuPrintServerList_Click(ByVal sender As Object, ByVal e As EventArgs) Handles mnuPrintServerList.Click
+        Dim serverList As New PrintDocument()
+
+        With serverList
+            .DocumentName = "Server List"
+            .DefaultPageSettings.Margins = New Margins(50, 50, 50, 50)
         End With
 
+        AddHandler serverList.PrintPage, AddressOf docServerList_PrintPage
+
         Using printDialog As New PrintDialog() With {
-            .Document = docServerList,
+            .Document = serverList,
             .UseEXDialog = True}
 
             If printDialog.ShowDialog() = DialogResult.OK Then
-                docServerList.Print()
+                serverList.Print()
             End If
         End Using
     End Sub
 
-    Private Sub docServerList_PrintPage(ByVal sender As System.Object, ByVal e As System.Drawing.Printing.PrintPageEventArgs) Handles docServerList.PrintPage
+    Private Sub docServerList_PrintPage(ByVal sender As Object, ByVal e As PrintPageEventArgs)
         Dim font As New System.Drawing.Font("Calibri", 10)
 
         'Initialize local static variables that contain the current line position and
@@ -483,9 +486,9 @@ Public Class frmMain
         Const intCol2NumberPos As Integer = 450
         Const intCol2NamePos As Integer = 550
 
-        Dim intPrintAreaHeight, intPrintAreaWidth, marginLeft, marginTop As Int32
+        Dim intPrintAreaHeight, intPrintAreaWidth, marginLeft, marginTop As Integer
 
-        With docServerList.DefaultPageSettings
+        With e.PageSettings
             ' Initialize local variables that contain the bounds of the printing 
             ' area rectangle.
             intPrintAreaHeight = .PaperSize.Height - .Margins.Top - .Margins.Bottom
