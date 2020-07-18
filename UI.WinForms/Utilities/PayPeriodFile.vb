@@ -42,6 +42,7 @@ Namespace Utilities
             End If
 
             Dim dataSet As FileDataSet = Read(_fileStream)
+            dataSet.AcceptChanges()
             Return PayPeriodData.Create(dataSet)
         End Function
 
