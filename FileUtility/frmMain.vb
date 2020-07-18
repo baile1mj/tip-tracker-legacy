@@ -126,28 +126,20 @@ Public Class frmMain
     End Sub
 
     Private Sub btnForceGlobalFileReset_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnForceGlobalFileReset.Click
-        If MessageBox.Show("It is recommended that you close all instances of Tip Tracker before continuing.  Please click OK when you are ready to proceed.", "Information", MessageBoxButtons.OKCancel) <> Windows.Forms.DialogResult.OK Then
-            Exit Sub
-        End If
+        Dim userPromptResult As DialogResult = MessageBox.Show("It is recommended that you close all instances " &
+            "of Tip Tracker before continuing.  Please click OK when you are ready to proceed.", "Information",
+            MessageBoxButtons.OKCancel)
 
-        Dim globalFilePath As String = MachineSettings.GetGlobalFilePath()
+        If userPromptResult <> DialogResult.OK Then Exit Sub
 
-        If Directory.Exists(Dir) Then
-            Dim writer As New StreamWriter(globalFilePath, False)
-
-            Try
-                writer.Write("")
-                writer.Flush()
-                writer.Close()
-                writer.Dispose()
-
-                MessageBox.Show("The global file path has been removed.  Please run Tip Tracker to configure the global file path.", "Reset Successful", MessageBoxButtons.OK)
-            Catch ex As Exception
-                MessageBox.Show("Unable to reset the global file path.  You must reset the path manually.", "Cannot Reset Path", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-        Else
-            MessageBox.Show("The global file path has not been set.  Please run Tip Tracker to configure the global file path.")
-        End If
+        Try
+            MachineSettings.ClearGlobalFilePath()
+            MessageBox.Show("The global file path has been removed.  Please run Tip Tracker to configure the " &
+                "global file path.", "Reset Successful", MessageBoxButtons.OK)
+        Catch ex As Exception
+            MessageBox.Show("Unable to reset the global file path.  You must reset the path manually.",
+                "Cannot Reset Path", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Friend Function GetGlobalFilePath() As String

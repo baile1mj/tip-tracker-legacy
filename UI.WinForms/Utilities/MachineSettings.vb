@@ -39,18 +39,28 @@ Namespace Utilities
                 IO.Directory.CreateDirectory(Directory)
             End If
 
+            WriteGlobalFilePath(filePath)
+        End Sub
+
+        ''' <summary>
+        ''' Clears the global file path to force a new file to be selected.
+        ''' </summary>
+        Public Shared Sub ClearGlobalFilePath()
+            WriteGlobalFilePath(String.Empty)
+        End Sub
+
+        ''' <summary>
+        ''' Writes a new path to the machine settings file.
+        ''' </summary>
+        ''' <param name="filePath">The path to write.</param>
+        Private Shared Sub WriteGlobalFilePath(filePath As String)
             Dim locationFilePath As String = Path.Combine(Directory, _SETTINGS_FILE)
-            Dim writer As New StreamWriter(locationFilePath, False)
 
             Try
-                writer.Write(filePath)
-                writer.Flush()
-                writer.Close()
-                writer.Dispose()
+                File.WriteAllText(locationFilePath, filePath)
             Catch ex As Exception
                 Throw New Exception("Could not write the changes to the file")
             End Try
         End Sub
-
     End Class
 End Namespace
