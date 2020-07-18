@@ -1,116 +1,94 @@
-Imports System.IO
+Imports TipTracker.Utilities
 
 Public Class frmGlobalFile
-    Private m_strPath As String = ""
+    Private ReadOnly _globalSettingsFile As GlobalSettingsFile
+    Private _globalSettings As GlobalSettings
 
-    Private Sub frmGlobalFile_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Dim globalPath As String = frmMain.GetGlobalFilePath()
+    Public Sub New(ByVal globalSettingsFile As GlobalSettingsFile)
+        InitializeComponent()
 
-        If Directory.Exists(Path.GetDirectoryName(globalPath)) Then
-            ' Try
-            Dim reader As StreamReader = New StreamReader(globalPath)
-
-            Me.m_strPath = reader.ReadToEnd().Trim()
-
-            reader.Close()
-            reader.Dispose()
-
-            Dim objFileEncoder As New clsFileEncoder
-
-            Me.GlobalDataSet.ReadXml(objFileEncoder.DecodeFile(m_strPath))
-
-            objFileEncoder.Dispose()
-            objFileEncoder = Nothing
-
-            Me.GlobalDataSet.AcceptChanges()
-            'Catch ex As Exception
-            'MessageBox.Show("Cannot load global settings file.  File may be corrupt or its contents may have been changed.", "Error Loading File", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            ' Me.Close()
-            ' End Try
-        Else
-            MessageBox.Show("Could not find global file.  Run Tip Tracker to create a new file.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        If IsNothing(globalSettingsFile) Then
+            Throw New ArgumentNullException(NameOf(globalSettingsFile), "The global settings file instance cannot be null.")
         End If
+
+        _globalSettingsFile = globalSettingsFile
     End Sub
 
-    Private Sub ExitToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExitToolStripMenuItem.Click
-        Me.Close()
-    End Sub
-
-    Private Sub SaveToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaveToolStripMenuItem.Click
+    Private Sub frmGlobalFile_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
         Try
-            Dim objFileEncoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            Me.GlobalDataSet.WriteXml(objDSStream)
-
-            objFileEncoder.EncodeFile(m_strPath, objDSStream)
-
-            objFileEncoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-            Me.GlobalDataSet.AcceptChanges()
+            _globalSettings = _globalSettingsFile.ReadGlobalSettings()
         Catch ex As Exception
-            MessageBox.Show("Could not save file.", "Error", MessageBoxButtons.OK)
-            Exit Sub
+            MessageBox.Show($"An error occurred while loading the global settings file: ""{ex.Message}"".",
+                "Error Loading Settings", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Close()
+        End Try
+
+        SettingsBindingSource.DataSource = _globalSettings.GlobalDataSet
+        SettingsBindingSource.DataMember = _globalSettings.GlobalDataSet.Settings.TableName
+
+        ServersBindingSource.DataSource = _globalSettings.GlobalDataSet
+        ServersBindingSource.DataMember = _globalSettings.GlobalDataSet.Servers.TableName
+    End Sub
+
+    Private Sub ExitToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ExitToolStripMenuItem.Click
+        Close()
+    End Sub
+
+    Private Sub SaveToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SaveToolStripMenuItem.Click
+        SaveFile()
+    End Sub
+
+    Private Function SaveFile() As Boolean
+        Dim isSuccessful As Boolean = True
+        Try
+            _globalSettingsFile.WriteGlobalSettings(_globalSettings)
+        Catch ex As Exception
+            MessageBox.Show($"An error occurred when saving the file: ""{ex.Message}"".", "Error Saving File",
+                MessageBoxButtons.OK, MessageBoxIcon.Error)
+            isSuccessful = False
+        End Try
+
+        Return isSuccessful
+    End Function
+
+    Private Sub SaveXMLToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SaveXMLToolStripMenuItem.Click
+        Dim strFileName As String
+
+        Using dlgSave As New SaveFileDialog() With {
+            .AddExtension = True,
+            .DefaultExt = ".xml",
+            .FileName = "Global Settings",
+            .Filter = "XML File (*.xml)|*.xml",
+            .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+            .OverwritePrompt = True,
+            .RestoreDirectory = True,
+            .SupportMultiDottedExtensions = True,
+            .Title = "Save File"}
+
+            If dlgSave.ShowDialog <> DialogResult.OK Then Exit Sub
+
+            strFileName = dlgSave.FileName
+        End Using
+
+        Try
+            _globalSettings.GlobalDataSet.WriteXml(strFileName)
+        Catch ex As Exception
+            MessageBox.Show($"An error occurred while saving the XML: ""{ex.Message}"".", "Error Saving XML",
+                MessageBoxButtons.OK)
         End Try
     End Sub
 
-    Private Sub SaveXMLToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaveXMLToolStripMenuItem.Click
-        Dim strFileName As String = ""
-        Dim dlgSave As New SaveFileDialog
+    Private Sub frmDataFile_FormClosing(ByVal sender As Object, ByVal e As FormClosingEventArgs) Handles Me.FormClosing
+        If Not _globalSettings.GlobalDataSet.HasChanges Then Exit Sub
 
-        With dlgSave
-            .AddExtension = True
-            .DefaultExt = ".xml"
-            .Filter = "XML File (*.xml)|*.xml"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .OverwritePrompt = True
-            .RestoreDirectory = True
-            .SupportMultiDottedExtensions = True
-            .Title = "Save File"
-        End With
+        Dim userResponse As DialogResult = MessageBox.Show("Do you wish to save your changes to the global settings?",
+            "Save Changes", MessageBoxButtons.YesNoCancel)
 
-        If dlgSave.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgSave.Dispose()
-            Exit Sub
-        End If
-
-        strFileName = dlgSave.FileName
-
-        Try
-            Me.GlobalDataSet.WriteXml(strFileName)
-        Catch ex As Exception
-            MessageBox.Show("Could not save XML.", "Error", MessageBoxButtons.OK)
-            Exit Sub
-        End Try
-    End Sub
-
-    Private Sub frmDataFile_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-        If Me.GlobalDataSet.HasChanges Then
-            Select Case MessageBox.Show("Do you want to discard your changes?", "Discard Changes", MessageBoxButtons.YesNoCancel)
-                Case Windows.Forms.DialogResult.No
-                    Try
-                        Dim objFileEncoder As New clsFileEncoder
-                        Dim objDSStream As New MemoryStream
-
-                        Me.GlobalDataSet.WriteXml(objDSStream)
-
-                        objFileEncoder.EncodeFile(m_strPath, objDSStream)
-
-                        objFileEncoder.Dispose()
-                        objDSStream.Close()
-                        objDSStream.Dispose()
-                        Me.GlobalDataSet.AcceptChanges()
-                    Catch ex As Exception
-                        MessageBox.Show("Could not save file.", "Error", MessageBoxButtons.OK)
-                        Exit Sub
-                    End Try
-                Case Windows.Forms.DialogResult.Yes
-                    Exit Sub
-                Case Windows.Forms.DialogResult.Cancel
-                    e.Cancel = True
-                    Exit Sub
-            End Select
+        If userResponse = DialogResult.Yes Then
+            Dim isSuccessful As Boolean = SaveFile()
+            e.Cancel = Not isSuccessful
+        ElseIf userResponse = DialogResult.Cancel Then
+            e.Cancel = True
         End If
     End Sub
 

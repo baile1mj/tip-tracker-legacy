@@ -30,8 +30,10 @@ Public Class frmMain
         frmDataFile.Show()
     End Sub
 
-    Private Sub btnGlobalFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnGlobalFile.Click
-        frmGlobalFile.Show()
+    Private Sub btnGlobalFile_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnGlobalFile.Click
+        Dim globalSettingsFile As New GlobalSettingsFile(MachineSettings.GetGlobalFilePath())
+        Dim globalFileEditor As New frmGlobalFile(globalSettingsFile)
+        globalFileEditor.Show()
     End Sub
 
     Private Sub btnDecodeFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDecodeFile.Click
@@ -141,11 +143,4 @@ Public Class frmMain
                 "Cannot Reset Path", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-
-    Friend Function GetGlobalFilePath() As String
-        Dim dir As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Tip Tracker")
-        Const FILE As String = "GlobalFile.location"
-
-        Return Path.Combine(dir, FILE)
-    End Function
 End Class
