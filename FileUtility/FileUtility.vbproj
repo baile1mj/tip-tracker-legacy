@@ -110,12 +110,6 @@
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GlobalDataSet.designer.vb">
-      <DependentUpon>GlobalDataSet.vb</DependentUpon>
-    </Compile>
-    <Compile Include="GlobalDataSet.vb">
-      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -168,15 +162,6 @@
     </None>
     <None Include="FileDataSet.xss">
       <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="GlobalDataSet.xsc">
-      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="GlobalDataSet.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="GlobalDataSet.xss">
-      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
     </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
