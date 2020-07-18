@@ -194,9 +194,9 @@
     <Content Include="TT.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tip Tracker\Tip Tracker.vbproj">
+    <ProjectReference Include="..\UI.WinForms\UI.WinForms.vbproj">
       <Project>{c8b8852c-6cba-4fc6-a342-2b57f110b251}</Project>
-      <Name>Tip Tracker</Name>
+      <Name>UI.WinForms</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
