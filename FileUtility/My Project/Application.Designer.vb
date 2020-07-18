@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.TipTracker.Debug.frmMain
+            Me.MainForm = Global.TipTracker.FileDebug.frmMain
         End Sub
     End Class
 End Namespace

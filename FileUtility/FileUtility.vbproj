@@ -7,9 +7,9 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E4750200-B940-4AE1-A0AC-7B9FD90481C8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>TipTracker.Debug.My.MyApplication</StartupObject>
-    <RootNamespace>TipTracker.Debug</RootNamespace>
-    <AssemblyName>TipTracker.Debug</AssemblyName>
+    <StartupObject>TipTracker.FileDebug.My.MyApplication</StartupObject>
+    <RootNamespace>TipTracker.FileDebug</RootNamespace>
+    <AssemblyName>TipTracker.FileDebug</AssemblyName>
     <MyType>WindowsForms</MyType>
     <OptionStrict>On</OptionStrict>
     <ApplicationIcon>TT.ico</ApplicationIcon>
@@ -26,7 +26,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>TipTracker.Debug.xml</DocumentationFile>
+    <DocumentationFile>TipTracker.FileDebug.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -35,7 +35,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>TipTracker.Debug.xml</DocumentationFile>
+    <DocumentationFile>TipTracker.FileDebug.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -43,7 +43,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DocumentationFile>TipTracker.Debug.xml</DocumentationFile>
+    <DocumentationFile>TipTracker.FileDebug.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -51,7 +51,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DocumentationFile>TipTracker.Debug.xml</DocumentationFile>
+    <DocumentationFile>TipTracker.FileDebug.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
     <DebugType>pdbonly</DebugType>
