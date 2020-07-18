@@ -26,6 +26,7 @@
         ''' <param name="globalSettings">The settings to write.</param>
         Public Sub WriteGlobalSettings(ByVal globalSettings As GlobalSettings)
             Write(globalSettings.GlobalDataSet)
+            globalSettings.GlobalDataSet.AcceptChanges()
         End Sub
 
         ''' <summary>
@@ -34,6 +35,7 @@
         ''' <returns>The settings contained in the file.</returns>
         Public Function ReadGlobalSettings() As GlobalSettings
             Dim globalDataSet As GlobalDataSet = Read()
+            globalDataSet.AcceptChanges()
             Return New GlobalSettings(globalDataSet)
         End Function
 
