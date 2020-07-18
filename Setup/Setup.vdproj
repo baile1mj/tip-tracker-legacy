@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:Tip Tracker Setup"
+"ProjectName" = "8:Setup"
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
@@ -13,12 +13,6 @@
 "SccProvider" = "8:"
     "Hierarchy"
     {
-        "Entry"
-        {
-        "MsmKey" = "8:_183E16CA4911AA8453770A4F16A2D485"
-        "OwnerKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
         "Entry"
         {
         "MsmKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
@@ -51,6 +45,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_516C314BEFF5C1805A4E6A8C5927DD9C"
+        "OwnerKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4DB9F6FB31F5493EA5E43DDF9FF50AC5"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,13 +58,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_183E16CA4911AA8453770A4F16A2D485"
+        "OwnerKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
+        "OwnerKey" = "8:_516C314BEFF5C1805A4E6A8C5927DD9C"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -162,37 +162,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_183E16CA4911AA8453770A4F16A2D485"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Tip Tracker, Version=3.1.0.0, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_183E16CA4911AA8453770A4F16A2D485"
-                    {
-                    "Name" = "8:Tip Tracker.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Tip Tracker.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4F827FD218A1462FB04358FB90619404"
             {
             "SourcePath" = "8:..\\..\\..\\..\\Visual Studio 2005\\Images\\Tip Tracker\\TTBanner.jpg"
@@ -251,6 +220,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_516C314BEFF5C1805A4E6A8C5927DD9C"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Tip Tracker, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_516C314BEFF5C1805A4E6A8C5927DD9C"
+                    {
+                    "Name" = "8:Tip Tracker.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Tip Tracker.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -903,7 +903,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
             {
-            "SourcePath" = "8:..\\TT Debug\\obj\\x86\\Release\\TT Debug.exe"
+            "SourcePath" = "8:..\\FileUtility\\obj\\Debug\\TT Debug.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
@@ -931,7 +931,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4DB9F6FB31F5493EA5E43DDF9FF50AC5"
             {
-            "SourcePath" = "8:..\\Tip Tracker\\obj\\x86\\Release\\Tip Tracker.exe"
+            "SourcePath" = "8:..\\UI.WinForms\\obj\\Debug\\Tip Tracker.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"

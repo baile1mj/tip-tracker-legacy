@@ -7,7 +7,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "UI.WinForms", "UI.WinForms\
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "FileUtility", "FileUtility\FileUtility.vbproj", "{E4750200-B940-4AE1-A0AC-7B9FD90481C8}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Tip Tracker Setup", "Tip Tracker Setup\Tip Tracker Setup.vdproj", "{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
