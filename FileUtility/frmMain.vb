@@ -1,6 +1,5 @@
 Imports System.IO
-Imports System.IO.File
-Imports Tip_Tracker.Utilities
+Imports TipTracker.Utilities
 
 Public Class frmMain
     Private m_strGlobalFilePath As String = GetGlobalFilePath()

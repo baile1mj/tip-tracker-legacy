@@ -55,7 +55,7 @@ Partial Class frmGlobalFile
         Me.DataGridView1 = New System.Windows.Forms.DataGridView
         Me.DataGridView2 = New System.Windows.Forms.DataGridView
         Me.SettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.GlobalDataSet = New TT_Debug.GlobalDataSet
+        Me.GlobalDataSet = New TipTracker.Debug.GlobalDataSet
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.SettingDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn
         Me.ValueDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn
@@ -461,7 +461,7 @@ Partial Class frmGlobalFile
     Friend WithEvents SaveXMLToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ExitToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents GlobalDataSet As TT_Debug.GlobalDataSet
+    Friend WithEvents GlobalDataSet As TipTracker.Debug.GlobalDataSet
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents SettingsBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource

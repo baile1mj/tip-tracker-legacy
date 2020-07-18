@@ -25,7 +25,7 @@ Partial Class frmDataFile
         Me.BindingNavigator1 = New System.Windows.Forms.BindingNavigator(Me.components)
         Me.BindingNavigatorAddNewItem = New System.Windows.Forms.ToolStripButton
         Me.TipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.FileDataSet = New TT_Debug.FileDataSet
+        Me.FileDataSet = New TipTracker.Debug.FileDataSet
         Me.BindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel
         Me.BindingNavigatorDeleteItem = New System.Windows.Forms.ToolStripButton
         Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton
@@ -850,7 +850,7 @@ Partial Class frmDataFile
     End Sub
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents FileDataSet As TT_Debug.FileDataSet
+    Friend WithEvents FileDataSet As TipTracker.Debug.FileDataSet
     Friend WithEvents TipsBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents SettingsBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents SpecialFunctionsBindingSource As System.Windows.Forms.BindingSource
