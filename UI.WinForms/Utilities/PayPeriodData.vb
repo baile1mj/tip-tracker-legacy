@@ -69,10 +69,10 @@ Namespace Utilities
                 recordDate = DateTime.Parse(row("WorkingDate").ToString())
 
                 If recordDate < periodStart Then
-                    row("Date") = periodStart
+                    row("WorkingDate") = periodStart
                     hasRecordOutsidePeriod = True
                 ElseIf recordDate > periodEnd Then
-                    row("Date") = periodEnd
+                    row("WorkingDate") = periodEnd
                     hasRecordOutsidePeriod = True
                 End If
             Next
