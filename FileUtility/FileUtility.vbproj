@@ -77,14 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsFileEncoder.vb" />
-    <Compile Include="FileDataSet.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="FileDataSet.vb">
-      <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="frmDataFile.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -152,17 +144,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="FileDataSet.xsc">
-      <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="FileDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>FileDataSet.Designer.vb</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="FileDataSet.xss">
-      <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
