@@ -23,7 +23,7 @@ Partial Class frmEnterTips
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEnterTips))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.FileDataSet = New Tip_Tracker.FileDataSet()
+        Me.FileDataSet = New TipTracker.FileDataSet()
         Me.strStatusStrip = New System.Windows.Forms.StatusStrip()
         Me.lblWorkingDate = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblPeriodStart = New System.Windows.Forms.ToolStripStatusLabel()
@@ -100,7 +100,7 @@ Partial Class frmEnterTips
         Me.btnQuickAddCashTips = New System.Windows.Forms.Button()
         Me.cboCAServer = New System.Windows.Forms.ComboBox()
         Me.CAServersLookupBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.ServersLookupDataset = New Tip_Tracker.ServersLookupDataset()
+        Me.ServersLookupDataset = New TipTracker.ServersLookupDataset()
         Me.lblCAServerName = New System.Windows.Forms.Label()
         Me.CashDataGridView = New System.Windows.Forms.DataGridView()
         Me.CAID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -188,7 +188,7 @@ Partial Class frmEnterTips
         Me.TextBox12 = New System.Windows.Forms.TextBox()
         Me.dlgOpenFile = New System.Windows.Forms.OpenFileDialog()
         Me.dlgSaveFile = New System.Windows.Forms.SaveFileDialog()
-        Me.ImportFileDataSet = New Tip_Tracker.FileDataSet()
+        Me.ImportFileDataSet = New TipTracker.FileDataSet()
         CType(Me.ServersBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.strStatusStrip.SuspendLayout()
@@ -1746,7 +1746,7 @@ Partial Class frmEnterTips
     Friend WithEvents lblPeriodEnd As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents lblSystemDate As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents FileDataSet As Tip_Tracker.FileDataSet
+    Friend WithEvents FileDataSet As TipTracker.FileDataSet
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents tabTipsTabControl As System.Windows.Forms.TabControl
@@ -1841,7 +1841,7 @@ Partial Class frmEnterTips
     Friend WithEvents mnuDeleteSFTip As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents dlgOpenFile As System.Windows.Forms.OpenFileDialog
     Friend WithEvents dlgSaveFile As System.Windows.Forms.SaveFileDialog
-    Friend WithEvents ImportFileDataSet As Tip_Tracker.FileDataSet
+    Friend WithEvents ImportFileDataSet As TipTracker.FileDataSet
     Friend WithEvents ServersServerNumber As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ServersFirstName As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ServersLastName As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -1858,7 +1858,7 @@ Partial Class frmEnterTips
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuCopyFromTemplate As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents btnManageFunctions As System.Windows.Forms.Button
-    Friend WithEvents ServersLookupDataset As Tip_Tracker.ServersLookupDataset
+    Friend WithEvents ServersLookupDataset As TipTracker.ServersLookupDataset
     Friend WithEvents lblCAServerName As System.Windows.Forms.Label
     Friend WithEvents CAServersLookupBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents cboCAServer As System.Windows.Forms.ComboBox

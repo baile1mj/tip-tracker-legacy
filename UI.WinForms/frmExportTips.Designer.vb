@@ -26,7 +26,7 @@ Partial Class frmExportTips
         Me.btnOK = New System.Windows.Forms.Button
         Me.btnCancel = New System.Windows.Forms.Button
         Me.grpSortOrder = New System.Windows.Forms.GroupBox
-        Me.FileDataSet = New Tip_Tracker.FileDataSet
+        Me.FileDataSet = New TipTracker.FileDataSet
         Me.gprServersToInclude = New System.Windows.Forms.GroupBox
         Me.cboServers = New System.Windows.Forms.ComboBox
         Me.optSelectedServer = New System.Windows.Forms.RadioButton
@@ -41,7 +41,7 @@ Partial Class frmExportTips
         Me.optSelectedDate = New System.Windows.Forms.RadioButton
         Me.optAllDates = New System.Windows.Forms.RadioButton
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.ServersLookupDataset = New Tip_Tracker.ServersLookupDataset
+        Me.ServersLookupDataset = New TipTracker.ServersLookupDataset
         Me.cboSortLevel1 = New System.Windows.Forms.ComboBox
         Me.lblSortLevel1 = New System.Windows.Forms.Label
         Me.lblSortLevel2 = New System.Windows.Forms.Label
@@ -372,7 +372,7 @@ Partial Class frmExportTips
     Friend WithEvents btnOK As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
     Friend WithEvents grpSortOrder As System.Windows.Forms.GroupBox
-    Friend WithEvents FileDataSet As Tip_Tracker.FileDataSet
+    Friend WithEvents FileDataSet As TipTracker.FileDataSet
     Friend WithEvents gprServersToInclude As System.Windows.Forms.GroupBox
     Friend WithEvents cboServers As System.Windows.Forms.ComboBox
     Friend WithEvents optSelectedServer As System.Windows.Forms.RadioButton
@@ -387,7 +387,7 @@ Partial Class frmExportTips
     Friend WithEvents optSelectedDate As System.Windows.Forms.RadioButton
     Friend WithEvents optAllDates As System.Windows.Forms.RadioButton
     Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents ServersLookupDataset As Tip_Tracker.ServersLookupDataset
+    Friend WithEvents ServersLookupDataset As TipTracker.ServersLookupDataset
     Friend WithEvents lblSortLevel1 As System.Windows.Forms.Label
     Friend WithEvents cboSortLevel1 As System.Windows.Forms.ComboBox
     Friend WithEvents cboSortLevel3 As System.Windows.Forms.ComboBox

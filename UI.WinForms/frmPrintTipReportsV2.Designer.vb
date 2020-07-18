@@ -29,7 +29,7 @@ Partial Class frmPrintTipReportsV2
         Me.gprServers = New System.Windows.Forms.GroupBox
         Me.cboServers = New System.Windows.Forms.ComboBox
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.ServersLookupDataset = New Tip_Tracker.ServersLookupDataset
+        Me.ServersLookupDataset = New TipTracker.ServersLookupDataset
         Me.optSelectedServer = New System.Windows.Forms.RadioButton
         Me.optAllServers = New System.Windows.Forms.RadioButton
         Me.grpDates = New System.Windows.Forms.GroupBox
@@ -374,7 +374,7 @@ Partial Class frmPrintTipReportsV2
     Friend WithEvents grpPrintOrder As System.Windows.Forms.GroupBox
     Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents cboServers As System.Windows.Forms.ComboBox
-    Friend WithEvents ServersLookupDataset As Tip_Tracker.ServersLookupDataset
+    Friend WithEvents ServersLookupDataset As TipTracker.ServersLookupDataset
     Friend WithEvents dlgPrint As System.Windows.Forms.PrintDialog
     Friend WithEvents optByDate As System.Windows.Forms.RadioButton
     Friend WithEvents optByServer As System.Windows.Forms.RadioButton

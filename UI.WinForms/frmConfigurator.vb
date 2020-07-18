@@ -1,5 +1,5 @@
 Imports System.IO
-Imports Tip_Tracker.Utilities
+Imports TipTracker.Utilities
 
 ''' <summary>
 ''' Provides a user interface for getting the file path for the global settings file.
