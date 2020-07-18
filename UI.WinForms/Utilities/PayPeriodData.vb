@@ -88,7 +88,6 @@ Namespace Utilities
                 If IsDBNull(row("SuppressChit")) Then row("SuppressChit") = False
             Next
 
-            dataSet.AcceptChanges()
             FileDataSet = dataSet
         End Sub
 
