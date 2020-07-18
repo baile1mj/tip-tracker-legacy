@@ -269,6 +269,8 @@
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </Compile>
     <Compile Include="Utilities\ObfuscatedDataSetFile.vb" />
+    <Compile Include="Utilities\PayPeriodData.vb" />
+    <Compile Include="Utilities\PayPeriodFile.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmAbout.resx">
