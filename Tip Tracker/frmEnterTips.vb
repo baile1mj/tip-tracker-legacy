@@ -1,39 +1,18 @@
 Imports System.IO
 Imports System.Drawing.Printing
+Imports Tip_Tracker.Utilities
 
 Public Class frmEnterTips
-    Private m_dataFileStream As FileStream
+    Public ReadOnly Property File As PayPeriodFile
+    Public ReadOnly Property Data As PayPeriodData
 
-    Friend Property CurrentFile As String
+    Public Sub New(ByVal file As PayPeriodFile, ByVal data As PayPeriodData)
+        InitializeComponent()
 
-    Private Sub frmEnterTips_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-        'Check for changes in the dataset then prompt the user to save if there are changes.
-        If Me.FileDataSet.HasChanges Then
-            Select Case MessageBox.Show("Save changes to the file " & Me.Text & "?", "Save Changes", MessageBoxButtons.YesNoCancel)
-                Case Windows.Forms.DialogResult.Yes
-                    SaveData()
-                Case Windows.Forms.DialogResult.No
-                    Me.FileDataSet.Clear()
-                    Me.FileDataSet.AcceptChanges()
-                Case Windows.Forms.DialogResult.Cancel
-                    e.Cancel = True
-                    Exit Sub
-            End Select
-        End If
-
-        'Perform cleanup
-        Try
-            m_dataFileStream.Close()
-            m_dataFileStream.Dispose()
-        Catch ex As Exception
-
-        End Try
-
-        'Check to see if this is the last data file that is open.  If it is call LastFileClosing()
-        'to disable the menu commands that require a file to be open.
-        If frmMain.NumberOfFilesOpen = 1 Then
-            frmMain.LastFileClosing()
-        End If
+        Me.File = file
+        Me.Data = data
+        FileDataSet = data.FileDataSet
+        Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
 
     Private Sub frmEnterTips_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -42,18 +21,28 @@ Public Class frmEnterTips
         Me.lblSystemDate.Text = "System Date: " & Format(DateTime.Today, "M/d/yyyy")
         Me.WindowState = FormWindowState.Maximized
 
+        'Bind the data sources to the display.
+        ServersBindingSource.DataSource = Data.FileDataSet
+        ServersBindingSource.DataMember = Data.FileDataSet.Servers.TableName
+
+        CreditCardTipsBindingSource.DataSource = Data.FileDataSet
+        CreditCardTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
+
+        RoomChargeTipsBindingSource.DataSource = Data.FileDataSet
+        RoomChargeTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
+
+        CashTipsBindingSource.DataSource = Data.FileDataSet
+        CashTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
+
+        SpecialFunctionTipsBindingSource.DataSource = Data.FileDataSet
+        SpecialFunctionTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
+
+        SpecialFunctionBindingSource.DataSource = Data.FileDataSet
+        SpecialFunctionBindingSource.DataMember = Data.FileDataSet.SpecialFunctions.TableName
+
+
         'Set the servers binding source sort mode.
         Me.ServersBindingSource.Sort = "LastName"
-
-        'Extract the file name then change the text of the form to show the file name.
-        Me.Text = Path.GetFileNameWithoutExtension(Me.CurrentFile)
-
-        'Call the subroutine to decode the xml file and read it into the dataset.
-        If LoadData() = False Then
-            Me.FileDataSet.AcceptChanges()
-            Me.Close()
-            Exit Sub
-        End If
 
         LoadServerCombos()
 
@@ -78,7 +67,7 @@ Public Class frmEnterTips
         'Populate the server lookup data table.
         Dim dvTemp As New DataView
 
-        dvTemp.Table = Me.FileDataSet.Servers
+        dvTemp.Table = Data.FileDataSet.Servers
         dvTemp.Sort = "LastName, FirstName"
 
         If dvTemp.Count <> 0 Then
@@ -118,119 +107,10 @@ Public Class frmEnterTips
         End If
     End Sub
 
-    Private Function LoadData() As Boolean
-        Try
-            Dim objFileDecoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            objDSStream = objFileDecoder.DecodeFile(Me.CurrentFile)
-
-            objDSStream.Flush()
-            objDSStream.Seek(0, SeekOrigin.Begin)
-
-            Me.FileDataSet.ReadXml(objDSStream)
-
-            objFileDecoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-
-            Me.FileDataSet.AcceptChanges()
-
-            'Hook the file so that another process cannot change it while it is open.
-            m_dataFileStream = File.Open(Me.CurrentFile, FileMode.Open)
-
-            Return True
-
-        Catch ex As Exception
-            MessageBox.Show("Could not load the requested data file.  Contact support.", "Error Loading File", MessageBoxButtons.OK)
-            Return False
-        End Try
-    End Function
-
-    Friend Sub SaveData()
-        Try
-            m_dataFileStream.Close()
-
-            Dim objFileEncoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            Me.FileDataSet.WriteXml(objDSStream)
-
-            objFileEncoder.EncodeFile(Me.CurrentFile, objDSStream)
-
-            objFileEncoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-            Me.FileDataSet.AcceptChanges()
-        Catch ex As Exception
-            MessageBox.Show("Could not save file.  Contact support.", "Error Saving File", MessageBoxButtons.OK)
-        End Try
-
-        Try
-            m_dataFileStream = File.Open(Me.CurrentFile, FileMode.Open)
-        Catch ex As Exception
-            MessageBox.Show("Could not reopen filestream.  Contact support.", "Technical Error", MessageBoxButtons.OK)
-        End Try
-
-        cboSelectSpecialFunction.SelectedIndex = -1
-    End Sub
-
-    Friend Sub SaveDataAs(ByVal NewFileName As String)
-        'Save dataset under a different file name.
-        Try
-            m_dataFileStream.Close()
-
-            Dim objFileEncoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            Me.FileDataSet.WriteXml(objDSStream)
-
-            objFileEncoder.EncodeFile(NewFileName, objDSStream)
-
-            objFileEncoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-            Me.FileDataSet.AcceptChanges()
-
-            Me.CurrentFile = NewFileName
-
-            Dim intBegin As Integer = 0
-            Dim intEnd As Integer = 0
-
-            For i As Integer = Len(Me.CurrentFile) To 1 Step -1
-                Dim c As Char = GetChar(Me.CurrentFile, i)
-                If c = "." Then
-                    intEnd = i
-                End If
-                If c = "\" Then
-                    intBegin = i
-                    Exit For
-                End If
-            Next
-
-            If intBegin <> 1 And intEnd <> 1 And intBegin <> 0 And intEnd <> 0 And intBegin < intEnd Then
-                Dim strFileName As String = Mid(Me.CurrentFile, intBegin + 1, intEnd - intBegin - 1)
-                Me.Text = strFileName
-            Else
-                Me.Text = "######"
-            End If
-
-        Catch ex As Exception
-            MessageBox.Show("Could not save file.  Contact support.", "Error Saving File", MessageBoxButtons.OK)
-            Exit Sub
-        End Try
-
-        Try
-            m_dataFileStream = File.Open(NewFileName, FileMode.Open)
-        Catch ex As Exception
-            MessageBox.Show("Could not reopen filestream.  Contact support.", "Technical Error", MessageBoxButtons.OK)
-        End Try
-    End Sub
-
     Private Sub UpdateDateLabels()
-        Dim dtePeriodStart As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        Dim dtePeriodStart As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dtePeriodEnd As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
 
         Me.lblPeriodStart.Text = "Period Start: " & Format(dtePeriodStart, "M/d/yyyy")
         Me.lblPeriodEnd.Text = "Period End: " & Format(dtePeriodEnd, "M/d/yyyy")
@@ -238,7 +118,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub SetSelectionFilters()
-        Dim strWorkingDate As String = Format(CDate(Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value")), "M/d/yyyy")
+        Dim strWorkingDate As String = Format(CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value")), "M/d/yyyy")
         Me.CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
         Me.CreditCardTipsBindingSource.Sort = "TipID"
 
@@ -306,8 +186,8 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnFinalize_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnFinalize.Click
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        Dim dtePeriodEnd As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
 
         If dteWorkingDate = dtePeriodEnd Then
             MessageBox.Show("The current working date is the last day in the pay period.  You cannot " &
@@ -322,15 +202,15 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value") = DateAdd(DateInterval.Day, 1, dteWorkingDate)
+        Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value") = DateAdd(DateInterval.Day, 1, dteWorkingDate)
         UpdateDateLabels()
         SetSelectionFilters()
     End Sub
 
     Private Sub btnSelectWorkingDate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSelectWorkingDate.Click
-        Dim dtePeriodStart As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        Dim dtePeriodStart As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dtePeriodEnd As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
 
         With frmSelectDate
             .MinDate = dtePeriodStart
@@ -347,7 +227,7 @@ Public Class frmEnterTips
                 Exit Sub
             End If
 
-            Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value") = .SelectedDate
+            Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value") = .SelectedDate
 
             .Dispose()
         End With
@@ -357,6 +237,8 @@ Public Class frmEnterTips
     End Sub
 
     'Credit card operations begin below:
+#Region "CreditCardOperations"
+
     Private Sub AddCreditCardTip()
         If txtCCServerNumber.Text = "" Then
             MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
@@ -379,16 +261,16 @@ Public Class frmEnterTips
 
         AutoInsertCCDecimal()
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = txtCCAmount.Text
         drNewRow("ServerNumber") = txtCCServerNumber.Text
-        drNewRow("FirstName") = Me.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("FirstName").ToString
-        drNewRow("LastName") = Me.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("LastName").ToString
+        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("FirstName").ToString
+        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("LastName").ToString
         drNewRow("Description") = "Credit Card"
-        drNewRow("WorkingDate") = CDate(Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
         UpdateCCTotals()
 
         txtCCAmount.Clear()
@@ -424,9 +306,9 @@ Public Class frmEnterTips
     Private Sub txtCCServerNumber_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCCServerNumber.LostFocus
         If txtCCServerNumber.Text = "" Then Exit Sub
 
-        If Not (Me.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text) Is Nothing) Then
-            Dim strFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("FirstName").ToString
-            Dim strLastName As String = Me.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("LastName").ToString
+        If Not (Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text) Is Nothing) Then
+            Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("FirstName").ToString
+            Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("LastName").ToString
 
             txtCCServerName.Text = strFirstName & " " & strLastName
         Else
@@ -472,16 +354,16 @@ Public Class frmEnterTips
 
         Dim intTipID As Integer = CInt(Me.CreditCardDataGridView.Item("CCID", Me.CreditCardTipsBindingSource.Position).Value)
 
-        Dim strTipAmount As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
+        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
+        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
 
-        Me.FileDataSet.Tips.FindByTipID(intTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
         UpdateCCTotals()
     End Sub
 
@@ -492,7 +374,7 @@ Public Class frmEnterTips
     Private Sub mnuReassignCCTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignCCTip.Click
         If Me.CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Me.FileDataSet
+        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
         If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -504,37 +386,37 @@ Public Class frmEnterTips
         Dim intSourceTipID As Integer = CInt(Me.CreditCardDataGridView.Item("CCID", Me.CreditCardTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
-        Dim strDestFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
+        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
+        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
         If strSourceServerNumber = strDestServerNumber Then
             MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
         Dim strSpecialFunction As String = ""
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = decAmount
         drNewRow("ServerNumber") = strDestServerNumber
         drNewRow("FirstName") = strDestFirstName
         drNewRow("LastName") = strDestLastName
         drNewRow("Description") = strDescription
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             drNewRow("SpecialFunction") = strSpecialFunction
         End If
         drNewRow("WorkingDate") = dteWorkingDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmSelectServer.Dispose()
         UpdateCCTotals()
@@ -545,15 +427,15 @@ Public Class frmEnterTips
 
         Dim intSourceTipID As Integer = CInt(Me.CreditCardDataGridView.Item("CCID", Me.CreditCardTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
             .TipAmount = decAmount
             .WorkingDate = dteWorkingDate
             .TipType = strDescription
-            .m_dsParentDataSet = Me.FileDataSet
+            .m_dsParentDataSet = Data.FileDataSet
         End With
 
         If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -571,14 +453,14 @@ Public Class frmEnterTips
         Dim decNewAmount As Decimal = frmEditTip.TipAmount
         Dim strNewDescription As String = frmEditTip.TipType
         Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
+        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
+        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Me.FileDataSet.SpecialFunctions
+            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
@@ -589,11 +471,11 @@ Public Class frmEnterTips
             End If
 
             strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Me.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
+            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
         End If
 
         If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
         End If
 
         frmSelectFunction.Dispose()
@@ -608,8 +490,8 @@ Public Class frmEnterTips
         End If
         drNewRow("WorkingDate") = dteNewDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmEditTip.Dispose()
         UpdateCCTotals()
@@ -617,8 +499,10 @@ Public Class frmEnterTips
         UpdateSFTotals()
         UpdateCATotals()
     End Sub
+#End Region
 
     'Room charge operations begin below:
+#Region "RoomChargeOperations"
     Private Sub AddRoomChargeTip()
         If txtRCServerNumber.Text = "" Then
             MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
@@ -641,16 +525,16 @@ Public Class frmEnterTips
 
         AutoInsertRCDecimal()
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = txtRCAmount.Text
         drNewRow("ServerNumber") = txtRCServerNumber.Text
-        drNewRow("FirstName") = Me.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("FirstName").ToString
-        drNewRow("LastName") = Me.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("LastName").ToString
+        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("FirstName").ToString
+        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("LastName").ToString
         drNewRow("Description") = "Room Charge"
-        drNewRow("WorkingDate") = CDate(Me.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
         UpdateRCTotals()
 
         txtRCAmount.Clear()
@@ -686,9 +570,9 @@ Public Class frmEnterTips
     Private Sub txtRCServerNumber_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtRCServerNumber.LostFocus
         If txtRCServerNumber.Text = "" Then Exit Sub
 
-        If Not (Me.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text) Is Nothing) Then
-            Dim strFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("FirstName").ToString
-            Dim strLastName As String = Me.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("LastName").ToString
+        If Not (Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text) Is Nothing) Then
+            Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("FirstName").ToString
+            Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("LastName").ToString
 
             txtRCServerName.Text = strFirstName & " " & strLastName
         Else
@@ -733,16 +617,16 @@ Public Class frmEnterTips
         If Me.RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
         Dim intTipID As Integer = CInt(Me.RoomChargeDataGridView.Item("RCID", Me.RoomChargeTipsBindingSource.Position).Value)
 
-        Dim strTipAmount As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
+        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
+        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
 
-        Me.FileDataSet.Tips.FindByTipID(intTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
         UpdateRCTotals()
     End Sub
 
@@ -753,7 +637,7 @@ Public Class frmEnterTips
     Private Sub mnuReassignRCTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignRCTip.Click
         If Me.RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Me.FileDataSet
+        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
         If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -765,37 +649,37 @@ Public Class frmEnterTips
         Dim intSourceTipID As Integer = CInt(Me.RoomChargeDataGridView.Item("RCID", Me.RoomChargeTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
-        Dim strDestFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
+        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
+        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
         If strSourceServerNumber = strDestServerNumber Then
             MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
         Dim strSpecialFunction As String
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = decAmount
         drNewRow("ServerNumber") = strDestServerNumber
         drNewRow("FirstName") = strDestFirstName
         drNewRow("LastName") = strDestLastName
         drNewRow("Description") = strDescription
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             drNewRow("SpecialFunction") = strSpecialFunction
         End If
         drNewRow("WorkingDate") = dteWorkingDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmSelectServer.Dispose()
     End Sub
@@ -805,15 +689,15 @@ Public Class frmEnterTips
 
         Dim intSourceTipID As Integer = CInt(Me.RoomChargeDataGridView.Item("RCID", Me.RoomChargeTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
             .TipAmount = decAmount
             .WorkingDate = dteWorkingDate
             .TipType = strDescription
-            .m_dsParentDataSet = Me.FileDataSet
+            .m_dsParentDataSet = Data.FileDataSet
         End With
 
         If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -831,14 +715,14 @@ Public Class frmEnterTips
         Dim decNewAmount As Decimal = frmEditTip.TipAmount
         Dim strNewDescription As String = frmEditTip.TipType
         Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
+        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
+        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Me.FileDataSet.SpecialFunctions
+            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
@@ -849,11 +733,11 @@ Public Class frmEnterTips
             End If
 
             strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Me.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
+            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
         End If
 
         If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
         End If
 
         frmSelectFunction.Dispose()
@@ -868,8 +752,8 @@ Public Class frmEnterTips
         End If
         drNewRow("WorkingDate") = dteNewDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmEditTip.Dispose()
         UpdateCCTotals()
@@ -877,8 +761,10 @@ Public Class frmEnterTips
         UpdateSFTotals()
         UpdateCATotals()
     End Sub
+#End Region
 
     'Cash operations begin below:
+#Region "CashOperations"
     Private Sub AddCashTip()
         If cboCAServer.SelectedIndex = -1 Then
             If cboCAServer.Text = "" Then
@@ -908,16 +794,16 @@ Public Class frmEnterTips
 
         AutoInsertCADecimal()
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = txtCAAmount.Text
         drNewRow("ServerNumber") = cboCAServer.SelectedValue.ToString
-        drNewRow("FirstName") = Me.FileDataSet.Servers.FindByServerNumber(cboCAServer.SelectedValue.ToString)("FirstName").ToString
-        drNewRow("LastName") = Me.FileDataSet.Servers.FindByServerNumber(cboCAServer.SelectedValue.ToString)("LastName").ToString
+        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(cboCAServer.SelectedValue.ToString)("FirstName").ToString
+        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(cboCAServer.SelectedValue.ToString)("LastName").ToString
         drNewRow("Description") = "Cash"
-        drNewRow("WorkingDate") = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
         UpdateCATotals()
 
         txtCAAmount.Clear()
@@ -979,23 +865,23 @@ Public Class frmEnterTips
 
         Dim intTipID As Integer = CInt(Me.CashDataGridView.Item("CAID", Me.CashTipsBindingSource.Position).Value)
 
-        Dim strTipAmount As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
+        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
+        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
 
-        Me.FileDataSet.Tips.FindByTipID(intTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
         UpdateCATotals()
     End Sub
 
     Private Sub mnuReassignCATip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignCATip.Click
         If Me.CashDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Me.FileDataSet
+        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
         If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -1007,37 +893,37 @@ Public Class frmEnterTips
         Dim intSourceTipID As Integer = CInt(Me.CashDataGridView.Item("CAID", Me.CashTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
-        Dim strDestFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
+        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
+        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
         If strSourceServerNumber = strDestServerNumber Then
             MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
         Dim strSpecialFunction As String
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = decAmount
         drNewRow("ServerNumber") = strDestServerNumber
         drNewRow("FirstName") = strDestFirstName
         drNewRow("LastName") = strDestLastName
         drNewRow("Description") = strDescription
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             drNewRow("SpecialFunction") = strSpecialFunction
         End If
         drNewRow("WorkingDate") = dteWorkingDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmSelectServer.Dispose()
     End Sub
@@ -1047,15 +933,15 @@ Public Class frmEnterTips
 
         Dim intSourceTipID As Integer = CInt(Me.CashDataGridView.Item("CAID", Me.CashTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
             .TipAmount = decAmount
             .WorkingDate = dteWorkingDate
             .TipType = strDescription
-            .m_dsParentDataSet = Me.FileDataSet
+            .m_dsParentDataSet = Data.FileDataSet
         End With
 
         If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -1073,14 +959,14 @@ Public Class frmEnterTips
         Dim decNewAmount As Decimal = frmEditTip.TipAmount
         Dim strNewDescription As String = frmEditTip.TipType
         Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
+        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
+        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Me.FileDataSet.SpecialFunctions
+            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
@@ -1091,11 +977,11 @@ Public Class frmEnterTips
             End If
 
             strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Me.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
+            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
         End If
 
         If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
         End If
 
         frmSelectFunction.Dispose()
@@ -1110,8 +996,8 @@ Public Class frmEnterTips
         End If
         drNewRow("WorkingDate") = dteNewDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmEditTip.Dispose()
         UpdateCCTotals()
@@ -1122,7 +1008,7 @@ Public Class frmEnterTips
 
     Private Sub btnQuickAddCashTips_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnQuickAddCashTips.Click
         Dim dvServers As New DataView
-        dvServers.Table = Me.FileDataSet.Servers
+        dvServers.Table = Data.FileDataSet.Servers
         dvServers.Sort = "LastName, FirstName"
 
         If dvServers.Count = 0 Then
@@ -1144,16 +1030,16 @@ Public Class frmEnterTips
                 Dim decTipAmount As Decimal = CDec(frmQuickAdd.txtTipAmount.Text)
 
                 If decTipAmount <> 0 Then
-                    Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+                    Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
                     drNewRow("Amount") = decTipAmount
                     drNewRow("ServerNumber") = strServerNumber
                     drNewRow("FirstName") = strFirstName
                     drNewRow("LastName") = strLastName
                     drNewRow("Description") = "Cash"
-                    drNewRow("WorkingDate") = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+                    drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
 
-                    Me.FileDataSet.Tips.Rows.Add(drNewRow)
+                    Data.FileDataSet.Tips.Rows.Add(drNewRow)
                     UpdateCATotals()
                 End If
 
@@ -1161,8 +1047,10 @@ Public Class frmEnterTips
             Next
         End If
     End Sub
+#End Region
 
     'Special function operations begin below:
+#Region "SpecialFunctionOperations"
     Private Sub AddSpecialFunctionTip()
         If cboSFServer.SelectedIndex = -1 Then
             If cboSFServer.Text = "" Then
@@ -1198,17 +1086,17 @@ Public Class frmEnterTips
 
         AutoInsertSFDecimal()
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = txtSFAmount.Text
         drNewRow("ServerNumber") = cboSFServer.SelectedValue.ToString
-        drNewRow("FirstName") = Me.FileDataSet.Servers.FindByServerNumber(cboSFServer.SelectedValue.ToString)("FirstName").ToString
-        drNewRow("LastName") = Me.FileDataSet.Servers.FindByServerNumber(cboSFServer.SelectedValue.ToString)("LastName").ToString
+        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(cboSFServer.SelectedValue.ToString)("FirstName").ToString
+        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(cboSFServer.SelectedValue.ToString)("LastName").ToString
         drNewRow("Description") = "Special Function"
         drNewRow("SpecialFunction") = cboSelectSpecialFunction.SelectedValue
-        drNewRow("WorkingDate") = CDate(Me.FileDataSet.SpecialFunctions.FindBySpecialFunction(cboSelectSpecialFunction.SelectedValue.ToString)("Date"))
+        drNewRow("WorkingDate") = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(cboSelectSpecialFunction.SelectedValue.ToString)("Date"))
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
         UpdateSFTotals()
 
         txtSFAmount.Clear()
@@ -1270,16 +1158,16 @@ Public Class frmEnterTips
 
         Dim intTipID As Integer = CInt(Me.SpecialFunctionDataGridView.Item("SFID", Me.SpecialFunctionTipsBindingSource.Position).Value)
 
-        Dim strTipAmount As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
+        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
+        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
         strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
             Exit Sub
         End If
 
-        Me.FileDataSet.Tips.FindByTipID(intTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
     End Sub
 
     Private Sub SpecialFunctionDataGridView_RowStateChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
@@ -1289,7 +1177,7 @@ Public Class frmEnterTips
     Private Sub mnuReassignSFTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignSFTip.Click
         If Me.SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Me.FileDataSet
+        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
         If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -1301,37 +1189,37 @@ Public Class frmEnterTips
         Dim intSourceTipID As Integer = CInt(Me.SpecialFunctionDataGridView.Item("SFID", Me.SpecialFunctionTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
-        Dim strDestFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
+        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
+        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
         If strSourceServerNumber = strDestServerNumber Then
             MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
         Dim strSpecialFunction As String
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         drNewRow("Amount") = decAmount
         drNewRow("ServerNumber") = strDestServerNumber
         drNewRow("FirstName") = strDestFirstName
         drNewRow("LastName") = strDestLastName
         drNewRow("Description") = strDescription
-        If Not IsDBNull(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
+        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             drNewRow("SpecialFunction") = strSpecialFunction
         End If
         drNewRow("WorkingDate") = dteWorkingDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmSelectServer.Dispose()
     End Sub
@@ -1341,15 +1229,15 @@ Public Class frmEnterTips
 
         Dim intSourceTipID As Integer = CInt(Me.SpecialFunctionDataGridView.Item("SFID", Me.SpecialFunctionTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
+        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
             .TipAmount = decAmount
             .WorkingDate = dteWorkingDate
             .TipType = strDescription
-            .m_dsParentDataSet = Me.FileDataSet
+            .m_dsParentDataSet = Data.FileDataSet
         End With
 
         If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -1367,14 +1255,14 @@ Public Class frmEnterTips
         Dim decNewAmount As Decimal = frmEditTip.TipAmount
         Dim strNewDescription As String = frmEditTip.TipType
         Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Me.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
+        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
+        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
 
-        Dim drNewRow As DataRow = Me.FileDataSet.Tips.NewRow
+        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
         If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Me.FileDataSet.SpecialFunctions
+            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
@@ -1385,11 +1273,11 @@ Public Class frmEnterTips
             End If
 
             strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Me.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
+            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
         End If
 
         If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
         End If
 
         frmSelectFunction.Dispose()
@@ -1404,8 +1292,8 @@ Public Class frmEnterTips
         End If
         drNewRow("WorkingDate") = dteNewDate
 
-        Me.FileDataSet.Tips.Rows.Add(drNewRow)
-        Me.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
+        Data.FileDataSet.Tips.Rows.Add(drNewRow)
+        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
         frmEditTip.Dispose()
         UpdateCCTotals()
@@ -1413,12 +1301,13 @@ Public Class frmEnterTips
         UpdateSFTotals()
         UpdateCATotals()
     End Sub
+#End Region
 
     'End of tip operations
 
     Private Sub mnuManageSpecialFunctions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuManageSpecialFunctions.Click
         With frmManageSpecialFunctions
-            .m_dsParentDataSet = Me.FileDataSet
+            .m_dsParentDataSet = Data.FileDataSet
             .ShowDialog()
             .Dispose()
         End With
@@ -1450,7 +1339,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuExportTips_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExportTips.Click
-        frmExportTips.m_dsParentDataSet = Me.FileDataSet
+        frmExportTips.m_dsParentDataSet = Data.FileDataSet
         frmExportTips.ShowDialog()
         frmExportTips.Dispose()
     End Sub
@@ -1464,7 +1353,7 @@ Public Class frmEnterTips
             While blnErrorState = True
                 If frmAddEditServer.ShowDialog <> DialogResult.OK Then Exit Sub
 
-                If Not (FileDataSet.Servers.FindByServerNumber(frmAddEditServer.ServerNumber) Is Nothing) Then
+                If Not (Data.FileDataSet.Servers.FindByServerNumber(frmAddEditServer.ServerNumber) Is Nothing) Then
                     MessageBox.Show("The server number you entered already exists in the data file.  Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
                     frmAddEditServer.ServerNumber = ""
                 Else
@@ -1472,14 +1361,14 @@ Public Class frmEnterTips
                 End If
             End While
 
-            Dim drNewRow As DataRow = FileDataSet.Servers.NewRow
+            Dim drNewRow As DataRow = Data.FileDataSet.Servers.NewRow
 
             drNewRow("ServerNumber") = frmAddEditServer.ServerNumber
             drNewRow("FirstName") = frmAddEditServer.FirstName
             drNewRow("LastName") = frmAddEditServer.LastName
             drNewRow("SuppressChit") = frmAddEditServer.SuppressChit
 
-            FileDataSet.Servers.Rows.Add(drNewRow)
+            Data.FileDataSet.Servers.Rows.Add(drNewRow)
 
             Dim frmMain As frmMain = DirectCast(MdiParent, frmMain)
 
@@ -1496,9 +1385,9 @@ Public Class frmEnterTips
 
     Private Sub mnuEditSelectedServer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuEditSelectedServer.Click, ServersDataGridView.DoubleClick
         Dim strServerNumber As String = Me.ServersDataGridView.Item("ServersServerNumber", Me.ServersBindingSource.Position).Value.ToString
-        Dim strFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
-        Dim blnSuppressChit As Boolean = CBool(Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit"))
+        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
+        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
+        Dim blnSuppressChit As Boolean = CBool(Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit"))
 
         With frmAddEditServer
             .Text = "Edit Server"
@@ -1519,9 +1408,9 @@ Public Class frmEnterTips
                 Exit Sub
             End If
 
-            Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName") = .FirstName
-            Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName") = .LastName
-            Me.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit") = .SuppressChit
+            Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName") = .FirstName
+            Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName") = .LastName
+            Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit") = .SuppressChit
 
             .Dispose()
         End With
@@ -1548,7 +1437,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuMergeDuplicate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuMergeDuplicate.Click
-        frmSelectServer.m_dsParentDataSet = Me.FileDataSet
+        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the merge recipient:"
 
         If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
@@ -1558,8 +1447,8 @@ Public Class frmEnterTips
 
         Dim strSourceServerNumber As String = Me.ServersDataGridView.Item("ServersServerNumber", Me.ServersBindingSource.Position).Value.ToString
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
-        Dim strDestFirstName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Me.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
+        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
+        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
         If strSourceServerNumber = strDestServerNumber Then
             MessageBox.Show("You may not merge a server with itself.", "Invalid Selection", MessageBoxButtons.OK)
@@ -1568,13 +1457,13 @@ Public Class frmEnterTips
 
 
         Dim dv As New DataView
-        dv.Table = Me.FileDataSet.Tips
+        dv.Table = Data.FileDataSet.Tips
         dv.RowFilter = "ServerNumber = '" & strSourceServerNumber & "'"
 
         Dim drNewRow As DataRow
 
         For i As Integer = 0 To dv.Count - 1
-            drNewRow = Me.FileDataSet.Tips.NewRow
+            drNewRow = Data.FileDataSet.Tips.NewRow
 
             drNewRow("Amount") = CDec(dv(i)("Amount"))
             drNewRow("ServerNumber") = strDestServerNumber
@@ -1586,11 +1475,11 @@ Public Class frmEnterTips
             End If
             drNewRow("WorkingDate") = CDate(dv(i)("WorkingDate"))
 
-            Me.FileDataSet.Tips.Rows.Add(drNewRow)
+            Data.FileDataSet.Tips.Rows.Add(drNewRow)
         Next
 
-        Me.FileDataSet.Servers.FindByServerNumber(strSourceServerNumber).Delete()
-        Me.FileDataSet.Servers.AcceptChanges()
+        Data.FileDataSet.Servers.FindByServerNumber(strSourceServerNumber).Delete()
+        Data.FileDataSet.Servers.AcceptChanges()
 
         MessageBox.Show("The merge was completed successfully.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
@@ -1599,18 +1488,18 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuCopyFromTemplate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuCopyFromTemplate.Click
-        Me.FileDataSet.Servers.Merge(DirectCast(MdiParent, frmMain).GetTemplateServers())
+        Data.FileDataSet.Servers.Merge(DirectCast(MdiParent, frmMain).GetTemplateServers())
     End Sub
 
     Private Sub mnuPrintTipChits_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPrintRegularTipChits.Click
-        frmPrintRegularTipChits.m_dsParentDataset = Me.FileDataSet
+        frmPrintRegularTipChits.m_dsParentDataset = Data.FileDataSet
         frmPrintRegularTipChits.ShowDialog()
         frmPrintRegularTipChits.Dispose()
     End Sub
 
     Private Sub btnManageFunctions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnManageFunctions.Click
         With frmManageSpecialFunctions
-            .m_dsParentDataSet = Me.FileDataSet
+            .m_dsParentDataSet = Data.FileDataSet
             .ShowDialog()
             .Dispose()
         End With
@@ -1627,13 +1516,13 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuTipReports_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuTipReports.Click
-        frmPrintTipReportsV2.m_dsParentDataSet = Me.FileDataSet
+        frmPrintTipReportsV2.m_dsParentDataSet = Data.FileDataSet
         frmPrintTipReportsV2.ShowDialog()
         frmPrintTipReportsV2.Dispose()
     End Sub
 
     Private Sub mnuSpecialFunctionReports_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSpecialFunctionReports.Click
-        frmPrintSpecialFunctionReportV2.m_dsParentDataSet = Me.FileDataSet
+        frmPrintSpecialFunctionReportV2.m_dsParentDataSet = Data.FileDataSet
         frmPrintSpecialFunctionReportV2.ShowDialog()
         frmPrintSpecialFunctionReportV2.Dispose()
     End Sub
@@ -1727,7 +1616,7 @@ Public Class frmEnterTips
 
         Dim dvTips As New DataView
 
-        dvTips.Table = Me.FileDataSet.Tips
+        dvTips.Table = Data.FileDataSet.Tips
         dvTips.Sort = "Description"
 
         Dim decCCTotal As Decimal = 0
@@ -1884,7 +1773,7 @@ Public Class frmEnterTips
             intSeed = CInt(frmAutoAddInput.Seed)
             blnSuppressChits = frmAutoAddInput.SuppressChits
 
-            If Not IsNothing(Me.FileDataSet.Servers.FindByServerNumber(CStr(intSeed))) Then
+            If Not IsNothing(Data.FileDataSet.Servers.FindByServerNumber(CStr(intSeed))) Then
                 MessageBox.Show("The number you entered is already in use.  Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
                 frmAutoAddInput.Seed = ""
                 Continue While
@@ -1898,8 +1787,8 @@ Public Class frmEnterTips
         Dim intCurrentServerNumber As Integer = intSeed
 
         Do
-            If Not IsNothing(Me.FileDataSet.Servers.FindByServerNumber(CStr(intCurrentServerNumber))) Then
-                Do Until IsNothing(Me.FileDataSet.Servers.FindByServerNumber(CStr(intCurrentServerNumber)))
+            If Not IsNothing(Data.FileDataSet.Servers.FindByServerNumber(CStr(intCurrentServerNumber))) Then
+                Do Until IsNothing(Data.FileDataSet.Servers.FindByServerNumber(CStr(intCurrentServerNumber)))
                     intCurrentServerNumber += 1
                 Loop
             End If
@@ -1919,24 +1808,25 @@ Public Class frmEnterTips
 
             frmAutoAddServers.Dispose()
 
-            Dim drNewRow As DataRow = Me.FileDataSet.Servers.NewRow
+            Dim drNewRow As DataRow = Data.FileDataSet.Servers.NewRow
 
             drNewRow("ServerNumber") = strServerNumber
             drNewRow("FirstName") = strFirstName
             drNewRow("LastName") = strLastName
             drNewRow("SuppressChit") = blnSuppressChits
 
-            Me.FileDataSet.Servers.Rows.Add(drNewRow)
+            Data.FileDataSet.Servers.Rows.Add(drNewRow)
         Loop
 
-        Select Case MessageBox.Show("Auto add complete.  Save file?", "Complete", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-            Case Windows.Forms.DialogResult.Yes
-                SaveData()
-            Case Windows.Forms.DialogResult.No
-                Exit Select
-            Case Windows.Forms.DialogResult.Cancel
-                Me.FileDataSet.RejectChanges()
-        End Select
+        'TODO: do we want to keep this?  Probably not, but we might need to raise an event.
+        'Select Case MessageBox.Show("Auto add complete.  Save file?", "Complete", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+        '    Case Windows.Forms.DialogResult.Yes
+        '        SaveData()
+        '    Case Windows.Forms.DialogResult.No
+        '        Exit Select
+        '    Case Windows.Forms.DialogResult.Cancel
+        '        Data.FileDataSet.RejectChanges()
+        'End Select
 
         LoadServerCombos()
     End Sub
@@ -1953,7 +1843,7 @@ Public Class frmEnterTips
         Windows.Forms.Cursor.Current = Cursors.WaitCursor
 
         Dim dvServers, dvtips As New DataView
-        dvServers.Table = Me.FileDataSet.Servers
+        dvServers.Table = Data.FileDataSet.Servers
 
         Dim intServer As Integer = 0
 
@@ -1961,7 +1851,7 @@ Public Class frmEnterTips
             lblInfo.Visible = True
             lblInfo.Text = "Checking " & dvServers.Item(intServer)("FirstName").ToString & " " & dvServers.Item(intServer)("LastName").ToString
 
-            dvtips.Table = Me.FileDataSet.Tips
+            dvtips.Table = Data.FileDataSet.Tips
             dvtips.RowFilter = "ServerNumber = '" & dvServers.Item(intServer)("ServerNumber").ToString & "'"
 
             If dvtips.Count = 0 Then
@@ -1978,23 +1868,24 @@ Public Class frmEnterTips
         lblInfo.Visible = False
         dvServers = Nothing
 
-        Select Case MessageBox.Show("Optimization complete.  Do you wish to save the file?", "Optimization Complete", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-            Case Windows.Forms.DialogResult.Yes
-                SaveData()
-            Case Windows.Forms.DialogResult.No
-                Exit Select
-            Case Windows.Forms.DialogResult.Cancel
-                Me.FileDataSet.RejectChanges()
-        End Select
+        'TODO: do we want to keep this?  Probably not, but we might need to raise an event.
+        'Select Case MessageBox.Show("Optimization complete.  Do you wish to save the file?", "Optimization Complete", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+        '    Case Windows.Forms.DialogResult.Yes
+        '        SaveData()
+        '    Case Windows.Forms.DialogResult.No
+        '        Exit Select
+        '    Case Windows.Forms.DialogResult.Cancel
+        '        Data.FileDataSet.RejectChanges()
+        'End Select
     End Sub
 
     Private Sub CompactTips()
         Dim dvTips As New DataView
-        dvTips.Table = Me.FileDataSet.Tips
+        dvTips.Table = Data.FileDataSet.Tips
 
-        Dim dteDate As Date = CDate(Me.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dteDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
 
-        Do Until dteDate > CDate(Me.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Do Until dteDate > CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
             dvTips.RowFilter = "WorkingDate = '" & Format(dteDate, "MM/dd/yyyy") & "' AND Description <> 'Special Function'"
             dvTips.Sort = "ServerNumber, Description"
 

@@ -26,7 +26,7 @@ Public Class frmMain
     Public Sub AddServerToTemplate(ByVal serverNumber As String, ByVal firstName As String, ByVal lastName As String, ByVal suppressChit As Boolean)
         _globalSettings.GlobalDataSet.Servers.AddServersRow(serverNumber, firstName, lastName, suppressChit)
         _globalSettings.GlobalDataSet.AcceptChanges()
-        _globalSettingsFile.Write(_globalSettings)
+        _globalSettingsFile.WriteGlobalSettings(_globalSettings)
     End Sub
 
     ''' <summary>
@@ -85,7 +85,7 @@ Public Class frmMain
 
         'We might fail to read the file if there's some issue with the machine or its permissions.
         Try
-            _globalSettings = _globalSettingsFile.Read()
+            _globalSettings = _globalSettingsFile.ReadGlobalSettings()
         Catch ex As Exception
             'There isn't much we can do if the can't be read.
             MessageBox.Show("Failed to load the global settings file.  Verify that the file path is correct and that " &
@@ -133,7 +133,7 @@ Public Class frmMain
             'If the file has been updated, the user will need to recreate their changes.  Since the global settings will
             'be removed in the next version, there's no point in trying to handle concurrency more gracefully.
             If _globalSettingsFile.IsChanged(_globalSettings) Then
-                _globalSettings = _globalSettingsFile.Read()
+                _globalSettings = _globalSettingsFile.ReadGlobalSettings()
                 MessageBox.Show("Another user changed the global settings file and your changes have been lost.  " &
                     "Please redo your changes.", "Concurrent Changes Detected", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Else
@@ -154,7 +154,7 @@ Public Class frmMain
 
         'If we can't save the settings, the application can still run, but the user should be notified.
         Try
-            _globalSettingsFile.Write(_globalSettings)
+            _globalSettingsFile.WriteGlobalSettings(_globalSettings)
         Catch ex As Exception
             MessageBox.Show("Failed to save the updated server list.  It is recommended that you save all open data files " &
                 $"and restart the application.  Verify that you have permission to write to {_globalSettingsFile.FilePath}. " &
@@ -168,7 +168,7 @@ Public Class frmMain
 
         'If the file has been updated, reload it.
         If _globalSettingsFile.IsChanged(_globalSettings) Then
-            _globalSettings = _globalSettingsFile.Read()
+            _globalSettings = _globalSettingsFile.ReadGlobalSettings()
         End If
 
         'Prompt the user to select a new default data directory.
@@ -182,7 +182,7 @@ Public Class frmMain
 
         'If we can't save the settings, the application can still run, but the user should be notified.
         Try
-            _globalSettingsFile.Write(_globalSettings)
+            _globalSettingsFile.WriteGlobalSettings(_globalSettings)
         Catch ex As Exception
             MessageBox.Show("Failed to save the updated setting.  It is recommended that you save all open data files " &
                 $"and restart the application.  Verify that you have permission to write to {_globalSettingsFile.FilePath}. " &
@@ -224,131 +224,108 @@ Public Class frmMain
         Return intFilesOpen
     End Function
 
-    Friend Sub LastFileClosing()
-        'To be called when the last data file closes.  If there are no data files open, the menu
-        'commands that provide data file functionality need to be disabled.
-        EnableMenuCommands(False)
-    End Sub
-
     Private Sub mnuClose_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuClose.Click
         ActiveMdiChild.Close()
     End Sub
 
     Private Sub mnuSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSave.Click
-        For Each form As frmEnterTips In MdiChildren
-            If form Is ActiveMdiChild Then
-                form.SaveData()
-            End If
-        Next
+        Dim active As frmEnterTips = CType(ActiveMdiChild, frmEnterTips)
+
+        Try
+            active.File.Write(active.Data)
+        Catch ex As Exception
+            MessageBox.Show("Failed to save the changes to the file.  Please verify that you have " &
+                "permission to write to the file and that the destination folder is connected if it is " &
+                "removable.  If the problem persists, contact your organization's IT support resource.",
+                "Error Saving File", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Private Sub mnuSaveAs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSaveAs.Click
-        dlgSaveFile.InitialDirectory = _globalSettings.DefaultDataDirectory
-        dlgSaveFile.FileName = ""
+        Dim activeChild As frmEnterTips = CType(ActiveMdiChild, frmEnterTips)
+        Dim fileNameSuggestion As String = $"{Path.GetFileNameWithoutExtension(activeChild.File.FilePath)} - Copy"
 
-        If dlgSaveFile.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgSaveFile.Dispose()
-            Exit Sub
-        End If
+        Using saveFileDialog As New SaveFileDialog() With {
+                .AddExtension = True,
+                .CheckPathExists = True,
+                .DefaultExt = "*.ttd",
+                .FileName = fileNameSuggestion,
+                .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd",
+                .InitialDirectory = _globalSettings.DefaultDataDirectory,
+                .SupportMultiDottedExtensions = True,
+                .Title = "Save Data File"
+            }
 
-        Dim strNewFileName As String = dlgSaveFile.FileName
+            If saveFileDialog.ShowDialog <> DialogResult.OK Then Exit Sub
 
-        For Each form As frmEnterTips In MdiChildren
-            If form Is ActiveMdiChild Then
-                form.SaveDataAs(strNewFileName)
-            End If
-        Next
+            Dim strNewFileName As String = saveFileDialog.FileName
+            Dim newFile As PayPeriodFile = New PayPeriodFile(strNewFileName)
+            Dim copy As PayPeriodData = PayPeriodData.Clone(activeChild.Data)
 
-        dlgSaveFile.Dispose()
+            Try
+                newFile.Open()
+                newFile.Write(copy)
+            Catch ex As Exception
+                MessageBox.Show("Failed to save the new file.  Please verify that you have " &
+                    "permission to write to the folder and that the destination folder is connected if it is " &
+                    "removable.  If the problem persists, contact your organization's IT support resource.",
+                    "Error Saving File", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End Try
+
+            'TODO: consolidate this since it's used in multiple methods.
+            Dim copyForm As New frmEnterTips(newFile, copy)
+            AddHandler copyForm.FormClosing, AddressOf ChildFormClosing
+
+            copyForm.Show()
+        End Using
     End Sub
 
     Private Sub mnuNew_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuNew.Click
-        Dim strFileName As String
+        Dim dtePeriodStart As Date
+        Dim dtePeriodEnd As Date
 
-        'Show frmCreateFile to have the user set the pay period start and end dates.
-        If frmCreateFile.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            frmCreateFile.Dispose()
-            dlgSaveFile.Dispose()
-            Exit Sub
-        End If
+        Using payPeriodDetails As New frmCreateFile()
+            If Not payPeriodDetails.ShowDialog() = DialogResult.OK Then Exit Sub
 
-        Dim dtePeriodStart As Date = frmCreateFile.PeriodStart
-        Dim dtePeriodEnd As Date = frmCreateFile.PeriodEnd
+            dtePeriodStart = payPeriodDetails.PeriodStart
+            dtePeriodEnd = payPeriodDetails.PeriodEnd
+        End Using
 
-        'Prepare dlgSaveFile to be shown.
-        dlgSaveFile.InitialDirectory = _globalSettings.DefaultDataDirectory
-        dlgSaveFile.Title = "Create New Data File"
-        dlgSaveFile.FileName = Format(dtePeriodStart, "yyyy_MM_dd")
+        Dim filePath As String
 
-        frmCreateFile.Dispose()
+        Using saveDialog As New SaveFileDialog() With {
+            .AddExtension = True,
+            .CheckPathExists = True,
+            .DefaultExt = "*.ttd",
+            .FileName = Format(dtePeriodStart, "yyyy_MM_dd"),
+            .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd",
+            .InitialDirectory = _globalSettings.DefaultDataDirectory,
+            .SupportMultiDottedExtensions = True,
+            .Title = "Create New Data File"
+        }
+            If Not saveDialog.ShowDialog() = DialogResult.OK Then Exit Sub
 
-        If dlgSaveFile.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgSaveFile.Dispose()
-            Exit Sub
-        End If
+            filePath = saveDialog.FileName
+        End Using
 
-        strFileName = dlgSaveFile.FileName
-
-        Dim drNewRow As DataRow
-
-        'Store the working date, period start, and period end in the settings table
-        'of the file dataset.
-        drNewRow = FileDataSet.Settings.NewRow
-        drNewRow("Setting") = "PeriodStart"
-        drNewRow("Value") = dtePeriodStart.ToString
-        FileDataSet.Settings.Rows.Add(drNewRow)
-
-        drNewRow = FileDataSet.Settings.NewRow
-        drNewRow("Setting") = "PeriodEnd"
-        drNewRow("Value") = dtePeriodEnd.ToString
-        FileDataSet.Settings.Rows.Add(drNewRow)
-
-        drNewRow = FileDataSet.Settings.NewRow
-        drNewRow("Setting") = "WorkingDate"
-        drNewRow("Value") = dtePeriodStart.ToString
-        FileDataSet.Settings.Rows.Add(drNewRow)
-
-        drNewRow = Nothing
-
-        'Copy the template servers into the file dataset.
-        FileDataSet.Servers.Merge(_globalSettings.GlobalDataSet.Servers)
+        Dim newFile As New PayPeriodFile(filePath)
+        Dim newFileData As PayPeriodData = PayPeriodData.Create(dtePeriodStart, dtePeriodEnd, GetTemplateServers())
 
         Try
-            'Encode the dataset then write the file to the selected directory.
-            Dim objFileEncoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            FileDataSet.WriteXml(objDSStream)
-            objDSStream.Flush()
-            objDSStream.Seek(0, SeekOrigin.Begin)
-
-            objFileEncoder.EncodeFile(strFileName, objDSStream)
-
-            'Clean up the dataset, file encoding object and dataset stream.
-            FileDataSet.Clear()
-            FileDataSet.AcceptChanges()
-
-            objFileEncoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-        Catch ex As IOException
-            MessageBox.Show("The file name you entered already exists and is in use.  The file could not be created.", "Error Creating File", MessageBoxButtons.OK)
-            FileDataSet.Clear()
-            FileDataSet.AcceptChanges()
-            Exit Sub
+            newFile.Open()
+            newFile.Write(newFileData)
         Catch ex As Exception
-            MessageBox.Show("Could not create the requested file.  Please contact support.", "Error Creating File", MessageBoxButtons.OK)
-            FileDataSet.Clear()
-            FileDataSet.AcceptChanges()
-            Exit Sub
+            MessageBox.Show("Failed to create the new file.  Verify that you have permission to write to the " &
+                "specified folder.  If this problem persists, please contact your organization's IT support resource",
+                "File Creation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
-        'Call a new instance of frmEnterTips and pass the filename into the form's
-        'current file property, then show the form.
-        Dim form As New frmEnterTips
-        form.CurrentFile = strFileName
+        'TODO: consolidate this since it's used in multiple methods.
+        Dim newFileForm As New frmEnterTips(newFile, newFileData)
+        AddHandler newFileForm.FormClosing, AddressOf ChildFormClosing
 
-        form.Show()
+        newFileForm.Show()
         EnableMenuCommands(True)
     End Sub
 
@@ -383,263 +360,78 @@ Public Class frmMain
     End Sub
 
     Private Sub OpenFile(ByVal Path As String)
+        'Create a file instance.
+        Dim payPeriodFile As New PayPeriodFile(Path)
+        Dim fileData As PayPeriodData
+
+        'Try opening the file.
         Try
-            Dim objFileDecoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            objDSStream = objFileDecoder.DecodeFile(Path)
-
-            objDSStream.Flush()
-            objDSStream.Seek(0, SeekOrigin.Begin)
-
-            FileDataSet.ReadXml(objDSStream)
-
-            objFileDecoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-        Catch ex As FormatException
-            If MessageBox.Show("The requested file was saved in the legacy format.  The file will be converted.  Please be patient as the conversion may take several minutes.", "Legacy Format", MessageBoxButtons.OKCancel) = Windows.Forms.DialogResult.Cancel Then
-                Exit Sub
-            End If
-
-            Try
-                Dim objFileDecoder As New clsFileEncoder
-                Dim objDSStream As New MemoryStream
-
-                objDSStream = objFileDecoder.LegacyDecodeFile(Path)
-
-                objDSStream.Flush()
-                objDSStream.Seek(0, SeekOrigin.Begin)
-
-                FileDataSet.ReadXml(objDSStream)
-
-                objFileDecoder.Dispose()
-                objDSStream.Close()
-                objDSStream.Dispose()
-
-                Dim objFileEncoder As New clsFileEncoder
-                objDSStream = New MemoryStream
-
-                FileDataSet.WriteXml(objDSStream)
-
-                objFileEncoder.EncodeFile(Path, objDSStream)
-
-                objFileEncoder.Dispose()
-                objDSStream.Close()
-                objDSStream.Dispose()
-                FileDataSet.AcceptChanges()
-
-            Catch subEx As Exception
-                MessageBox.Show("Could not convert the requested file.  The file may be an invalid type or may be corrupted.", "Error Converting File", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Exit Sub
-            End Try
-        Catch ex As IOException
-            MessageBox.Show("The requested file could not be opened because it is already in use.", "Error Opening File", MessageBoxButtons.OK)
-            FileDataSet.Clear()
-            FileDataSet.AcceptChanges()
-            Exit Sub
+            payPeriodFile.Open()
         Catch ex As Exception
-            MessageBox.Show("Could not open file.  Contact Support", "Error", MessageBoxButtons.OK)
-            FileDataSet.Clear()
-            FileDataSet.AcceptChanges()
-            Exit Sub
+            MessageBox.Show("Failed to open the requested file.  The file may have moved, may be in use by another " &
+                "user, or you may not have permission to access this file.  If the problem persists, please contact " &
+                "your organization's IT support resource.", "Error Opening File", MessageBoxButtons.OK,
+                MessageBoxIcon.Error)
+            Return
         End Try
 
-        If ValidateFile() = False Then
-            MessageBox.Show("The file you selected is not a valid Tip Tracker data file.", "Invalid File Type", MessageBoxButtons.OK)
-            FileDataSet.Clear()
-            FileDataSet.AcceptChanges()
-            Exit Sub
-        End If
+        'Try reading the settings.
+        Try
+            fileData = payPeriodFile.ReadPayPeriodFile()
+        Catch ex As Exception
+            MessageBox.Show("Failed to read the requested file.  The file is corrupt or is not a valid Tip " &
+                "Tracker data file.", "Invalid File Type", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End Try
 
-        'Check for functions not in the pay period.
-        Dim lstInvalidFunctions As New List(Of String)
-
-        Dim dtePeriodStart As Date = CDate(FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd As Date = CDate(FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-
-        Dim dvFunctions As New DataView
-        dvFunctions.Table = FileDataSet.SpecialFunctions
-        dvFunctions.RowFilter = "Date < '" & Format(dtePeriodStart, "MM/dd/yyyy") & "' OR Date > '" & Format(dtePeriodEnd, "MM/dd/yyyy") & "'"
-
-        If dvFunctions.Count > 0 Then
-            MessageBox.Show("Selected file contains functions that are not in the pay period.  Function dates before" &
-                 " the period beginning date will be changed to the first day in the pay period and function dates after" &
-                 " the period ending date will be changed to the last day in the pay period.  Please be patient as the" &
-                 " conversion may take several minutes.", "Invalid Functions Found", MessageBoxButtons.OK)
-
-            Dim i As Integer = 0
-
-            Do Until i = dvFunctions.Count
-                Dim dteDate As Date = CDate(dvFunctions(i)("Date"))
-
-                If dteDate < dtePeriodStart Then
-                    dvFunctions(i)("Date") = dtePeriodStart
-                End If
-                If dteDate > dtePeriodEnd Then
-                    dvFunctions(i)("Date") = dtePeriodEnd
-                End If
-            Loop
-
-            FileDataSet.AcceptChanges()
-
-            Try
-                Dim objDSStream As New MemoryStream
-                Dim objFileEncoder As New clsFileEncoder
-                objDSStream = New MemoryStream
-
-                FileDataSet.WriteXml(objDSStream)
-
-                objFileEncoder.EncodeFile(Path, objDSStream)
-
-                objFileEncoder.Dispose()
-                objDSStream.Close()
-                objDSStream.Dispose()
-                FileDataSet.AcceptChanges()
-
-            Catch subEx As Exception
-                MessageBox.Show("Could not convert the requested file.  The file may be an invalid type or may be corrupted.", "Error Converting File", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Debug.WriteLine(subEx.ToString)
-                Exit Sub
-            End Try
-        End If
-
-        'Check for tips not in the pay period.
-        Dim dvTips As New DataView
-        dvTips.Table = FileDataSet.Tips
-        dvTips.RowFilter = "WorkingDate < '" & Format(dtePeriodStart, "MM/dd/yyyy") & "' OR WorkingDate > '" & Format(dtePeriodEnd, "MM/dd/yyyy") & "'"
-
-        If dvTips.Count > 0 Then
-            MessageBox.Show("Selected file contains tips that are not in the pay period.  Tip dates before" &
-                 " the period beginning date will be changed to the first day in the pay period and function dates after" &
-                 " the period ending date will be changed to the last day in the pay period.  Please be patient as the" &
-                 " conversion may take several minutes.", "Invalid Tips Found", MessageBoxButtons.OK)
-
-            Dim i As Integer = 0
-
-            Do Until i = dvTips.Count
-                Dim dteDate As Date = CDate(dvTips(i)("WorkingDate"))
-
-                If dteDate < dtePeriodStart Then
-                    dvTips(i)("WorkingDate") = dtePeriodStart
-                End If
-                If dteDate > dtePeriodEnd Then
-                    dvTips(i)("WorkingDate") = dtePeriodEnd
-                End If
-            Loop
-
-            FileDataSet.AcceptChanges()
-
-            Try
-                Dim objDSStream As New MemoryStream
-                Dim objFileEncoder As New clsFileEncoder
-                objDSStream = New MemoryStream
-
-                FileDataSet.WriteXml(objDSStream)
-
-                objFileEncoder.EncodeFile(Path, objDSStream)
-
-                objFileEncoder.Dispose()
-                objDSStream.Close()
-                objDSStream.Dispose()
-                FileDataSet.AcceptChanges()
-
-            Catch subEx As Exception
-                MessageBox.Show("Could not convert the requested file.  The file may be an invalid type or may be corrupted.", "Error Converting File", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Debug.WriteLine(subEx.ToString)
-                Exit Sub
-            End Try
-        End If
-
-        'Check for servers where suppress chit option is null.
-        Dim blnFoundNull As Boolean = False
-
-        For Each row As DataRow In FileDataSet.Servers
-            If IsDBNull(row("SuppressChit")) Then
-                row("SuppressChit") = False
-                blnFoundNull = True
-            End If
+        'Notify on any warnings that the file generated.
+        For Each message As String In fileData.GetWarnings()
+            MessageBox.Show(message, "Data Validation Information", MessageBoxButtons.OK)
         Next
 
-        If blnFoundNull = True Then
-            MessageBox.Show("Null values were found in the 'Suppress Tip Chit' option for some of the servers.  The option for these servers has been unchecked.", "Null Values Found", MessageBoxButtons.OK)
+        'Open the editing form.
+        'TODO: consolidate this since it's used in multiple methods.
+        Dim editor As New frmEnterTips(payPeriodFile, fileData)
+        AddHandler editor.FormClosing, AddressOf ChildFormClosing
+        editor.Show()
 
-            Try
-                Dim objDSStream As New MemoryStream
-                Dim objFileEncoder As New clsFileEncoder
-                objDSStream = New MemoryStream
-
-                FileDataSet.WriteXml(objDSStream)
-
-                objFileEncoder.EncodeFile(Path, objDSStream)
-
-                objFileEncoder.Dispose()
-                objDSStream.Close()
-                objDSStream.Dispose()
-                FileDataSet.AcceptChanges()
-
-            Catch subEx As Exception
-                MessageBox.Show("Could not save file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Debug.WriteLine(subEx.ToString)
-                Exit Sub
-            End Try
-        End If
-
-        FileDataSet.Clear()
-        FileDataSet.AcceptChanges()
-
-        Dim form As New frmEnterTips
-        form.CurrentFile = Path
-
-        Try
-            form.Show()
-            EnableMenuCommands(True)
-        Catch ex As Exception
-        End Try
+        'If this is the first file to be opened, enable the file-specific menu commands.
+        If MdiChildren.Length = 1 Then EnableMenuCommands(True)
     End Sub
 
-    Private Function ValidateFile() As Boolean
-        If FileDataSet.Settings.Rows.Count = 0 Then Return False
+    Private Sub ChildFormClosing(ByVal sender As Object, ByVal e As FormClosingEventArgs)
+        Dim form As frmEnterTips = CType(sender, frmEnterTips)
 
-        For Each row As DataRow In FileDataSet.Settings
-            Select Case row("Setting").ToString
-                Case "PeriodStart"
-                    If row("Value").ToString = "" Or row("Value") Is Nothing Then
-                        Return False
-                    Else
-                        Try
-                            Dim dtePeriodStart As Date = CDate(row("Value"))
-                        Catch ex As Exception
-                            Return False
-                        End Try
-                    End If
-                Case "PeriodEnd"
-                    If row("Value").ToString = "" Or row("Value") Is Nothing Then
-                        Return False
-                    Else
-                        Try
-                            Dim dtePeriodEnd As Date = CDate(row("Value"))
-                        Catch ex As Exception
-                            Return False
-                        End Try
-                    End If
-                Case "WorkingDate"
-                    If row("Value").ToString = "" Or row("Value") Is Nothing Then
-                        Return False
-                    Else
-                        Try
-                            Dim dteWorkingDate As Date = CDate(row("Value"))
-                        Catch ex As Exception
-                            Return False
-                        End Try
-                    End If
-                Case Else
-                    Return False
-            End Select
-        Next
+        'If the file has changes, see what the user wants to do with them.
+        If form.Data.FileDataSet.HasChanges() Then
+            Dim userResponse As DialogResult = MessageBox.Show($"Save changes to the file {form.Text}?", "Save Changes", MessageBoxButtons.YesNoCancel)
 
-        Return True
-    End Function
+            If userResponse = DialogResult.Yes Then
+                Try
+                    form.File.Write(form.Data)
+                    form.Data.FileDataSet.AcceptChanges()
+                Catch ex As Exception
+                    MessageBox.Show("Failed to save the changes to the file.  Please verify that you have " &
+                        "permission to write to the file and that the destination folder is connected if it is " &
+                        "removable.  If the problem persists, contact your organization's IT support resource.",
+                        "Error Saving File", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    e.Cancel = True
+                    Exit Sub
+                End Try
+            ElseIf userResponse = DialogResult.Cancel Then
+                e.Cancel = True
+                Exit Sub
+            End If
+        End If
+
+        form.File.Dispose()
+        form.Dispose()
+
+        'Disable any file-specific commands if there are no more files to which they apply.
+        If MdiChildren.Length = 0 Then
+            EnableMenuCommands(False)
+        End If
+    End Sub
 
     Private Sub mnuExportServerList_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExportServerList.Click
         Dim strFileName As String
