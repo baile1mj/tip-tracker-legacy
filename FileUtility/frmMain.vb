@@ -2,7 +2,25 @@ Imports System.IO
 Imports TipTracker.Utilities
 
 Public Class frmMain
-    Private m_strGlobalFilePath As String = GetGlobalFilePath()
+    Private ReadOnly _defaultDataDirectory As String
+
+    Public Sub New()
+        InitializeComponent()
+
+        Try
+            Dim globalFile As New GlobalSettingsFile(MachineSettings.GetGlobalFilePath())
+            Dim globalSettings As GlobalSettings = globalFile.ReadGlobalSettings()
+
+            _defaultDataDirectory = globalSettings.DefaultDataDirectory
+        Catch ex As Exception
+            'Do nothing if this fails since we'll default to the Documents folder.
+        End Try
+
+        'The path may not be valid so set up a valid one.
+        If Not Directory.Exists(_defaultDataDirectory) Then
+            _defaultDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        End If
+    End Sub
 
     Private Sub btnExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnExit.Click
         Application.Exit()
@@ -17,140 +35,93 @@ Public Class frmMain
     End Sub
 
     Private Sub btnDecodeFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDecodeFile.Click
-        Dim strSourceFile As String = ""
-        Dim dlgOpen As New OpenFileDialog
+        Dim strSourceFile As String
+        Using dlgOpen As New OpenFileDialog() With {
+            .CheckFileExists = True,
+            .CheckPathExists = True,
+            .DefaultExt = ".ttd",
+            .Filter = "Tip Tracker Data File (*.ttd)|*.ttd|Tip Tracker Global File (*.dat)|*.dat",
+            .InitialDirectory = _defaultDataDirectory,
+            .RestoreDirectory = True,
+            .Title = "Select File to Decode"}
 
-        With dlgOpen
-            .CheckFileExists = True
-            .CheckPathExists = True
-            .DefaultExt = ".ttd"
-            .Filter = "Tip Tracker Data File (*.ttd)|*.ttd|Tip Tracker Global File (*.dat)|*.dat"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .RestoreDirectory = True
-            .Title = "Select File to Decode"
-        End With
+            If dlgOpen.ShowDialog <> DialogResult.OK Then Exit Sub
 
-        If dlgOpen.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgOpen.Dispose()
-            Exit Sub
-        End If
+            strSourceFile = dlgOpen.FileName
+        End Using
 
-        strSourceFile = dlgOpen.FileName
-        dlgOpen.Dispose()
+        Dim strDestinationFile As String
+        Using dlgSave As New SaveFileDialog() With {
+            .AddExtension = True,
+            .DefaultExt = ".xml",
+            .Filter = "XML File (*.xml)|*.xml|Plain Text File (*.txt)|*.txt",
+            .InitialDirectory = _defaultDataDirectory,
+            .OverwritePrompt = True,
+            .RestoreDirectory = True,
+            .SupportMultiDottedExtensions = True,
+            .Title = "Save Decoded File"}
 
-        Dim strDestinationFile As String = ""
-        Dim dlgSave As New SaveFileDialog
+            If dlgSave.ShowDialog <> DialogResult.OK Then Exit Sub
 
-        With dlgSave
-            .AddExtension = True
-            .DefaultExt = ".txt"
-            .Filter = "Plain Text File (*.txt)|*.txt"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .OverwritePrompt = True
-            .RestoreDirectory = True
-            .SupportMultiDottedExtensions = True
-            .Title = "Save Decoded File"
-        End With
-
-        If dlgSave.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgSave.Dispose()
-            Exit Sub
-        End If
-
-        strDestinationFile = dlgSave.FileName
-        dlgSave.Dispose()
+            strDestinationFile = dlgSave.FileName
+        End Using
 
         Try
-            Dim objEncoder As New clsFileEncoder
-            Dim objStreamReader As New StreamReader(strSourceFile)
-            Dim objStreamWriter As New StreamWriter(strDestinationFile)
+            Dim obfuscator As New FileObfuscator()
+            Dim fileContent As String = File.ReadAllText(strSourceFile)
+            Dim plainTextBytes As Byte() = obfuscator.DeObfuscate(fileContent)
 
-            Dim strEncoded, strDecoded As String
-
-            strEncoded = objStreamReader.ReadToEnd
-            strDecoded = objEncoder.DecodeString(strEncoded)
-
-            objStreamWriter.Write(strDecoded)
-
-            objStreamWriter.Flush()
-            objStreamWriter.Close()
-            objStreamWriter.Dispose()
-
-            objStreamReader.Close()
-            objStreamReader.Dispose()
-
-            objEncoder.Dispose()
+            File.WriteAllBytes(strDestinationFile, plainTextBytes)
         Catch ex As Exception
-            MessageBox.Show("Could not decode file.  File may already be plain text.", "Error", MessageBoxButtons.OK)
+            MessageBox.Show($"Failed to decode file.  The process resulted in an exception: ""{ex.Message}"".",
+                "File Decoding Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
-    Private Sub btnEncodeFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnEncodeFile.Click
+    Private Sub btnEncodeFile_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnEncodeFile.Click
         Dim strSourceFile As String = ""
-        Dim dlgOpen As New OpenFileDialog
+        Using dlgOpen As New OpenFileDialog() With {
+            .CheckFileExists = True,
+            .CheckPathExists = True,
+            .DefaultExt = ".txt",
+            .Filter = "XML File (*.xml)|*.xml|Plain Text File (*.txt)|*.txt",
+            .InitialDirectory = _defaultDataDirectory,
+            .RestoreDirectory = True,
+            .Title = "Select File to Encode"}
 
-        With dlgOpen
-            .CheckFileExists = True
-            .CheckPathExists = True
-            .DefaultExt = ".txt"
-            .Filter = "Plain Text File (*.txt)|*.txt|XML File (*.xml)|*.xml"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .RestoreDirectory = True
-            .Title = "Select File to Encode"
-        End With
+            If dlgOpen.ShowDialog <> DialogResult.OK Then Exit Sub
 
-        If dlgOpen.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgOpen.Dispose()
-            Exit Sub
-        End If
-
-        strSourceFile = dlgOpen.FileName
-        dlgOpen.Dispose()
+            strSourceFile = dlgOpen.FileName
+        End Using
 
         Dim strDestinationFile As String = ""
-        Dim dlgSave As New SaveFileDialog
+        Using dlgSave As New SaveFileDialog With {
+            .AddExtension = True,
+            .DefaultExt = ".ttd",
+            .Filter = "Tip Tracker Data File (*.ttd)|*.ttd|Tip Tracker Global File (*.dat)|*.dat",
+            .InitialDirectory = _defaultDataDirectory,
+            .OverwritePrompt = True,
+            .RestoreDirectory = True,
+            .SupportMultiDottedExtensions = True,
+            .Title = "Save Encoded File"}
 
-        With dlgSave
-            .AddExtension = True
-            .DefaultExt = ".ttd"
-            .Filter = "Tip Tracker Data File (*.ttd)|*.ttd|Tip Tracker Global File (*.dat)|*.dat"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .OverwritePrompt = True
-            .RestoreDirectory = True
-            .SupportMultiDottedExtensions = True
-            .Title = "Save Encoded File"
-        End With
+            If dlgSave.ShowDialog <> DialogResult.OK Then Exit Sub
 
-        If dlgSave.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgSave.Dispose()
-            Exit Sub
-        End If
+            strDestinationFile = dlgSave.FileName
+        End Using
 
-        strDestinationFile = dlgSave.FileName
-        dlgSave.Dispose()
+        Dim sourceFileContents As Byte()
 
         Try
-            Dim objEncoder As New clsFileEncoder
-            Dim objStreamReader As New StreamReader(strSourceFile)
-            Dim objStreamWriter As New StreamWriter(strDestinationFile)
+            Dim obfuscatedContent As String
+            Dim obfuscator As New FileObfuscator()
 
-            Dim strEncoded, strDecoded As String
-
-            strDecoded = objStreamReader.ReadToEnd
-            strEncoded = objEncoder.EncodeString(strDecoded)
-
-            objStreamWriter.Write(strEncoded)
-
-            objStreamWriter.Flush()
-            objStreamWriter.Close()
-            objStreamWriter.Dispose()
-
-            objStreamReader.Close()
-            objStreamReader.Dispose()
-
-            objEncoder.Dispose()
+            sourceFileContents = File.ReadAllBytes(strSourceFile)
+            obfuscatedContent = obfuscator.Obfuscate(sourceFileContents)
+            File.WriteAllText(strDestinationFile, obfuscatedContent)
         Catch ex As Exception
-            MessageBox.Show("Could not decode file.  File may already be plain text.", "Error", MessageBoxButtons.OK)
+            MessageBox.Show($"Failed to encode file.  The process resulted in an exception: ""{ex.Message}"".",
+                "File Encoding Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
