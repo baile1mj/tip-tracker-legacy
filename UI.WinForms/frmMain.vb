@@ -376,7 +376,7 @@ Public Class frmMain
 
         'Notify on any warnings that the file generated.
         For Each message As String In fileData.GetWarnings()
-            MessageBox.Show(message, "Data Validation Information", MessageBoxButtons.OK)
+            MessageBox.Show(message, "Data Validation Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Next
 
         'Open the editing form.
