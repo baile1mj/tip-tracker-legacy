@@ -458,11 +458,14 @@ Public Class frmMain
             .Margins.Right = 50
         End With
 
-        If dlgPrint.ShowDialog = Windows.Forms.DialogResult.OK Then
-            docServerList.Print()
-        End If
+        Using printDialog As New PrintDialog() With {
+            .Document = docServerList,
+            .UseEXDialog = True}
 
-        dlgPrint.Dispose()
+            If printDialog.ShowDialog() = DialogResult.OK Then
+                docServerList.Print()
+            End If
+        End Using
     End Sub
 
     Private Sub docServerList_PrintPage(ByVal sender As System.Object, ByVal e As System.Drawing.Printing.PrintPageEventArgs) Handles docServerList.PrintPage
@@ -481,6 +484,7 @@ Public Class frmMain
         Const intCol2NamePos As Integer = 550
 
         Dim intPrintAreaHeight, intPrintAreaWidth, marginLeft, marginTop As Int32
+
         With docServerList.DefaultPageSettings
             ' Initialize local variables that contain the bounds of the printing 
             ' area rectangle.
