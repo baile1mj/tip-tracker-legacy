@@ -4,8 +4,6 @@ Imports Tip_Tracker.Utilities
 Public Class frmMain
     Private _globalSettingsFile As GlobalSettingsFile
     Private _globalSettings As GlobalSettings
-    Private m_strCurrentFile As String = ""
-    Private m_objGlobalStream As File
 
     ''' <summary>
     ''' Gets a value indicating whether a server is in the template.
@@ -36,15 +34,6 @@ Public Class frmMain
     Public Function GetTemplateServers() As DataTable
         Return _globalSettings.GlobalDataSet.Servers.Copy()
     End Function
-
-    Private Property CurrentDataFile() As String
-        Get
-            Return m_strCurrentFile
-        End Get
-        Set(ByVal value As String)
-            m_strCurrentFile = value
-        End Set
-    End Property
 
     Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         'Disable the menu commands that can only be used if a file is open.

@@ -19,7 +19,6 @@ Partial Class frmMain
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.strMainMenuStrip = New System.Windows.Forms.MenuStrip()
         Me.mnuFile = New System.Windows.Forms.ToolStripMenuItem()
@@ -51,18 +50,9 @@ Partial Class frmMain
         Me.mnuIndex = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuAbout = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.FileDataSet = New Tip_Tracker.FileDataSet()
-        Me.TipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.SpecialFunctionBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.dlgSaveFile = New System.Windows.Forms.SaveFileDialog()
         Me.docServerList = New System.Drawing.Printing.PrintDocument()
         Me.dlgPrint = New System.Windows.Forms.PrintDialog()
         Me.strMainMenuStrip.SuspendLayout()
-        CType(Me.ServersBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.TipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'strMainMenuStrip
@@ -252,33 +242,6 @@ Partial Class frmMain
         Me.mnuAbout.Size = New System.Drawing.Size(166, 22)
         Me.mnuAbout.Text = "About Tip Tracker"
         '
-        'ServersBindingSource
-        '
-        Me.ServersBindingSource.DataMember = "Servers"
-        Me.ServersBindingSource.DataSource = Me.FileDataSet
-        '
-        'FileDataSet
-        '
-        Me.FileDataSet.CaseSensitive = True
-        Me.FileDataSet.DataSetName = "FileDataSet"
-        Me.FileDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
-        '
-        'TipsBindingSource
-        '
-        Me.TipsBindingSource.DataMember = "Tips"
-        Me.TipsBindingSource.DataSource = Me.FileDataSet
-        '
-        'SpecialFunctionBindingSource
-        '
-        Me.SpecialFunctionBindingSource.DataMember = "SpecialFunctions"
-        Me.SpecialFunctionBindingSource.DataSource = Me.FileDataSet
-        '
-        'dlgSaveFile
-        '
-        Me.dlgSaveFile.DefaultExt = "*.ttd"
-        Me.dlgSaveFile.Filter = "Tip Tracker Data Files (*.ttd)|*.ttd"
-        Me.dlgSaveFile.Title = "Save Data File"
-        '
         'docServerList
         '
         Me.docServerList.DocumentName = "Server List"
@@ -304,10 +267,6 @@ Partial Class frmMain
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.strMainMenuStrip.ResumeLayout(False)
         Me.strMainMenuStrip.PerformLayout()
-        CType(Me.ServersBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.TipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -325,18 +284,13 @@ Partial Class frmMain
     Friend WithEvents mnuExit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuTools As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuManageTemplateServers As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents TipsBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents FileDataSet As Tip_Tracker.FileDataSet
     Friend WithEvents FirstNameDataGridViewTextBoxColumn1 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents LastNameDataGridViewTextBoxColumn1 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SpecialFunctionBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents mnuContents As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuIndex As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator7 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuAbout As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuSettings As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents dlgSaveFile As System.Windows.Forms.SaveFileDialog
     Friend WithEvents mnuWindow As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuMinimizeAll As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuMaximizeAll As System.Windows.Forms.ToolStripMenuItem
