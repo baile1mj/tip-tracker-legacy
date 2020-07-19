@@ -242,6 +242,7 @@
     <Compile Include="GlobalDataSet.vb">
       <DependentUpon>GlobalDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\DataTableErrorMessageBuilder.vb" />
     <Compile Include="Utilities\FileObfuscator.vb" />
     <Compile Include="Utilities\GlobalFileDialogOptions.vb" />
     <Compile Include="Utilities\GlobalSettings.vb" />

@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.Text
 
 Namespace Utilities
 
@@ -20,6 +21,22 @@ Namespace Utilities
         ''' <returns></returns>
         Public Function GetWarnings() As ReadOnlyCollection(Of String)
             Return _warnings.AsReadOnly()
+        End Function
+
+        ''' <summary>
+        ''' Gets a message listing all of the errors present in the DataSet.
+        ''' </summary>
+        ''' <returns>The error message string.</returns>
+        Public Function GetDataSetErrorMessage() As String
+            Dim messageBuilder As New StringBuilder()
+
+            For Each table As DataTable In FileDataSet.Tables
+                Dim tableErrorBuilder As New DataTableErrorMessageBuilder(table)
+                messageBuilder.AppendLine(tableErrorBuilder.GetErrorMessage())
+                messageBuilder.AppendLine()
+            Next
+
+            Return messageBuilder.ToString().TrimEnd()
         End Function
 
         ''' <summary>
@@ -90,6 +107,14 @@ Namespace Utilities
 
             FileDataSet = dataSet
         End Sub
+
+        ''' <summary>
+        ''' Creates a copy of this instance.
+        ''' </summary>
+        ''' <returns>A new instance containing a copy of the data in the current instance.</returns>
+        Public Function Clone() As PayPeriodData
+            Return Clone(Me)
+        End Function
 
         ''' <summary>
         ''' Creates a new instance of the <see cref="PayPeriodData"/> class from a populated data set.
