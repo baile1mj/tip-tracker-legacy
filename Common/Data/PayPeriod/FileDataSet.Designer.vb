@@ -408,8 +408,7 @@ Namespace Data.PayPeriod
         <Global.System.Serializable(),  _
             Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")>  _
         Partial Public Class ServersDataTable
-            Inherits Global.System.Data.DataTable
-            Implements Global.System.Collections.IEnumerable
+            Inherits Global.System.Data.TypedTableBase(Of ServersRow)
         
             Private columnServerNumber As Global.System.Data.DataColumn
         
@@ -535,12 +534,6 @@ Namespace Data.PayPeriod
                 Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
             Public Function FindByServerNumber(ByVal ServerNumber As String) As ServersRow
                 Return CType(Me.Rows.Find(New Object() {ServerNumber}),ServersRow)
-            End Function
-        
-            <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-                Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
-            Public Overridable Function GetEnumerator() As Global.System.Collections.IEnumerator Implements Global.System.Collections.IEnumerable.GetEnumerator
-                Return Me.Rows.GetEnumerator
             End Function
         
             <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -716,8 +709,7 @@ Namespace Data.PayPeriod
         <Global.System.Serializable(),  _
             Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")>  _
         Partial Public Class TipsDataTable
-            Inherits Global.System.Data.DataTable
-            Implements Global.System.Collections.IEnumerable
+            Inherits Global.System.Data.TypedTableBase(Of TipsRow)
         
             Private columnTipID As Global.System.Data.DataColumn
         
@@ -886,12 +878,6 @@ Namespace Data.PayPeriod
                 Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
             Public Function FindByTipID(ByVal TipID As Integer) As TipsRow
                 Return CType(Me.Rows.Find(New Object() {TipID}),TipsRow)
-            End Function
-        
-            <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-                Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
-            Public Overridable Function GetEnumerator() As Global.System.Collections.IEnumerator Implements Global.System.Collections.IEnumerable.GetEnumerator
-                Return Me.Rows.GetEnumerator
             End Function
         
             <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -1083,8 +1069,7 @@ Namespace Data.PayPeriod
         <Global.System.Serializable(),  _
             Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")>  _
         Partial Public Class SettingsDataTable
-            Inherits Global.System.Data.DataTable
-            Implements Global.System.Collections.IEnumerable
+            Inherits Global.System.Data.TypedTableBase(Of SettingsRow)
         
             Private columnSetting As Global.System.Data.DataColumn
         
@@ -1190,12 +1175,6 @@ Namespace Data.PayPeriod
                 Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
             Public Function FindBySetting(ByVal Setting As String) As SettingsRow
                 Return CType(Me.Rows.Find(New Object() {Setting}),SettingsRow)
-            End Function
-        
-            <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-                Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
-            Public Overridable Function GetEnumerator() As Global.System.Collections.IEnumerator Implements Global.System.Collections.IEnumerable.GetEnumerator
-                Return Me.Rows.GetEnumerator
             End Function
         
             <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -1364,8 +1343,7 @@ Namespace Data.PayPeriod
         <Global.System.Serializable(),  _
             Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")>  _
         Partial Public Class SpecialFunctionsDataTable
-            Inherits Global.System.Data.DataTable
-            Implements Global.System.Collections.IEnumerable
+            Inherits Global.System.Data.TypedTableBase(Of SpecialFunctionsRow)
         
             Private columnSpecialFunction As Global.System.Data.DataColumn
         
@@ -1471,12 +1449,6 @@ Namespace Data.PayPeriod
                 Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
             Public Function FindBySpecialFunction(ByVal SpecialFunction As String) As SpecialFunctionsRow
                 Return CType(Me.Rows.Find(New Object() {SpecialFunction}),SpecialFunctionsRow)
-            End Function
-        
-            <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-                Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
-            Public Overridable Function GetEnumerator() As Global.System.Collections.IEnumerator Implements Global.System.Collections.IEnumerable.GetEnumerator
-                Return Me.Rows.GetEnumerator
             End Function
         
             <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
