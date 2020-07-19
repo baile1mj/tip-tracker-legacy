@@ -1,5 +1,6 @@
 Imports System.Drawing.Printing
 Imports System.IO
+Imports System.Reflection
 Imports TipTracker.Common.Data
 Imports TipTracker.Common.Data.GlobalSettings
 Imports TipTracker.Common.Data.PayPeriod
@@ -544,9 +545,13 @@ Public Class frmMain
 
     Private Sub mnuRunMaintenanceUtility_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuRunMaintenanceUtility.Click
         Try
-            Microsoft.VisualBasic.Interaction.Shell(My.Application.Info.DirectoryPath & "\TT Debug.exe", AppWinStyle.NormalFocus, False, 1)
+            Dim fileUtilityAssembly As Assembly = Assembly.GetAssembly(GetType(FileDebug.frmMain))
+            Dim fileUtilityPath As String = fileUtilityAssembly.Location
+
+            Shell(fileUtilityPath, AppWinStyle.NormalFocus, False, 1)
         Catch ex As FileNotFoundException
-            MessageBox.Show("Could not find the maintenance utility external executable.  Please reinstall the application.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Could not find the maintenance utility external executable.  Please reinstall " &
+                "the application.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

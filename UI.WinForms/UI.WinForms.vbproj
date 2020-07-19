@@ -397,6 +397,10 @@
       <Project>{24627859-a07b-4e7c-9bcf-a5b30b2c58b0}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileUtility\FileUtility.vbproj">
+      <Project>{e4750200-b940-4ae1-a0ac-7b9fd90481c8}</Project>
+      <Name>FileUtility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
