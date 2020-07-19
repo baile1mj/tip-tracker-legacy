@@ -1,3 +1,5 @@
+Imports TipTracker.Common.Data.GlobalSettings
+
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmGlobalFile
     Inherits System.Windows.Forms.Form
@@ -55,7 +57,7 @@ Partial Class frmGlobalFile
         Me.DataGridView1 = New System.Windows.Forms.DataGridView
         Me.DataGridView2 = New System.Windows.Forms.DataGridView
         Me.SettingsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.GlobalDataSet = New TipTracker.GlobalDataSet
+        Me.GlobalDataSet = New GlobalDataSet
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.SettingDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn
         Me.ValueDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn
@@ -461,7 +463,7 @@ Partial Class frmGlobalFile
     Friend WithEvents SaveXMLToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ExitToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents GlobalDataSet As TipTracker.GlobalDataSet
+    Friend WithEvents GlobalDataSet As GlobalDataSet
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents SettingsBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource

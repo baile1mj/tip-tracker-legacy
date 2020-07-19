@@ -1,5 +1,5 @@
 Imports System.IO
-Imports TipTracker.Utilities
+Imports TipTracker.Common.Data.PayPeriod
 
 Public Class frmDataFile
     Private ReadOnly _defaultDirectory As String

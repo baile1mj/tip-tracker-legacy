@@ -1,9 +1,11 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+Imports TipTracker.Common.Data.PayPeriod
+
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmDataFile
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -17,7 +19,7 @@ Partial Class frmDataFile
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmDataFile))
@@ -25,7 +27,7 @@ Partial Class frmDataFile
         Me.BindingNavigator1 = New System.Windows.Forms.BindingNavigator(Me.components)
         Me.BindingNavigatorAddNewItem = New System.Windows.Forms.ToolStripButton
         Me.TipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.FileDataSet = New TipTracker.FileDataSet
+        Me.FileDataSet = New FileDataSet
         Me.BindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel
         Me.BindingNavigatorDeleteItem = New System.Windows.Forms.ToolStripButton
         Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton
@@ -850,7 +852,7 @@ Partial Class frmDataFile
     End Sub
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents FileDataSet As TipTracker.FileDataSet
+    Friend WithEvents FileDataSet As FileDataSet
     Friend WithEvents TipsBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents SettingsBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents SpecialFunctionsBindingSource As System.Windows.Forms.BindingSource

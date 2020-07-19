@@ -1,5 +1,6 @@
 Imports System.IO
-Imports TipTracker.Utilities
+Imports TipTracker.Common.Data
+Imports TipTracker.Common.Data.GlobalSettings
 
 Public Class frmMain
     Private ReadOnly _defaultDataDirectory As String

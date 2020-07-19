@@ -161,9 +161,9 @@
     <Content Include="TT.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UI.WinForms\UI.WinForms.vbproj">
-      <Project>{c8b8852c-6cba-4fc6-a342-2b57f110b251}</Project>
-      <Name>UI.WinForms</Name>
+    <ProjectReference Include="..\Common\Common.vbproj">
+      <Project>{24627859-a07b-4e7c-9bcf-a5b30b2c58b0}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />

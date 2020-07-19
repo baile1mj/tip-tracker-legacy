@@ -1,4 +1,4 @@
-Imports TipTracker.Utilities
+Imports TipTracker.Common.Data.GlobalSettings
 
 Public Class frmGlobalFile
     Private ReadOnly _globalSettingsFile As GlobalSettingsFile
