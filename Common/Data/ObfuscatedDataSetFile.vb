@@ -72,8 +72,9 @@ Namespace Data
         ''' </summary>
         ''' <returns>The data set contained in the file.</returns>
         Protected Function Read() As T
-            Dim fileStream As FileStream = File.OpenRead(FilePath)
-            Return Read(fileStream)
+            Using fileStream As FileStream = File.OpenRead(FilePath)
+                Return Read(fileStream)
+            End Using
         End Function
 
         ''' <summary>
