@@ -1,4 +1,5 @@
 Imports System.IO
+Imports TipTracker.Common.Data.PayPeriod
 
 Public Class frmExportTips
     'Since there are multiple instances of frmEnterTips, a reference to the dataset

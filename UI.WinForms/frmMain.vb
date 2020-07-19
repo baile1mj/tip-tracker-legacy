@@ -1,6 +1,8 @@
 Imports System.Drawing.Printing
 Imports System.IO
-Imports TipTracker.Utilities
+Imports TipTracker.Common.Data
+Imports TipTracker.Common.Data.GlobalSettings
+Imports TipTracker.Common.Data.PayPeriod
 
 Public Class frmMain
     Private _globalSettingsFile As GlobalSettingsFile

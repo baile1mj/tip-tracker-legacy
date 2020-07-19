@@ -1,4 +1,6 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+Imports TipTracker.Common.Data.PayPeriod
+
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmManageSpecialFunctions
     Inherits System.Windows.Forms.Form
 
@@ -24,7 +26,7 @@ Partial Class frmManageSpecialFunctions
         Me.SpecialFunction = New System.Windows.Forms.DataGridViewTextBoxColumn
         Me.DateDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn
         Me.SpecialFunctionsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.FileDataSet = New TipTracker.FileDataSet
+        Me.FileDataSet = New FileDataSet
         Me.btnClose = New System.Windows.Forms.Button
         Me.btnAdd = New System.Windows.Forms.Button
         Me.btnDelete = New System.Windows.Forms.Button
@@ -143,7 +145,7 @@ Partial Class frmManageSpecialFunctions
     Friend WithEvents btnAdd As System.Windows.Forms.Button
     Friend WithEvents btnDelete As System.Windows.Forms.Button
     Friend WithEvents SpecialFunctionsBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents FileDataSet As TipTracker.FileDataSet
+    Friend WithEvents FileDataSet As FileDataSet
     Friend WithEvents SpecialFunction As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DateDataGridViewTextBoxColumn As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents btnEdit As System.Windows.Forms.Button

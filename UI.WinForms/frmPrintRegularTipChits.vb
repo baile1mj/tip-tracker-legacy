@@ -1,4 +1,5 @@
 Imports System.Drawing.Printing
+Imports TipTracker.Common.Data.PayPeriod
 
 Public Class frmPrintRegularTipChits
     Friend m_dsParentDataset As New FileDataSet

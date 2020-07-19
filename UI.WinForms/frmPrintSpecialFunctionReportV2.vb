@@ -1,4 +1,5 @@
 Imports System.Drawing.Printing
+Imports TipTracker.Common.Data.PayPeriod
 
 Public Class frmPrintSpecialFunctionReportV2
     'Since there are multiple instances of frmEnterTips, a reference to the dataset

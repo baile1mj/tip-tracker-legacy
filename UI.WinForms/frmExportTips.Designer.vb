@@ -1,4 +1,6 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+Imports TipTracker.Common.Data.PayPeriod
+
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmExportTips
     Inherits System.Windows.Forms.Form
 
@@ -26,7 +28,7 @@ Partial Class frmExportTips
         Me.btnOK = New System.Windows.Forms.Button
         Me.btnCancel = New System.Windows.Forms.Button
         Me.grpSortOrder = New System.Windows.Forms.GroupBox
-        Me.FileDataSet = New TipTracker.FileDataSet
+        Me.FileDataSet = New FileDataSet
         Me.gprServersToInclude = New System.Windows.Forms.GroupBox
         Me.cboServers = New System.Windows.Forms.ComboBox
         Me.optSelectedServer = New System.Windows.Forms.RadioButton
@@ -372,7 +374,7 @@ Partial Class frmExportTips
     Friend WithEvents btnOK As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
     Friend WithEvents grpSortOrder As System.Windows.Forms.GroupBox
-    Friend WithEvents FileDataSet As TipTracker.FileDataSet
+    Friend WithEvents FileDataSet As FileDataSet
     Friend WithEvents gprServersToInclude As System.Windows.Forms.GroupBox
     Friend WithEvents cboServers As System.Windows.Forms.ComboBox
     Friend WithEvents optSelectedServer As System.Windows.Forms.RadioButton

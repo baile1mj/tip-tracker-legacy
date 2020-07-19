@@ -1,3 +1,5 @@
+Imports TipTracker.Common.Data.PayPeriod
+
 Public Class frmManageSpecialFunctions
     Friend m_dsParentDataSet As New FileDataSet
 
@@ -21,7 +23,7 @@ Public Class frmManageSpecialFunctions
             End If
 
             If Not IsNothing(m_dsParentDataSet.SpecialFunctions.FindBySpecialFunction(frmAddSpecialFunction.FunctionName)) Then
-                MessageBox.Show("A special function called " & frmAddSpecialFunction.FunctionName & _
+                MessageBox.Show("A special function called " & frmAddSpecialFunction.FunctionName &
                 " already exists.  Please enter a different name.", "Duplicate Entry", MessageBoxButtons.OK)
                 frmAddSpecialFunction.Dispose()
                 Continue While

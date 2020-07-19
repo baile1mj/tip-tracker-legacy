@@ -1,6 +1,6 @@
-Imports System.IO
 Imports System.Drawing.Printing
-Imports TipTracker.Utilities
+Imports System.IO
+Imports TipTracker.Common.Data.PayPeriod
 
 Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile

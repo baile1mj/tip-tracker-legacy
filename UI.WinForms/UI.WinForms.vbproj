@@ -102,11 +102,6 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileDataSet.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="frmAbout.Designer.vb">
       <DependentUpon>frmAbout.vb</DependentUpon>
     </Compile>
@@ -234,20 +229,7 @@
     <Compile Include="frmSettings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GlobalDataSet.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="GlobalDataSet.vb">
-      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Utilities\DataTableErrorMessageBuilder.vb" />
-    <Compile Include="Utilities\FileObfuscator.vb" />
     <Compile Include="Utilities\GlobalFileDialogOptions.vb" />
-    <Compile Include="Utilities\GlobalSettings.vb" />
-    <Compile Include="Utilities\GlobalSettingsFile.vb" />
-    <Compile Include="Utilities\MachineSettings.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -269,9 +251,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\ObfuscatedDataSetFile.vb" />
-    <Compile Include="Utilities\PayPeriodData.vb" />
-    <Compile Include="Utilities\PayPeriodFile.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmAbout.resx">
@@ -367,28 +346,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="FileDataSet.xsc">
-      <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="FileDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>FileDataSet.Designer.vb</LastGenOutput>
-    </None>
-    <None Include="FileDataSet.xss">
-      <DependentUpon>FileDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="GlobalDataSet.xsc">
-      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="GlobalDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>GlobalDataSet.Designer.vb</LastGenOutput>
-    </None>
-    <None Include="GlobalDataSet.xss">
-      <DependentUpon>GlobalDataSet.xsd</DependentUpon>
-    </None>
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -435,7 +392,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vbproj">
+      <Project>{24627859-a07b-4e7c-9bcf-a5b30b2c58b0}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

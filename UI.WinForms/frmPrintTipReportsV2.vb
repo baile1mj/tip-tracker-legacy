@@ -1,4 +1,5 @@
 Imports System.Drawing.Printing
+Imports TipTracker.Common.Data.PayPeriod
 
 Public Class frmPrintTipReportsV2
     'The following constants indicate the index of each print order that

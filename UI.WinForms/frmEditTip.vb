@@ -1,3 +1,5 @@
+Imports TipTracker.Common.Data.PayPeriod
+
 Public Class frmEditTip
     Friend m_dsParentDataSet As New FileDataSet
 
