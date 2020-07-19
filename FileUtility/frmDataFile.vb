@@ -1,291 +1,169 @@
 Imports System.IO
+Imports TipTracker.Utilities
 
 Public Class frmDataFile
-    Private m_strCurrentFile As String = ""
+    Private ReadOnly _defaultDirectory As String
 
-    Private Sub ExitToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExitToolStripMenuItem.Click
-        Me.Close()
-    End Sub
+    Private _payPeriodFile As PayPeriodFile
+    Private _payPeriodData As PayPeriodData
 
-    Private Sub SaveToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaveToolStripMenuItem.Click
-        If m_strCurrentFile = "" Then Exit Sub
+    Public Sub New(ByVal defaultDirectory As String)
+        InitializeComponent()
 
-        Try
-            Dim objFileEncoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            Me.FileDataSet.WriteXml(objDSStream)
-
-            objFileEncoder.EncodeFile(m_strCurrentFile, objDSStream)
-
-            objFileEncoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-            Me.FileDataSet.AcceptChanges()
-        Catch ex As Exception
-            MessageBox.Show("Could not save file.", "Error", MessageBoxButtons.OK)
-            Exit Sub
-        End Try
-
-    End Sub
-
-    Private Sub SaveXMLToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaveXMLToolStripMenuItem.Click
-        If m_strCurrentFile = "" Then Exit Sub
-
-        Dim strFileName As String = ""
-        Dim dlgSave As New SaveFileDialog
-
-        With dlgSave
-            .AddExtension = True
-            .DefaultExt = ".xml"
-            .Filter = "XML File (*.xml)|*.xml"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .OverwritePrompt = True
-            .RestoreDirectory = True
-            .SupportMultiDottedExtensions = True
-            .Title = "Save File"
-        End With
-
-        If dlgSave.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgSave.Dispose()
-            Exit Sub
+        If Directory.Exists(defaultDirectory) Then
+            _defaultDirectory = defaultDirectory
+        Else
+            _defaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
         End If
+    End Sub
 
-        strFileName = dlgSave.FileName
+    Private Sub ExitToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ExitToolStripMenuItem.Click
+        Close()
+    End Sub
+
+    Private Sub SaveToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SaveToolStripMenuItem.Click
+        SaveFile()
+    End Sub
+
+    Private Function SaveFile() As Boolean
+        Try
+            _payPeriodFile.Write(_payPeriodData)
+            Return True
+        Catch ex As Exception
+            MessageBox.Show($"An error occurred while saving the data file: ""{ex.Message}"".",
+                "Error Saving File", MessageBoxButtons.OK)
+            Return False
+        End Try
+    End Function
+
+    Private Sub SaveXMLToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SaveXMLToolStripMenuItem.Click
+        Dim strFileName As String
+        Using dlgSave As New SaveFileDialog() With {
+            .AddExtension = True,
+            .DefaultExt = ".xml",
+            .FileName = Path.GetFileNameWithoutExtension(_payPeriodFile.FilePath),
+            .Filter = "XML File (*.xml)|*.xml",
+            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments,
+            .OverwritePrompt = True,
+            .RestoreDirectory = True,
+            .SupportMultiDottedExtensions = True,
+            .Title = "Save File"}
+
+            If dlgSave.ShowDialog <> DialogResult.OK Then Exit Sub
+
+            strFileName = dlgSave.FileName
+        End Using
 
         Try
-            Me.FileDataSet.WriteXml(strFileName)
+            _payPeriodData.FileDataSet.WriteXml(strFileName)
         Catch ex As Exception
-            MessageBox.Show("Could not save XML.", "Error", MessageBoxButtons.OK)
+            MessageBox.Show($"An error occurred while saving the XML: ""{ex.Message}"".",
+                "Error Saving XML", MessageBoxButtons.OK)
             Exit Sub
         End Try
     End Sub
 
-    Private Sub CloseFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        If m_strCurrentFile = "" Then Exit Sub
+    Private Sub SaveAsToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SaveAsToolStripMenuItem.Click
+        If _payPeriodData.FileDataSet.HasChanges Then
+            Dim response As DialogResult = MessageBox.Show("Do you wish to save your changes to the data file?",
+                "Save Changes", MessageBoxButtons.YesNoCancel)
 
-        If Me.FileDataSet.HasChanges Then
-            If MessageBox.Show("Do you want to discard your changes?", "Discard Changes", MessageBoxButtons.YesNo) = _
-                Windows.Forms.DialogResult.No Then
+            If response = DialogResult.Yes Then
+                Dim isSuccess As Boolean = SaveFile()
+                If Not isSuccess Then Exit Sub
+            ElseIf response = DialogResult.Cancel Then
                 Exit Sub
             End If
         End If
 
-        Me.FileDataSet.Clear()
-        Me.FileDataSet.AcceptChanges()
+        Dim strFileName As String
+        Using dlgSave As New SaveFileDialog() With {
+            .AddExtension = True,
+            .DefaultExt = ".ttd",
+            .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd",
+            .FileName = $"{Path.GetFileNameWithoutExtension(_payPeriodFile.FilePath)} - Copy",
+            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments,
+            .OverwritePrompt = True,
+            .RestoreDirectory = True,
+            .SupportMultiDottedExtensions = True,
+            .Title = "Save File"}
 
-        m_strCurrentFile = ""
-    End Sub
+            If dlgSave.ShowDialog <> DialogResult.OK Then Exit Sub
 
-    Private Sub SaveAsToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaveAsToolStripMenuItem.Click
-        If m_strCurrentFile = "" Then Exit Sub
-
-        Dim strFileName As String = ""
-        Dim dlgSave As New SaveFileDialog
-
-        With dlgSave
-            .AddExtension = True
-            .DefaultExt = ".ttd"
-            .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .OverwritePrompt = True
-            .RestoreDirectory = True
-            .SupportMultiDottedExtensions = True
-            .Title = "Save File"
-        End With
-
-        If dlgSave.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgSave.Dispose()
-            Exit Sub
-        End If
-
-        strFileName = dlgSave.FileName
+            strFileName = dlgSave.FileName
+        End Using
 
         Try
-            Dim objFileEncoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
+            Dim dataCopy As PayPeriodData = _payPeriodData.Clone()
+            Dim newFile As New PayPeriodFile(strFileName)
 
-            Me.FileDataSet.WriteXml(objDSStream)
+            newFile.Open()
+            newFile.Write(dataCopy)
 
-            objFileEncoder.EncodeFile(strFileName, objDSStream)
-
-            objFileEncoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-
-            Me.FileDataSet.AcceptChanges()
+            _payPeriodFile.Dispose()
+            _payPeriodFile = newFile
+            _payPeriodData = _payPeriodData
+            Text = _payPeriodFile.FilePath
         Catch ex As Exception
-            MessageBox.Show("Could not save file.", "Error", MessageBoxButtons.OK)
+            MessageBox.Show($"An error occurred while saving the file copy: ""{ex.Message}"".",
+                "Error", MessageBoxButtons.OK)
             Exit Sub
         End Try
-
-        m_strCurrentFile = strFileName
     End Sub
 
-    Private Sub frmDataFile_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-        If Me.FileDataSet.HasChanges Then
-            Select Case MessageBox.Show("Do you want to discard your changes?", "Discard Changes", MessageBoxButtons.YesNoCancel)
-                Case Windows.Forms.DialogResult.No
-                    Try
-                        Dim objFileEncoder As New clsFileEncoder
-                        Dim objDSStream As New MemoryStream
+    Private Sub frmDataFile_FormClosing(ByVal sender As Object, ByVal e As FormClosingEventArgs) Handles Me.FormClosing
+        If _payPeriodData.FileDataSet.HasChanges Then
+            Dim response As DialogResult = MessageBox.Show("Do you wish to save your changes to the data file?",
+                "Save Changes", MessageBoxButtons.YesNoCancel)
 
-                        Me.FileDataSet.WriteXml(objDSStream)
-
-                        objFileEncoder.EncodeFile(m_strCurrentFile, objDSStream)
-
-                        objFileEncoder.Dispose()
-                        objDSStream.Close()
-                        objDSStream.Dispose()
-                        Me.FileDataSet.AcceptChanges()
-                    Catch ex As Exception
-                        MessageBox.Show("Could not save file." & vbCrLf & vbCrLf & ex.ToString, "Error", MessageBoxButtons.OK)
-                        Exit Sub
-                    End Try
-                Case Windows.Forms.DialogResult.Yes
-                    Exit Sub
-                Case Windows.Forms.DialogResult.Cancel
-                    e.Cancel = True
-                    Exit Sub
-            End Select
-        End If
-    End Sub
-
-    Private Sub ViewErrorsToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ViewErrorsToolStripMenuItem.Click
-        If Me.m_strCurrentFile = "" Then Exit Sub
-
-        If Me.FileDataSet.HasErrors = False Then
-            MsgBox("No errors were found.", MsgBoxStyle.OkOnly, "No Errors")
-            Exit Sub
-        End If
-
-        Dim strServers As String = ""
-        Dim strTips As String = ""
-        Dim strSettings As String = ""
-        Dim strFunctions As String = ""
-
-        If Me.FileDataSet.Servers.HasErrors = False Then
-            strServers = "No errors found."
-        Else
-            For Each row As DataRow In Me.FileDataSet.Servers
-                If row.HasErrors Then
-                    strServers += vbCrLf & "Server Number: " & row("ServerNumber").ToString
-                    strServers += vbCrLf & "First Name: " & row("FirstName").ToString
-                    strServers += vbCrLf & "Last Name: " & row("LastName").ToString
-                    strServers += vbCrLf
-                End If
-            Next
-        End If
-
-        If Me.FileDataSet.Tips.HasErrors = False Then
-            strTips = "No errors found."
-        Else
-            For Each row As DataRow In Me.FileDataSet.Tips
-                If row.HasErrors Then
-                    strTips += vbCrLf & "Tip ID: " & row("TipID").ToString
-                    strTips += vbCrLf & "Amount: " & row("Amount").ToString
-                    strTips += vbCrLf & "Server Number: " & row("ServerNumber").ToString
-                    strTips += vbCrLf & "First Name: " & row("FirstName").ToString
-                    strTips += vbCrLf & "Last Name: " & row("LastName").ToString
-                    strTips += vbCrLf & "Description: " & row("Description").ToString
-                    strTips += vbCrLf & "Function: " & row("SpecialFunction").ToString
-                    strTips += vbCrLf & "Working Date: " & row("WorkingDate").ToString
-                    strTips += vbCrLf
-                End If
-            Next
-        End If
-
-        If Me.FileDataSet.Settings.HasErrors = False Then
-            strSettings = "No errors found."
-        Else
-            For Each row As DataRow In Me.FileDataSet.Settings
-                If row.HasErrors Then
-                    strSettings += vbCrLf & "Setting: " & row("Setting").ToString
-                    strSettings += vbCrLf & "Value: " & row("Value").ToString
-                    strSettings += vbCrLf
-                End If
-            Next
-        End If
-
-        If Me.FileDataSet.SpecialFunctions.HasErrors = False Then
-            strFunctions = "No errors found."
-        Else
-            For Each row As DataRow In Me.FileDataSet.SpecialFunctions
-                If row.HasErrors Then
-                    strFunctions += vbCrLf & "Function: " & row("SpecialFunction").ToString
-                    strFunctions += vbCrLf & "Date: " & row("Date").ToString
-                    strFunctions += vbCrLf
-                End If
-            Next
-        End If
-
-        With frmErrors
-            .TextBox1.Text += "Servers Table:" & vbCrLf & strServers
-            .TextBox1.Text += vbCrLf & vbCrLf & "Tips Table: " & vbCrLf & strTips
-            .TextBox1.Text += vbCrLf & vbCrLf & "Settings Table: " & vbCrLf & strSettings
-            .TextBox1.Text += vbCrLf & vbCrLf & "Functions Table: " & vbCrLf & strFunctions
-
-            .ShowDialog()
-            .Dispose()
-        End With
-
-
-
-    End Sub
-
-    Private Sub frmDataFile_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Dim strFileName As String = ""
-        Dim dlgOpen As New OpenFileDialog
-
-        With dlgOpen
-            .CheckFileExists = True
-            .CheckPathExists = True
-            .DefaultExt = ".ttd"
-            .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd"
-            .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-            .RestoreDirectory = True
-            .Title = "Open Data File"
-        End With
-
-        If dlgOpen.ShowDialog <> Windows.Forms.DialogResult.OK Then
-            dlgOpen.Dispose()
-            Me.Close()
-            Exit Sub
-        End If
-
-        If Me.FileDataSet.HasChanges Then
-            If MessageBox.Show("Do you want to discard your changes?", "Discard Changes", MessageBoxButtons.YesNo) = _
-                Windows.Forms.DialogResult.No Then
-                Exit Sub
+            If response = DialogResult.Yes Then
+                Dim isSuccess As Boolean = SaveFile()
+                e.Cancel = Not isSuccess
+            ElseIf response = DialogResult.Cancel Then
+                e.Cancel = True
             End If
         End If
 
-        Me.FileDataSet.Clear()
-        Me.FileDataSet.AcceptChanges()
+        If Not e.Cancel Then _payPeriodFile.Dispose()
+    End Sub
 
-        strFileName = dlgOpen.FileName
-        m_strCurrentFile = strFileName
+    Private Sub ViewErrorsToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ViewErrorsToolStripMenuItem.Click
+        Dim errorMessage As String = _payPeriodData.GetDataSetErrorMessage()
 
-        dlgOpen.Dispose()
+        Using errorViewer As New frmErrors(errorMessage)
+            errorViewer.ShowDialog()
+        End Using
+    End Sub
+
+    Private Sub frmDataFile_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
+        Using dlgOpen As New OpenFileDialog() With {
+            .CheckFileExists = True,
+            .CheckPathExists = True,
+            .DefaultExt = ".ttd",
+            .Filter = "Tip Tracker Data Files (*.ttd)|*.ttd",
+            .InitialDirectory = _defaultDirectory,
+            .RestoreDirectory = True,
+            .Title = "Open Data File"}
+
+            If dlgOpen.ShowDialog <> DialogResult.OK Then Exit Sub
+
+            _payPeriodFile = New PayPeriodFile(dlgOpen.FileName)
+        End Using
 
         Try
-            Dim objFileDecoder As New clsFileEncoder
-            Dim objDSStream As New MemoryStream
-
-            objDSStream = objFileDecoder.DecodeFile(strFileName)
-
-            objDSStream.Flush()
-            objDSStream.Seek(0, SeekOrigin.Begin)
-
-            Me.FileDataSet.ReadXml(objDSStream)
-
-            objFileDecoder.Dispose()
-            objDSStream.Close()
-            objDSStream.Dispose()
-
-            Me.FileDataSet.AcceptChanges()
+            _payPeriodFile.Open()
+            _payPeriodData = _payPeriodFile.ReadPayPeriodFileUnsafe()
+            Text = _payPeriodFile.FilePath
         Catch ex As Exception
-            MsgBox(ex.ToString, MsgBoxStyle.OkOnly, "Error")
+            MessageBox.Show($"An error occurred while reading the selected file: ""{ex.Message}"".",
+            "Error Reading File", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Close()
+            Exit Sub
         End Try
+
+        ServersBindingSource.DataSource = _payPeriodData.FileDataSet.Servers
+        TipsBindingSource.DataSource = _payPeriodData.FileDataSet.Tips
+        SpecialFunctionsBindingSource.DataSource = _payPeriodData.FileDataSet.SpecialFunctions
+        SettingsBindingSource.DataSource = _payPeriodData.FileDataSet.Settings
     End Sub
 End Class

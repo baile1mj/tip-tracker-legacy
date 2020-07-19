@@ -27,7 +27,8 @@ Public Class frmMain
     End Sub
 
     Private Sub btnDataFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDataFile.Click
-        frmDataFile.Show()
+        Dim fileEditor As New frmDataFile(_defaultDataDirectory)
+        fileEditor.Show()
     End Sub
 
     Private Sub btnGlobalFile_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnGlobalFile.Click
