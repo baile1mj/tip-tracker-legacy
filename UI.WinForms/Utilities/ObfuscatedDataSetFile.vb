@@ -35,7 +35,7 @@ Namespace Utilities
         ''' Writes the data set to the file.
         ''' </summary>
         ''' <param name="dataSet">The data set to write.</param>
-        Public Sub Write(ByVal dataSet As T)
+        Protected Sub Write(ByVal dataSet As T)
             Dim obfuscator As New FileObfuscator()
             Dim dataStream As New MemoryStream()
 
