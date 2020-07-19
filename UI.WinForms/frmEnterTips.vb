@@ -1818,29 +1818,19 @@ Public Class frmEnterTips
             Data.FileDataSet.Servers.Rows.Add(drNewRow)
         Loop
 
-        'TODO: do we want to keep this?  Probably not, but we might need to raise an event.
-        'Select Case MessageBox.Show("Auto add complete.  Save file?", "Complete", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-        '    Case Windows.Forms.DialogResult.Yes
-        '        SaveData()
-        '    Case Windows.Forms.DialogResult.No
-        '        Exit Select
-        '    Case Windows.Forms.DialogResult.Cancel
-        '        Data.FileDataSet.RejectChanges()
-        'End Select
-
         LoadServerCombos()
     End Sub
 
-    Private Sub mnuOptimizeFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuOptimizeFile.Click
+    Private Sub mnuOptimizeFile_Click(ByVal sender As Object, ByVal e As EventArgs) Handles mnuOptimizeFile.Click
         If MessageBox.Show("This function will compact credit card, room charge, and cash tips so that there is only one entry per" &
         " server per day.  It will also remove all servers who do not have tips.  It is recommended that this function" &
         " only be performed after the pay period is balanced and all reports have been printed.  Optimization may take several" &
         " minutes depending on the number of tips and servers in the file.  Do you wish to continue?", "Optimize File",
-        MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
+        MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
 
-        Windows.Forms.Cursor.Current = Cursors.WaitCursor
+        Cursor.Current = Cursors.WaitCursor
 
         Dim dvServers, dvtips As New DataView
         dvServers.Table = Data.FileDataSet.Servers
@@ -1862,21 +1852,10 @@ Public Class frmEnterTips
         Loop
 
         CompactTips()
-
-        Windows.Forms.Cursor.Current = Cursors.Default
-
+        Cursor.Current = Cursors.Default
         lblInfo.Visible = False
-        dvServers = Nothing
-
-        'TODO: do we want to keep this?  Probably not, but we might need to raise an event.
-        'Select Case MessageBox.Show("Optimization complete.  Do you wish to save the file?", "Optimization Complete", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-        '    Case Windows.Forms.DialogResult.Yes
-        '        SaveData()
-        '    Case Windows.Forms.DialogResult.No
-        '        Exit Select
-        '    Case Windows.Forms.DialogResult.Cancel
-        '        Data.FileDataSet.RejectChanges()
-        'End Select
+        dvServers.Dispose()
+        dvtips.Dispose()
     End Sub
 
     Private Sub CompactTips()
@@ -1912,7 +1891,7 @@ Public Class frmEnterTips
             dteDate = DateAdd(DateInterval.Day, 1, dteDate)
         Loop
 
-        dvTips = Nothing
+        dvTips.Dispose()
     End Sub
 
     Private Sub ServersDataGridView_CellMouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles ServersDataGridView.CellMouseDown
