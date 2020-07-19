@@ -80,9 +80,9 @@ Namespace Utilities
         ''' Reads the data set from the file.
         ''' </summary>
         ''' <param name="fileStream">The file stream to use for reading the file.</param>
+        ''' <param name="unsafe">True to turn off constraint checking; otherwise, false (default).</param>
         ''' <returns>The data set contained in the file.</returns>
-        Protected Function Read(fileStream As FileStream) As T
-
+        Protected Function Read(fileStream As FileStream, Optional ByVal unsafe As Boolean = False) As T
             Dim reader As New StreamReader(fileStream)
             Dim fileContents As String = reader.ReadToEnd()
             Dim obfuscator As New FileObfuscator()
@@ -103,7 +103,11 @@ Namespace Utilities
             Dim dataStream As New MemoryStream(contentBytes)
             Dim dataSet As New T()
 
-            dataSet.ReadXml(dataStream)
+            Try
+                dataSet.ReadXml(dataStream)
+            Catch ex As Exception
+                If Not unsafe Then Throw ex
+            End Try
 
             Return dataSet
         End Function

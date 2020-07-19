@@ -35,15 +35,34 @@ Namespace Utilities
         ''' <summary>
         ''' Reads the data from the file.
         ''' </summary>
+        ''' <param name="unsafe">True to allow potentially unstable data to be read; otherwise, false.</param>
         ''' <returns>The pay period data contained in the file.</returns>
-        Public Function ReadPayPeriodFile() As PayPeriodData
+        Private Function ReadPayPeriodFile(ByVal unsafe As Boolean) As PayPeriodData
             If IsNothing(_fileStream) Then
                 Throw New InvalidOperationException("The file has not been opened for reading.")
             End If
 
-            Dim dataSet As FileDataSet = Read(_fileStream)
+            Dim dataSet As FileDataSet = Read(_fileStream, unsafe)
             dataSet.AcceptChanges()
             Return PayPeriodData.Create(dataSet)
+        End Function
+
+        ''' <summary>
+        ''' Reads the data from the file.
+        ''' </summary>
+        ''' <returns>The pay period data contained in the file.</returns>
+        Public Function ReadPayPeriodFile() As PayPeriodData
+            Return ReadPayPeriodFile(False)
+        End Function
+
+        ''' <summary>
+        ''' Reads the data from the file without validating data relationships.
+        ''' </summary>
+        ''' <returns>The pay period data contained in the file.</returns>
+        ''' <remarks>This option could allow unstable data to be read in and should only
+        ''' be used for troubleshooting applications.</remarks>
+        Public Function ReadPayPeriodFileUnsafe() As PayPeriodData
+            Return ReadPayPeriodFile(True)
         End Function
 
         ''' <summary>
