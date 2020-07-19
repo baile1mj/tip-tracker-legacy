@@ -112,7 +112,7 @@ Public Class frmDataFile
     End Sub
 
     Private Sub frmDataFile_FormClosing(ByVal sender As Object, ByVal e As FormClosingEventArgs) Handles Me.FormClosing
-        If _payPeriodData.FileDataSet.HasChanges Then
+        If _payPeriodData?.FileDataSet.HasChanges Then
             Dim response As DialogResult = MessageBox.Show("Do you wish to save your changes to the data file?",
                 "Save Changes", MessageBoxButtons.YesNoCancel)
 
@@ -124,7 +124,7 @@ Public Class frmDataFile
             End If
         End If
 
-        If Not e.Cancel Then _payPeriodFile.Dispose()
+        If Not e.Cancel Then _payPeriodFile?.Dispose()
     End Sub
 
     Private Sub ViewErrorsToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ViewErrorsToolStripMenuItem.Click
@@ -145,7 +145,10 @@ Public Class frmDataFile
             .RestoreDirectory = True,
             .Title = "Open Data File"}
 
-            If dlgOpen.ShowDialog <> DialogResult.OK Then Exit Sub
+            If dlgOpen.ShowDialog <> DialogResult.OK Then
+                Close()
+                Exit Sub
+            End If
 
             _payPeriodFile = New PayPeriodFile(dlgOpen.FileName)
         End Using
