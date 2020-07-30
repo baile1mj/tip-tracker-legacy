@@ -257,6 +257,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\SortableBindingList.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmAbout.resx">
