@@ -26,7 +26,7 @@ Namespace Utilities
         ''' Creates a new instance of the sortable binding list class.
         ''' </summary>
         Public Sub New()
-            MyBase.New()
+            Me.New(New List(Of T))
         End Sub
 
         ''' <summary>
@@ -36,6 +36,8 @@ Namespace Utilities
         ''' <param name="list">The items to store in the list.</param>
         Public Sub New(ByVal list As IList(Of T))
             MyBase.New(list)
+
+            AddHandler ListChanged, AddressOf CheckReSortNeeded
         End Sub
 
         ''' <inheritdoc />
@@ -77,6 +79,21 @@ Namespace Utilities
 
             'Fire an event to tell the UI that the contents have changed.
             OnListChanged(New ListChangedEventArgs(ListChangedType.Reset, -1))
+        End Sub
+
+        ''' <summary>
+        ''' Watches for the list changed event and re-sorts the list when required.
+        ''' </summary>
+        ''' <param name="sender">The object that triggered the event.</param>
+        ''' <param name="e">Arguments associated with the event.</param>
+        Protected Sub CheckReSortNeeded(ByVal sender As Object, ByVal e As ListChangedEventArgs)
+            Dim isReSortableChange As Boolean = e.ListChangedType = ListChangedType.ItemAdded _
+                Or e.ListChangedType = ListChangedType.ItemChanged
+            Dim needsResorting As Boolean = IsSortedCore And isReSortableChange
+
+            If needsResorting Then
+                ApplySortCore(SortPropertyCore, SortDirectionCore)
+            End If
         End Sub
     End Class
 End Namespace
