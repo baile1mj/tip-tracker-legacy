@@ -89,9 +89,9 @@ Public Class frmMain
             Return
         End Try
 
-        'If there's not default directory, require the user to select one.
-        While String.IsNullOrEmpty(_globalSettings.DefaultDataDirectory)
-            MessageBox.Show("You must select a default data directory.", "Select Directory", MessageBoxButtons.OK)
+        'If the default directory is invalid, require the user to select a valid one.
+        While String.IsNullOrEmpty(_globalSettings.DefaultDataDirectory) Or Not Directory.Exists(_globalSettings.DefaultDataDirectory)
+            MessageBox.Show("You must select a valid default data directory.", "Select Directory", MessageBoxButtons.OK)
             mnuSettings.PerformClick()
         End While
 
