@@ -82,7 +82,6 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="clsFileEncoder.vb" />
     <Compile Include="frmDataFile.vb">
       <SubType>Form</SubType>
     </Compile>
