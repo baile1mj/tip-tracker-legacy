@@ -211,19 +211,6 @@ Public Class frmMain
         LayoutMdi(MdiLayout.Cascade)
     End Sub
 
-    Friend Function NumberOfFilesOpen() As Integer
-        'Returns the number of data files open.  Since each data file calls a new instance of
-        'frmEnterTips when it is opened, the number of mdi children is also the number of open
-        'data files.
-        Dim intFilesOpen As Integer = 0
-
-        For Each form As Form In MdiChildren
-            intFilesOpen += 1
-        Next
-
-        Return intFilesOpen
-    End Function
-
     Private Sub mnuClose_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuClose.Click
         ActiveMdiChild.Close()
     End Sub
