@@ -4,6 +4,7 @@ Imports System.Reflection
 Imports TipTracker.Common.Data
 Imports TipTracker.Common.Data.GlobalSettings
 Imports TipTracker.Common.Data.PayPeriod
+Imports TipTracker.Core
 
 Public Class frmMain
     Private _globalSettingsFile As GlobalSettingsFile
@@ -132,8 +133,14 @@ Public Class frmMain
             Else
                 _globalSettings.GlobalDataSet.Servers.Rows.Clear()
 
-                For Each row As DataRow In serverManager.ServersTable.Rows
-                    _globalSettings.GlobalDataSet.Servers.ImportRow(row)
+                For Each server As Server In serverManager.Servers
+                    Dim newRow As GlobalDataSet.ServersRow = _globalSettings.GlobalDataSet.Servers.NewServersRow
+                    newRow.ServerNumber = server.PosId
+                    newRow.FirstName = server.FirstName
+                    newRow.LastName = server.LastName
+                    newRow.SuppressChit = server.SuppressChit
+
+                    _globalSettings.GlobalDataSet.Servers.AddServersRow(newRow)
                 Next
 
                 _globalSettings.GlobalDataSet.AcceptChanges()

@@ -19,19 +19,19 @@ Partial Class frmManageServers
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
-        Me.ServersDataGridView = New System.Windows.Forms.DataGridView
-        Me.ServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.NoChit = New System.Windows.Forms.DataGridViewCheckBoxColumn
-        Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.btnAdd = New System.Windows.Forms.Button
-        Me.btnEdit = New System.Windows.Forms.Button
-        Me.btnDelete = New System.Windows.Forms.Button
-        Me.btnClose = New System.Windows.Forms.Button
+        Me.components = New System.ComponentModel.Container()
+        Me.ServersDataGridView = New System.Windows.Forms.DataGridView()
+        Me.PosIdDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SuppressChitDataGridViewCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ServerBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.btnAdd = New System.Windows.Forms.Button()
+        Me.btnEdit = New System.Windows.Forms.Button()
+        Me.btnDelete = New System.Windows.Forms.Button()
+        Me.btnClose = New System.Windows.Forms.Button()
         CType(Me.ServersDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ServersBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ServersDataGridView
@@ -41,12 +41,12 @@ Partial Class frmManageServers
         Me.ServersDataGridView.AllowUserToResizeColumns = False
         Me.ServersDataGridView.AllowUserToResizeRows = False
         Me.ServersDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ServersDataGridView.AutoGenerateColumns = False
         Me.ServersDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.ServersDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ServerNumber, Me.FirstName, Me.LastName, Me.NoChit})
-        Me.ServersDataGridView.DataSource = Me.ServersBindingSource
+        Me.ServersDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PosIdDataGridViewTextBoxColumn, Me.FirstNameDataGridViewTextBoxColumn, Me.LastNameDataGridViewTextBoxColumn, Me.SuppressChitDataGridViewCheckBoxColumn})
+        Me.ServersDataGridView.DataSource = Me.ServerBindingSource
         Me.ServersDataGridView.Location = New System.Drawing.Point(12, 12)
         Me.ServersDataGridView.MultiSelect = False
         Me.ServersDataGridView.Name = "ServersDataGridView"
@@ -58,34 +58,42 @@ Partial Class frmManageServers
         Me.ServersDataGridView.TabIndex = 4
         Me.ServersDataGridView.TabStop = False
         '
-        'ServerNumber
+        'PosIdDataGridViewTextBoxColumn
         '
-        Me.ServerNumber.HeaderText = "Number"
-        Me.ServerNumber.Name = "ServerNumber"
-        Me.ServerNumber.ReadOnly = True
-        Me.ServerNumber.Width = 50
+        Me.PosIdDataGridViewTextBoxColumn.DataPropertyName = "PosId"
+        Me.PosIdDataGridViewTextBoxColumn.HeaderText = "Number"
+        Me.PosIdDataGridViewTextBoxColumn.Name = "PosIdDataGridViewTextBoxColumn"
+        Me.PosIdDataGridViewTextBoxColumn.ReadOnly = True
+        Me.PosIdDataGridViewTextBoxColumn.Width = 50
         '
-        'FirstName
+        'FirstNameDataGridViewTextBoxColumn
         '
-        Me.FirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.FirstName.FillWeight = 75.0!
-        Me.FirstName.HeaderText = "First Name"
-        Me.FirstName.Name = "FirstName"
-        Me.FirstName.ReadOnly = True
+        Me.FirstNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.FirstNameDataGridViewTextBoxColumn.DataPropertyName = "FirstName"
+        Me.FirstNameDataGridViewTextBoxColumn.FillWeight = 75.0!
+        Me.FirstNameDataGridViewTextBoxColumn.HeaderText = "First Name"
+        Me.FirstNameDataGridViewTextBoxColumn.Name = "FirstNameDataGridViewTextBoxColumn"
+        Me.FirstNameDataGridViewTextBoxColumn.ReadOnly = True
         '
-        'LastName
+        'LastNameDataGridViewTextBoxColumn
         '
-        Me.LastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.LastName.HeaderText = "Last Name"
-        Me.LastName.Name = "LastName"
-        Me.LastName.ReadOnly = True
+        Me.LastNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.LastNameDataGridViewTextBoxColumn.DataPropertyName = "LastName"
+        Me.LastNameDataGridViewTextBoxColumn.HeaderText = "Last Name"
+        Me.LastNameDataGridViewTextBoxColumn.Name = "LastNameDataGridViewTextBoxColumn"
+        Me.LastNameDataGridViewTextBoxColumn.ReadOnly = True
         '
-        'NoChit
+        'SuppressChitDataGridViewCheckBoxColumn
         '
-        Me.NoChit.HeaderText = "No Chit"
-        Me.NoChit.Name = "NoChit"
-        Me.NoChit.ReadOnly = True
-        Me.NoChit.Width = 50
+        Me.SuppressChitDataGridViewCheckBoxColumn.DataPropertyName = "SuppressChit"
+        Me.SuppressChitDataGridViewCheckBoxColumn.HeaderText = "No Chit"
+        Me.SuppressChitDataGridViewCheckBoxColumn.Name = "SuppressChitDataGridViewCheckBoxColumn"
+        Me.SuppressChitDataGridViewCheckBoxColumn.ReadOnly = True
+        Me.SuppressChitDataGridViewCheckBoxColumn.Width = 50
+        '
+        'ServerBindingSource
+        '
+        Me.ServerBindingSource.DataSource = GetType(TipTracker.Core.Server)
         '
         'btnAdd
         '
@@ -145,18 +153,18 @@ Partial Class frmManageServers
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Manage Template Servers"
         CType(Me.ServersDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ServersBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents ServersDataGridView As System.Windows.Forms.DataGridView
     Friend WithEvents btnAdd As System.Windows.Forms.Button
     Friend WithEvents btnEdit As System.Windows.Forms.Button
     Friend WithEvents btnDelete As System.Windows.Forms.Button
     Friend WithEvents btnClose As System.Windows.Forms.Button
-    Friend WithEvents ServerNumber As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents FirstName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents NoChit As System.Windows.Forms.DataGridViewCheckBoxColumn
+    Friend WithEvents PosIdDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
+    Friend WithEvents FirstNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
+    Friend WithEvents LastNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
+    Friend WithEvents SuppressChitDataGridViewCheckBoxColumn As DataGridViewCheckBoxColumn
+    Private WithEvents ServerBindingSource As BindingSource
 End Class

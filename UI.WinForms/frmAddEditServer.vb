@@ -1,4 +1,26 @@
+Imports TipTracker.Core
+
 Public Class frmAddEditServer
+    Public ReadOnly Property Server As Server
+
+    Public Sub New()
+        Me.New(New Server(), True)
+    End Sub
+
+    Public Sub New(ByVal editServer As Server, ByVal allowNumberChange As Boolean)
+        InitializeComponent()
+
+        If IsNothing(editServer) Then
+            Throw New ArgumentNullException(NameOf(editServer), "Cannot edit a null object.")
+        End If
+
+        _Server = editServer
+        txtServerNumber.ReadOnly = Not allowNumberChange
+        txtServerNumber.DataBindings.Add(NameOf(txtServerNumber.Text), Server, NameOf(Server.PosId))
+        txtFirstName.DataBindings.Add(NameOf(txtFirstName.Text), Server, NameOf(Server.FirstName))
+        txtLastName.DataBindings.Add(NameOf(txtLastName.Text), Server, NameOf(Server.LastName))
+        optSuppressChit.DataBindings.Add(NameOf(optSuppressChit.Checked), Server, NameOf(Server.SuppressChit))
+    End Sub
 
     Friend Property ServerNumber() As String
         Get

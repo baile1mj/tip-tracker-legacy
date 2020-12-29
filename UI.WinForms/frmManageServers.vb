@@ -1,6 +1,20 @@
+Imports System.Linq
+Imports TipTracker.Core
+Imports TipTracker.Utilities
+
 Public Class frmManageServers
 
-    Public Property ServersTable As DataTable
+    Public ReadOnly Servers As IList(Of Server)
+
+    Public Sub New(ByVal existingServers As List(Of Server))
+        InitializeComponent()
+
+        'Make sure we always have a list to work with.
+        If IsNothing(existingServers) Then existingServers = New List(Of Server)()
+
+        'Set up the bindable collection.
+        Servers = New SortableBindingList(Of Server)(existingServers)
+    End Sub
 
     Public Sub New(ByVal serversTable As DataTable)
         InitializeComponent()
@@ -9,17 +23,20 @@ Public Class frmManageServers
             Throw New ArgumentException("Cannot modify a null object.", NameOf(serversTable))
         End If
 
-        Me.ServersTable = serversTable
+        Dim existingServers As List(Of Server) = serversTable _
+            .AsEnumerable() _
+            .Select(Function(ByVal r) New Server() With {
+                .PosId = r("ServerNumber").ToString(),
+                .FirstName = r("FirstName").ToString(),
+                .LastName = r("LastName").ToString(),
+                .SuppressChit = CBool(r("SuppressChit"))}) _
+            .ToList()
+        Servers = New SortableBindingList(Of Server)(existingServers)
     End Sub
 
     Private Sub frmManageServers_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
-        ServersBindingSource.DataSource = ServersTable
-        ServersBindingSource.Sort = "ServerNumber"
-
-        ServersDataGridView.Columns("ServerNumber").DataPropertyName = ServersTable.Columns("ServerNumber").ColumnName
-        ServersDataGridView.Columns("FirstName").DataPropertyName = ServersTable.Columns("FirstName").ColumnName
-        ServersDataGridView.Columns("LastName").DataPropertyName = ServersTable.Columns("LastName").ColumnName
-        ServersDataGridView.Columns("NoChit").DataPropertyName = ServersTable.Columns("SuppressChit").ColumnName
+        ServerBindingSource.DataSource = Servers
+        ServerBindingSource.Sort = NameOf(Server.PosId)
     End Sub
 
     Private Sub btnAdd_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAdd.Click
@@ -34,67 +51,57 @@ Public Class frmManageServers
                     Exit Sub
                 End If
 
-                If Not (ServersTable.Rows.Find(frmAddEditServer.ServerNumber) Is Nothing) Then
-                    MessageBox.Show("The server number you entered already exists in the data file.  Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
+                Dim existingServer As Server = Servers _
+                    .FirstOrDefault(Function(ByVal s) s.PosId = frmAddEditServer.ServerNumber)
+
+                If existingServer IsNot Nothing Then
+                    MessageBox.Show("The server number you entered already exists in the data file.  Please enter a different number.",
+                        "Invalid Entry", MessageBoxButtons.OK)
                     frmAddEditServer.ServerNumber = ""
                 Else
                     blnErrorState = False
                 End If
             End While
 
-            Dim drNewRow As DataRow = ServersTable.NewRow
+            Dim newServer As New Server() With {
+                .PosId = frmAddEditServer.ServerNumber,
+                .FirstName = frmAddEditServer.FirstName,
+                .LastName = frmAddEditServer.LastName,
+                .SuppressChit = frmAddEditServer.SuppressChit}
 
-            drNewRow("ServerNumber") = frmAddEditServer.ServerNumber
-            drNewRow("FirstName") = frmAddEditServer.FirstName
-            drNewRow("LastName") = frmAddEditServer.LastName
-            drNewRow("SuppressChit") = frmAddEditServer.SuppressChit
-
-            ServersTable.Rows.Add(drNewRow)
+            Servers.Add(newServer)
+            ServerBindingSource.Position = Servers.IndexOf(newServer)
         End Using
     End Sub
 
     Private Sub btnEdit_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnEdit.Click
-        Dim strServerNumber As String = ServersDataGridView.Item("ServerNumber", ServersBindingSource.Position).Value.ToString
-        Dim serverRow As DataRow = ServersTable.Rows.Find(strServerNumber)
-        Dim strFirstName As String = serverRow("FirstName").ToString
-        Dim strLastName As String = serverRow("LastName").ToString
-        Dim blnSuppressChit As Boolean = CBool(serverRow("SuppressChit"))
 
-        Using frmAddEditServer As New frmAddEditServer()
+        Dim server As Server = Servers(ServersDataGridView.CurrentRow.Index)
+
+        Using frmAddEditServer As New frmAddEditServer(server.Clone(), False)
             With frmAddEditServer
                 .Text = "Edit Server"
-                .txtServerNumber.ReadOnly = True
-                .ServerNumber = strServerNumber
-                .FirstName = strFirstName
-                .LastName = strLastName
-                .SuppressChit = blnSuppressChit
 
-                If .ShowDialog <> DialogResult.OK Then
-                    Exit Sub
+                If .ShowDialog <> DialogResult.OK Then Exit Sub
+
+                If Not server.Matches(frmAddEditServer.Server) Then
+                    Servers(ServersDataGridView.CurrentRow.Index) = frmAddEditServer.Server
                 End If
 
-                If .ServerNumber = strServerNumber And .FirstName = strFirstName And .LastName = strLastName And .SuppressChit = blnSuppressChit Then
-                    Exit Sub
-                End If
-
-                serverRow("FirstName") = .FirstName
-                serverRow("LastName") = .LastName
-                serverRow("SuppressChit") = .SuppressChit
+                ServerBindingSource.Position = Servers.IndexOf(frmAddEditServer.Server)
             End With
         End Using
     End Sub
 
     Private Sub btnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
-        Dim strServerNumber As String = ServersDataGridView.Item("ServerNumber", ServersBindingSource.Position).Value.ToString
-        Dim strFirstName As String = ServersTable.Rows.Find(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = ServersTable.Rows.Find(strServerNumber)("LastName").ToString
+        Dim server As Server = Servers(ServersDataGridView.CurrentRow.Index)
 
-        If MessageBox.Show("Are you sure you want to delete server " & strServerNumber & " " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
+        If MessageBox.Show("Are you sure you want to delete server " & server.PosId & " " &
+        server.FirstName & " " & server.LastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
 
-        ServersTable.Rows.Find(strServerNumber).Delete()
+        Servers.Remove(server)
     End Sub
 
     Private Sub btnClose_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnClose.Click
