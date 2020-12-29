@@ -23,9 +23,9 @@ Partial Class frmEnterTips
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEnterTips))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.FileDataSet = New FileDataSet()
+        Me.FileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         Me.strStatusStrip = New System.Windows.Forms.StatusStrip()
         Me.lblWorkingDate = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblPeriodStart = New System.Windows.Forms.ToolStripStatusLabel()
@@ -188,9 +188,7 @@ Partial Class frmEnterTips
         Me.TextBox10 = New System.Windows.Forms.TextBox()
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
-        Me.dlgOpenFile = New System.Windows.Forms.OpenFileDialog()
-        Me.dlgSaveFile = New System.Windows.Forms.SaveFileDialog()
-        Me.ImportFileDataSet = New FileDataSet()
+        Me.ImportFileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         CType(Me.ServersBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.strStatusStrip.SuspendLayout()
@@ -511,9 +509,9 @@ Partial Class frmEnterTips
         'CCAmount
         '
         Me.CCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle1.Format = "C2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Format = "C2"
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle2
         Me.CCAmount.HeaderText = "Amount"
         Me.CCAmount.Name = "CCAmount"
         Me.CCAmount.ReadOnly = True
@@ -1666,19 +1664,6 @@ Partial Class frmEnterTips
         Me.TextBox12.TabIndex = 7
         Me.TextBox12.TabStop = False
         '
-        'dlgOpenFile
-        '
-        Me.dlgOpenFile.DefaultExt = "tsf"
-        Me.dlgOpenFile.Filter = "Tip Tracker SF Data Files (*.tsf)|*.tsf"
-        Me.dlgOpenFile.Title = "Import Tips"
-        '
-        'dlgSaveFile
-        '
-        Me.dlgSaveFile.DefaultExt = "csv"
-        Me.dlgSaveFile.FileName = "Export"
-        Me.dlgSaveFile.Filter = "Comma Delimited File (*.csv)|*.csv"
-        Me.dlgSaveFile.Title = "Export Tips"
-        '
         'ImportFileDataSet
         '
         Me.ImportFileDataSet.CaseSensitive = True
@@ -1841,8 +1826,6 @@ Partial Class frmEnterTips
     Friend WithEvents mnuDeleteCATip As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuSFTips As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents mnuDeleteSFTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents dlgOpenFile As System.Windows.Forms.OpenFileDialog
-    Friend WithEvents dlgSaveFile As System.Windows.Forms.SaveFileDialog
     Friend WithEvents ImportFileDataSet As FileDataSet
     Friend WithEvents ServersServerNumber As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ServersFirstName As System.Windows.Forms.DataGridViewTextBoxColumn
