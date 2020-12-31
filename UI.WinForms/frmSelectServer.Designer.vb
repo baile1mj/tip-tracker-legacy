@@ -19,10 +19,10 @@ Partial Class frmSelectServer
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.lblSelectServer = New System.Windows.Forms.Label
-        Me.cboSelectServer = New System.Windows.Forms.ComboBox
-        Me.btnOK = New System.Windows.Forms.Button
-        Me.btnCancel = New System.Windows.Forms.Button
+        Me.lblSelectServer = New System.Windows.Forms.Label()
+        Me.cboSelectServer = New System.Windows.Forms.ComboBox()
+        Me.btnOK = New System.Windows.Forms.Button()
+        Me.btnCancel = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lblSelectServer
@@ -37,7 +37,7 @@ Partial Class frmSelectServer
         'cboSelectServer
         '
         Me.cboSelectServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboSelectServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboSelectServer.FormattingEnabled = True
         Me.cboSelectServer.Location = New System.Drawing.Point(12, 48)
@@ -83,8 +83,9 @@ Partial Class frmSelectServer
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents lblSelectServer As System.Windows.Forms.Label
-    Friend WithEvents cboSelectServer As System.Windows.Forms.ComboBox
-    Friend WithEvents btnOK As System.Windows.Forms.Button
-    Friend WithEvents btnCancel As System.Windows.Forms.Button
+
+    Private WithEvents lblSelectServer As Label
+    Private WithEvents cboSelectServer As ComboBox
+    Private WithEvents btnOK As Button
+    Private WithEvents btnCancel As Button
 End Class

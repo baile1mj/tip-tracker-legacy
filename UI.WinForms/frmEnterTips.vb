@@ -1,6 +1,8 @@
 Imports System.Drawing.Printing
 Imports System.IO
 Imports TipTracker.Common.Data.PayPeriod
+Imports TipTracker.Core
+Imports System.Linq
 
 Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile
@@ -14,6 +16,17 @@ Public Class frmEnterTips
         FileDataSet = data.FileDataSet
         Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
+
+    Private Function GetServers() As List(Of Server)
+        Return Data.FileDataSet.Servers _
+            .AsEnumerable() _
+            .Select(Function(r) New Server() With {
+                .PosId = r("ServerNumber").ToString(),
+                .FirstName = r("FirstName").ToString(),
+                .LastName = r("LastName").ToString(),
+                .SuppressChit = CBool(r("SuppressChit"))}) _
+            .ToList()
+    End Function
 
     Private Sub frmEnterTips_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Set the form as an mdi child of frmMain.
@@ -374,18 +387,18 @@ Public Class frmEnterTips
     Private Sub mnuReassignCCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignCCTip.Click
         If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
-        frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
+        Dim tipRecipient As Server
 
-        If frmSelectServer.ShowDialog <> DialogResult.OK Then
-            frmSelectServer.Dispose()
-            Exit Sub
-        End If
+        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
+            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
+
+            tipRecipient = selectServer.GetSelectedServer()
+        End Using
 
         Dim strSourceServerNumber As String = CreditCardDataGridView.Item("CCServerNumber", CreditCardTipsBindingSource.Position).Value.ToString
         Dim intSourceTipID = CInt(CreditCardDataGridView.Item("CCID", CreditCardTipsBindingSource.Position).Value)
 
-        Dim strDestServerNumber As String = frmSelectServer.ServerNumber
+        Dim strDestServerNumber As String = tipRecipient.PosId
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
         Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
@@ -418,7 +431,6 @@ Public Class frmEnterTips
 
         Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
-        frmSelectServer.Dispose()
         UpdateCCTotals()
     End Sub
 
@@ -637,18 +649,18 @@ Public Class frmEnterTips
     Private Sub mnuReassignRCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignRCTip.Click
         If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
-        frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
+        Dim tipRecipient As Server
 
-        If frmSelectServer.ShowDialog <> DialogResult.OK Then
-            frmSelectServer.Dispose()
-            Exit Sub
-        End If
+        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
+            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
+
+            tipRecipient = selectServer.GetSelectedServer()
+        End Using
 
         Dim strSourceServerNumber As String = RoomChargeDataGridView.Item("RCServerNumber", RoomChargeTipsBindingSource.Position).Value.ToString
         Dim intSourceTipID = CInt(RoomChargeDataGridView.Item("RCID", RoomChargeTipsBindingSource.Position).Value)
 
-        Dim strDestServerNumber As String = frmSelectServer.ServerNumber
+        Dim strDestServerNumber As String = tipRecipient.PosId
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
         Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
@@ -680,8 +692,6 @@ Public Class frmEnterTips
         Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
         Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-        frmSelectServer.Dispose()
     End Sub
 
     Private Sub mnuEditRCTip_Click(sender As Object, e As EventArgs) Handles mnuEditRCTip.Click, RoomChargeDataGridView.DoubleClick
@@ -881,18 +891,18 @@ Public Class frmEnterTips
     Private Sub mnuReassignCATip_Click(sender As Object, e As EventArgs) Handles mnuReassignCATip.Click
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
-        frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
+        Dim tipRecipient As Server
 
-        If frmSelectServer.ShowDialog <> DialogResult.OK Then
-            frmSelectServer.Dispose()
-            Exit Sub
-        End If
+        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
+            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
+
+            tipRecipient = selectServer.GetSelectedServer()
+        End Using
 
         Dim strSourceServerNumber As String = CashDataGridView.Item("CAServerNumber", CashTipsBindingSource.Position).Value.ToString
         Dim intSourceTipID = CInt(CashDataGridView.Item("CAID", CashTipsBindingSource.Position).Value)
 
-        Dim strDestServerNumber As String = frmSelectServer.ServerNumber
+        Dim strDestServerNumber As String = tipRecipient.PosId
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
         Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
@@ -924,8 +934,6 @@ Public Class frmEnterTips
         Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
         Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-        frmSelectServer.Dispose()
     End Sub
 
     Private Sub mnuEditCATip_Click(sender As Object, e As EventArgs) Handles mnuEditCATip.Click, CashDataGridView.DoubleClick
@@ -1177,18 +1185,18 @@ Public Class frmEnterTips
     Private Sub mnuReassignSFTip_Click(sender As Object, e As EventArgs) Handles mnuReassignSFTip.Click
         If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
 
-        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
-        frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
+        Dim tipRecipient As Server
 
-        If frmSelectServer.ShowDialog <> DialogResult.OK Then
-            frmSelectServer.Dispose()
-            Exit Sub
-        End If
+        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
+            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
+
+            tipRecipient = selectServer.GetSelectedServer()
+        End Using
 
         Dim strSourceServerNumber As String = SpecialFunctionDataGridView.Item("SFServerNumber", SpecialFunctionTipsBindingSource.Position).Value.ToString
         Dim intSourceTipID = CInt(SpecialFunctionDataGridView.Item("SFID", SpecialFunctionTipsBindingSource.Position).Value)
 
-        Dim strDestServerNumber As String = frmSelectServer.ServerNumber
+        Dim strDestServerNumber As String = tipRecipient.PosId
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
         Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
@@ -1220,8 +1228,6 @@ Public Class frmEnterTips
         Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
         Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-        frmSelectServer.Dispose()
     End Sub
 
     Private Sub mnuEditSFTip_Click(sender As Object, e As EventArgs) Handles mnuEditSFTip.Click, SpecialFunctionDataGridView.DoubleClick
@@ -1437,16 +1443,16 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuMergeDuplicate_Click(sender As Object, e As EventArgs) Handles mnuMergeDuplicate.Click
-        frmSelectServer.m_dsParentDataSet = Data.FileDataSet
-        frmSelectServer.lblSelectServer.Text = "Select the merge recipient:"
+        Dim mergeTarget As Server
 
-        If frmSelectServer.ShowDialog <> DialogResult.OK Then
-            frmSelectServer.Dispose()
-            Exit Sub
-        End If
+        Using selectServer As New frmSelectServer("Select the merge recipient:", GetServers())
+            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
+
+            mergeTarget = selectServer.GetSelectedServer()
+        End Using
 
         Dim strSourceServerNumber As String = ServersDataGridView.Item("ServersServerNumber", ServersBindingSource.Position).Value.ToString
-        Dim strDestServerNumber As String = frmSelectServer.ServerNumber
+        Dim strDestServerNumber As String = mergeTarget.PosId
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
         Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
 
@@ -1484,7 +1490,6 @@ Public Class frmEnterTips
         MessageBox.Show("The merge was completed successfully.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         LoadServerCombos()
-        frmSelectServer.Dispose()
     End Sub
 
     Private Sub mnuCopyFromTemplate_Click(sender As Object, e As EventArgs) Handles mnuCopyFromTemplate.Click

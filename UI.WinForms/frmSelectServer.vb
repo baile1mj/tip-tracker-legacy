@@ -1,48 +1,29 @@
-Imports TipTracker.Common.Data.PayPeriod
+Imports TipTracker.Core
 
 Public Class frmSelectServer
-    Friend m_dsParentDataSet As New FileDataSet
 
-    Friend ReadOnly Property ServerNumber As String
-        Get
-            Return ExtractServerNumber()
-        End Get
-    End Property
+    Private Class ServerWrapper
+        Friend ReadOnly Property Server As Server
 
-    Private Sub frmSelectServer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        PopulateComboBox()
+        Friend Sub New(server As Server)
+            _Server = server
+        End Sub
+
+        Public Overrides Function ToString() As String
+            Return $"{Server.LastName}, {Server.FirstName}: {Server.PosId}"
+        End Function
+    End Class
+
+    Public Sub New(displayText As String, servers As List(Of Server))
+        InitializeComponent()
+        lblSelectServer.Text = displayText
+        servers.ForEach(Sub(s) cboSelectServer.Items.Add(New ServerWrapper(s)))
     End Sub
 
-    Private Sub PopulateComboBox()
-        cboSelectServer.Items.Clear()
+    Public Function GetSelectedServer() As Server
+        If cboSelectServer.SelectedItem Is Nothing Then Return Nothing
 
-        For Each row As DataRow In m_dsParentDataSet.Servers.Rows
-            If row.RowState <> DataRowState.Deleted Then
-                Dim strServerNumber As String = row("ServerNumber").ToString
-                Dim strFirstName As String = row("FirstName").ToString
-                Dim strLastName As String = row("LastName").ToString
-
-                cboSelectServer.Items.Add(strLastName & ", " & strFirstName & ": " & strServerNumber)
-            End If
-
-            cboSelectServer.Sorted = True
-        Next
-    End Sub
-
-    Private Function ExtractServerNumber() As String
-        Dim strExtractedNumber = ""
-
-        For i As Integer = Len(cboSelectServer.SelectedItem.ToString) To 1 Step -1
-            Dim c As Char = GetChar(cboSelectServer.SelectedItem.ToString, i)
-
-            If c = ":" Then
-                strExtractedNumber = Microsoft.VisualBasic.Right(cboSelectServer.SelectedItem.ToString, Len(cboSelectServer.SelectedItem.ToString) - i)
-            End If
-        Next
-
-        strExtractedNumber = Trim(strExtractedNumber)
-
-        Return strExtractedNumber
+        Return DirectCast(cboSelectServer.SelectedItem, ServerWrapper).Server
     End Function
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -50,7 +31,7 @@ Public Class frmSelectServer
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-        If cboSelectServer.SelectedIndex = -1 Then
+        If cboSelectServer.SelectedItem Is Nothing Then
             MessageBox.Show("You must select a server.", "Select Server", MessageBoxButtons.OK)
             Exit Sub
         End If
