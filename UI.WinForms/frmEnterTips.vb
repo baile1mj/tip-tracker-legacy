@@ -6,7 +6,7 @@ Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
 
-    Public Sub New(ByVal file As PayPeriodFile, ByVal data As PayPeriodData)
+    Public Sub New(file As PayPeriodFile, data As PayPeriodData)
         InitializeComponent()
 
         Me.File = file
@@ -15,11 +15,11 @@ Public Class frmEnterTips
         Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
 
-    Private Sub frmEnterTips_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub frmEnterTips_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Set the form as an mdi child of frmMain.
-        Me.MdiParent = frmMain
-        Me.lblSystemDate.Text = "System Date: " & Format(DateTime.Today, "M/d/yyyy")
-        Me.WindowState = FormWindowState.Maximized
+        MdiParent = frmMain
+        lblSystemDate.Text = "System Date: " & Format(Date.Today, "M/d/yyyy")
+        WindowState = FormWindowState.Maximized
 
         'Bind the data sources to the display.
         ServersBindingSource.DataSource = Data.FileDataSet
@@ -42,7 +42,7 @@ Public Class frmEnterTips
 
 
         'Set the servers binding source sort mode.
-        Me.ServersBindingSource.Sort = "LastName"
+        ServersBindingSource.Sort = "LastName"
 
         LoadServerCombos()
 
@@ -55,14 +55,14 @@ Public Class frmEnterTips
 
         'Since the tab control doesn't like to focus on the first child control on it's own,
         'the child control needs to be selected manually.
-        Me.txtCCServerNumber.Focus()
+        txtCCServerNumber.Focus()
 
     End Sub
 
     Private Sub LoadServerCombos()
         'Clear the server lookup dataset if there are any records already in it.
-        Me.ServersLookupDataset.Clear()
-        Me.ServersLookupDataset.AcceptChanges()
+        ServersLookupDataset.Clear()
+        ServersLookupDataset.AcceptChanges()
 
         'Populate the server lookup data table.
         Dim dvTemp As New DataView
@@ -71,96 +71,96 @@ Public Class frmEnterTips
         dvTemp.Sort = "LastName, FirstName"
 
         If dvTemp.Count <> 0 Then
-            For i As Integer = 0 To dvTemp.Count - 1
+            For i = 0 To dvTemp.Count - 1
                 Dim strServerNumber As String = dvTemp(i)("ServerNumber").ToString
                 Dim strFirstName As String = dvTemp(i)("FirstName").ToString
                 Dim strLastName As String = dvTemp(i)("LastName").ToString
 
                 'Build name string with LastName, FirstName format.
-                Dim drNewRow As DataRow = Me.ServersLookupDataset.Servers.NewRow
+                Dim drNewRow As DataRow = ServersLookupDataset.Servers.NewRow
 
                 drNewRow("ServerNumber") = strServerNumber
                 drNewRow("NameString") = strLastName & ", " & strFirstName
 
-                Me.ServersLookupDataset.Servers.Rows.Add(drNewRow)
+                ServersLookupDataset.Servers.Rows.Add(drNewRow)
 
                 'Build name string with FirstName LastName format.
-                drNewRow = Me.ServersLookupDataset.Servers.NewRow
+                drNewRow = ServersLookupDataset.Servers.NewRow
 
                 drNewRow("ServerNumber") = strServerNumber
                 drNewRow("NameString") = strFirstName & " " & strLastName
 
-                Me.ServersLookupDataset.Servers.Rows.Add(drNewRow)
+                ServersLookupDataset.Servers.Rows.Add(drNewRow)
 
                 'Build name string with server number included.
-                drNewRow = Me.ServersLookupDataset.Servers.NewRow
+                drNewRow = ServersLookupDataset.Servers.NewRow
 
                 drNewRow("ServerNumber") = strServerNumber
                 drNewRow("NameString") = strServerNumber & " " & strLastName & ", " & strFirstName
 
-                Me.ServersLookupDataset.Servers.Rows.Add(drNewRow)
+                ServersLookupDataset.Servers.Rows.Add(drNewRow)
             Next
 
-            Me.ServersLookupDataset.AcceptChanges()
+            ServersLookupDataset.AcceptChanges()
             cboCAServer.SelectedIndex = -1
             cboSFServer.SelectedIndex = -1
         End If
     End Sub
 
     Private Sub UpdateDateLabels()
-        Dim dtePeriodStart As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        Dim dtePeriodStart = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dtePeriodEnd = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
 
-        Me.lblPeriodStart.Text = "Period Start: " & Format(dtePeriodStart, "M/d/yyyy")
-        Me.lblPeriodEnd.Text = "Period End: " & Format(dtePeriodEnd, "M/d/yyyy")
-        Me.lblWorkingDate.Text = "Working Date: " & Format(dteWorkingDate, "M/d/yyyy")
+        lblPeriodStart.Text = "Period Start: " & Format(dtePeriodStart, "M/d/yyyy")
+        lblPeriodEnd.Text = "Period End: " & Format(dtePeriodEnd, "M/d/yyyy")
+        lblWorkingDate.Text = "Working Date: " & Format(dteWorkingDate, "M/d/yyyy")
     End Sub
 
     Private Sub SetSelectionFilters()
         Dim strWorkingDate As String = Format(CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value")), "M/d/yyyy")
-        Me.CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
-        Me.CreditCardTipsBindingSource.Sort = "TipID"
+        CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
+        CreditCardTipsBindingSource.Sort = "TipID"
 
-        Me.RoomChargeTipsBindingSource.Filter = "Description = 'Room Charge' AND WorkingDate = '" & strWorkingDate & "'"
-        Me.RoomChargeTipsBindingSource.Sort = "TipID"
+        RoomChargeTipsBindingSource.Filter = "Description = 'Room Charge' AND WorkingDate = '" & strWorkingDate & "'"
+        RoomChargeTipsBindingSource.Sort = "TipID"
 
-        Me.CashTipsBindingSource.Filter = "Description = 'Cash'"
-        Me.CashTipsBindingSource.Sort = "TipID"
+        CashTipsBindingSource.Filter = "Description = 'Cash'"
+        CashTipsBindingSource.Sort = "TipID"
 
 
         If cboSelectSpecialFunction.SelectedIndex <> -1 Then
-            Me.SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function' AND SpecialFunction = '" & cboSelectSpecialFunction.SelectedValue.ToString & "'"
-            Me.SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
+            SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function' AND SpecialFunction = '" & cboSelectSpecialFunction.SelectedValue.ToString & "'"
+            SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
         Else
-            Me.SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
-            Me.SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
+            SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
+            SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
         End If
 
-        Me.SpecialFunctionBindingSource.Sort = "SpecialFunction"
+        SpecialFunctionBindingSource.Sort = "SpecialFunction"
 
         UpdateCCTotals()
         UpdateRCTotals()
         UpdateCATotals()
     End Sub
 
-    Private Sub tabTipsTabControl_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles tabTipsTabControl.SelectedIndexChanged
-        Dim creditCard As TabPage = Me.tabCreditCard
-        Dim roomCharge As TabPage = Me.tabRoomCharge
-        Dim cash As TabPage = Me.tabCash
-        Dim specialFunction As TabPage = Me.tabSpecialFunction
+    Private Sub tabTipsTabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabTipsTabControl.SelectedIndexChanged
+        Dim creditCard As TabPage = tabCreditCard
+        Dim roomCharge As TabPage = tabRoomCharge
+        Dim cash As TabPage = tabCash
+        Dim specialFunction As TabPage = tabSpecialFunction
 
         If tabTipsTabControl.SelectedTab Is creditCard Then
-            Me.SelectNextControl(creditCard, True, True, True, True)
+            SelectNextControl(creditCard, True, True, True, True)
         ElseIf tabTipsTabControl.SelectedTab Is roomCharge Then
-            Me.SelectNextControl(roomCharge, True, True, True, True)
+            SelectNextControl(roomCharge, True, True, True, True)
         ElseIf tabTipsTabControl.SelectedTab Is cash Then
-            Me.SelectNextControl(cash, True, True, True, True)
+            SelectNextControl(cash, True, True, True, True)
         ElseIf tabTipsTabControl.SelectedTab Is specialFunction Then
-            Me.SelectNextControl(specialFunction, True, True, True, True)
+            SelectNextControl(specialFunction, True, True, True, True)
         End If
 
-        lblCurrentTipType.Text = "Editing " & Me.tabTipsTabControl.SelectedTab.Text & " Tips"
+        lblCurrentTipType.Text = "Editing " & tabTipsTabControl.SelectedTab.Text & " Tips"
 
         ''Make the tip ID columns invisible.
         'Me.CCID.Visible = False
@@ -176,18 +176,18 @@ Public Class frmEnterTips
         txtRCServerNumber.Clear()
         txtRCServerName.Clear()
 
-        Me.cboCAServer.SelectedIndex = -1
-        Me.cboSFServer.SelectedIndex = -1
+        cboCAServer.SelectedIndex = -1
+        cboSFServer.SelectedIndex = -1
 
         txtCAAmount.Clear()
         txtSFAmount.Clear()
 
-        Me.cboSelectSpecialFunction.SelectedIndex = -1
+        cboSelectSpecialFunction.SelectedIndex = -1
     End Sub
 
-    Private Sub btnFinalize_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnFinalize.Click
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+    Private Sub btnFinalize_Click(sender As Object, e As EventArgs) Handles btnFinalize.Click
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        Dim dtePeriodEnd = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
 
         If dteWorkingDate = dtePeriodEnd Then
             MessageBox.Show("The current working date is the last day in the pay period.  You cannot " &
@@ -198,7 +198,7 @@ Public Class frmEnterTips
         End If
 
         If MessageBox.Show("The working date will be changed to " & Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), "M/d/yyyy") &
-        ".  Do you wish to continue?", "Confirm Date Change", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
+        ".  Do you wish to continue?", "Confirm Date Change", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
 
@@ -207,17 +207,17 @@ Public Class frmEnterTips
         SetSelectionFilters()
     End Sub
 
-    Private Sub btnSelectWorkingDate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSelectWorkingDate.Click
-        Dim dtePeriodStart As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+    Private Sub btnSelectWorkingDate_Click(sender As Object, e As EventArgs) Handles btnSelectWorkingDate.Click
+        Dim dtePeriodStart = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dtePeriodEnd = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
 
         With frmSelectDate
             .MinDate = dtePeriodStart
             .MaxDate = dtePeriodEnd
             .CurrentDate = dteWorkingDate
 
-            If .ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If .ShowDialog <> DialogResult.OK Then
                 .Dispose()
                 Exit Sub
             End If
@@ -282,28 +282,28 @@ Public Class frmEnterTips
     Private Sub UpdateCCTotals()
         Dim decAmount As Decimal = 0
 
-        For Each row As DataGridViewRow In Me.CreditCardDataGridView.Rows
+        For Each row As DataGridViewRow In CreditCardDataGridView.Rows
             decAmount += CDec(row.Cells.Item("CCAmount").Value)
         Next
 
         lblCCTotal.Text = "Total: " & Format(decAmount, "c")
     End Sub
 
-    Private Sub txtCCServerNumber_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCCServerNumber.KeyPress
+    Private Sub txtCCServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCCServerNumber.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             txtCCAmount.Focus()
         End If
     End Sub
 
-    Private Sub txtCCAmount_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCCAmount.KeyPress
+    Private Sub txtCCAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCCAmount.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             AddCreditCardTip()
         End If
     End Sub
 
-    Private Sub txtCCServerNumber_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCCServerNumber.LostFocus
+    Private Sub txtCCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtCCServerNumber.LostFocus
         If txtCCServerNumber.Text = "" Then Exit Sub
 
         If Not (Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text) Is Nothing) Then
@@ -338,28 +338,28 @@ Public Class frmEnterTips
         txtCCAmount.Text = Format(decAmount, "0.00")
     End Sub
 
-    Private Sub btnAddCC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAddCC.Click
+    Private Sub btnAddCC_Click(sender As Object, e As EventArgs) Handles btnAddCC.Click
         AddCreditCardTip()
     End Sub
 
-    Private Sub btnClearCC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClearCC.Click
+    Private Sub btnClearCC_Click(sender As Object, e As EventArgs) Handles btnClearCC.Click
         txtCCAmount.Clear()
         txtCCServerNumber.Clear()
         txtCCServerName.Clear()
         txtCCServerNumber.Focus()
     End Sub
 
-    Private Sub mnuDeleteCCTip_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDeleteCCTip.Click
-        If Me.CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuDeleteCCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCCTip.Click
+        If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
 
-        Dim intTipID As Integer = CInt(Me.CreditCardDataGridView.Item("CCID", Me.CreditCardTipsBindingSource.Position).Value)
+        Dim intTipID = CInt(CreditCardDataGridView.Item("CCID", CreditCardTipsBindingSource.Position).Value)
 
         Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
         Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
+        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
 
@@ -367,23 +367,23 @@ Public Class frmEnterTips
         UpdateCCTotals()
     End Sub
 
-    Private Sub txtCCServerName_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCCServerName.GotFocus
+    Private Sub txtCCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtCCServerName.GotFocus
         txtCCServerNumber.Focus()
     End Sub
 
-    Private Sub mnuReassignCCTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignCCTip.Click
-        If Me.CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuReassignCCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignCCTip.Click
+        If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
 
         frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
-        If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmSelectServer.ShowDialog <> DialogResult.OK Then
             frmSelectServer.Dispose()
             Exit Sub
         End If
 
-        Dim strSourceServerNumber As String = Me.CreditCardDataGridView.Item("CCServerNumber", Me.CreditCardTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID As Integer = CInt(Me.CreditCardDataGridView.Item("CCID", Me.CreditCardTipsBindingSource.Position).Value)
+        Dim strSourceServerNumber As String = CreditCardDataGridView.Item("CCServerNumber", CreditCardTipsBindingSource.Position).Value.ToString
+        Dim intSourceTipID = CInt(CreditCardDataGridView.Item("CCID", CreditCardTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
@@ -394,13 +394,13 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-        Dim strSpecialFunction As String = ""
+        Dim strSpecialFunction = ""
         If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
         Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
@@ -422,13 +422,13 @@ Public Class frmEnterTips
         UpdateCCTotals()
     End Sub
 
-    Private Sub mnuEditCCTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuEditCCTip.Click, CreditCardDataGridView.DoubleClick
-        If Me.CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuEditCCTip_Click(sender As Object, e As EventArgs) Handles mnuEditCCTip.Click, CreditCardDataGridView.DoubleClick
+        If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
 
-        Dim intSourceTipID As Integer = CInt(Me.CreditCardDataGridView.Item("CCID", Me.CreditCardTipsBindingSource.Position).Value)
+        Dim intSourceTipID = CInt(CreditCardDataGridView.Item("CCID", CreditCardTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
@@ -438,7 +438,7 @@ Public Class frmEnterTips
             .m_dsParentDataSet = Data.FileDataSet
         End With
 
-        If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmEditTip.ShowDialog <> DialogResult.OK Then
             frmEditTip.Dispose()
             Exit Sub
         End If
@@ -464,7 +464,7 @@ Public Class frmEnterTips
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
-            If frmSelectFunction.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
                 frmSelectFunction.Dispose()
                 frmEditTip.Dispose()
                 Exit Sub
@@ -546,28 +546,28 @@ Public Class frmEnterTips
     Private Sub UpdateRCTotals()
         Dim decAmount As Decimal = 0
 
-        For Each row As DataGridViewRow In Me.RoomChargeDataGridView.Rows
+        For Each row As DataGridViewRow In RoomChargeDataGridView.Rows
             decAmount += CDec(row.Cells.Item("RCAmount").Value)
         Next
 
         lblRCTotal.Text = "Total: " & Format(decAmount, "c")
     End Sub
 
-    Private Sub txtRCServerNumber_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtRCServerNumber.KeyPress
+    Private Sub txtRCServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRCServerNumber.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             txtRCAmount.Focus()
         End If
     End Sub
 
-    Private Sub txtRCAmount_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtRCAmount.KeyPress
+    Private Sub txtRCAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRCAmount.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             AddRoomChargeTip()
         End If
     End Sub
 
-    Private Sub txtRCServerNumber_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtRCServerNumber.LostFocus
+    Private Sub txtRCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtRCServerNumber.LostFocus
         If txtRCServerNumber.Text = "" Then Exit Sub
 
         If Not (Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text) Is Nothing) Then
@@ -602,27 +602,27 @@ Public Class frmEnterTips
         txtRCAmount.Text = Format(decAmount, "0.00")
     End Sub
 
-    Private Sub btnAddRC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAddRC.Click
+    Private Sub btnAddRC_Click(sender As Object, e As EventArgs) Handles btnAddRC.Click
         AddRoomChargeTip()
     End Sub
 
-    Private Sub btnClearRC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClearRC.Click
+    Private Sub btnClearRC_Click(sender As Object, e As EventArgs) Handles btnClearRC.Click
         txtRCAmount.Clear()
         txtRCServerNumber.Clear()
         txtRCServerName.Clear()
         txtRCServerNumber.Focus()
     End Sub
 
-    Private Sub mnuDeleteRCTip_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDeleteRCTip.Click
-        If Me.RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
-        Dim intTipID As Integer = CInt(Me.RoomChargeDataGridView.Item("RCID", Me.RoomChargeTipsBindingSource.Position).Value)
+    Private Sub mnuDeleteRCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteRCTip.Click
+        If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
+        Dim intTipID = CInt(RoomChargeDataGridView.Item("RCID", RoomChargeTipsBindingSource.Position).Value)
 
         Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
         Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
+        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
 
@@ -630,23 +630,23 @@ Public Class frmEnterTips
         UpdateRCTotals()
     End Sub
 
-    Private Sub txtRCServerName_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtRCServerName.GotFocus
+    Private Sub txtRCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtRCServerName.GotFocus
         txtRCServerNumber.Focus()
     End Sub
 
-    Private Sub mnuReassignRCTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignRCTip.Click
-        If Me.RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuReassignRCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignRCTip.Click
+        If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
 
         frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
-        If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmSelectServer.ShowDialog <> DialogResult.OK Then
             frmSelectServer.Dispose()
             Exit Sub
         End If
 
-        Dim strSourceServerNumber As String = Me.RoomChargeDataGridView.Item("RCServerNumber", Me.RoomChargeTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID As Integer = CInt(Me.RoomChargeDataGridView.Item("RCID", Me.RoomChargeTipsBindingSource.Position).Value)
+        Dim strSourceServerNumber As String = RoomChargeDataGridView.Item("RCServerNumber", RoomChargeTipsBindingSource.Position).Value.ToString
+        Dim intSourceTipID = CInt(RoomChargeDataGridView.Item("RCID", RoomChargeTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
@@ -657,13 +657,13 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
         Dim strSpecialFunction As String
         If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
         Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
@@ -684,13 +684,13 @@ Public Class frmEnterTips
         frmSelectServer.Dispose()
     End Sub
 
-    Private Sub mnuEditRCTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuEditRCTip.Click, RoomChargeDataGridView.DoubleClick
-        If Me.RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuEditRCTip_Click(sender As Object, e As EventArgs) Handles mnuEditRCTip.Click, RoomChargeDataGridView.DoubleClick
+        If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
 
-        Dim intSourceTipID As Integer = CInt(Me.RoomChargeDataGridView.Item("RCID", Me.RoomChargeTipsBindingSource.Position).Value)
+        Dim intSourceTipID = CInt(RoomChargeDataGridView.Item("RCID", RoomChargeTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
@@ -700,7 +700,7 @@ Public Class frmEnterTips
             .m_dsParentDataSet = Data.FileDataSet
         End With
 
-        If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmEditTip.ShowDialog <> DialogResult.OK Then
             frmEditTip.Dispose()
             Exit Sub
         End If
@@ -726,7 +726,7 @@ Public Class frmEnterTips
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
-            If frmSelectFunction.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
                 frmSelectFunction.Dispose()
                 frmEditTip.Dispose()
                 Exit Sub
@@ -814,14 +814,14 @@ Public Class frmEnterTips
     Private Sub UpdateCATotals()
         Dim decAmount As Decimal = 0
 
-        For Each row As DataGridViewRow In Me.CashDataGridView.Rows
+        For Each row As DataGridViewRow In CashDataGridView.Rows
             decAmount += CDec(row.Cells.Item("CAAmount").Value)
         Next
 
         lblCATotal.Text = "Total: " & Format(decAmount, "c")
     End Sub
 
-    Private Sub txtCAAmount_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCAAmount.KeyPress
+    Private Sub txtCAAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCAAmount.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             AddCashTip()
@@ -846,11 +846,11 @@ Public Class frmEnterTips
         txtCAAmount.Text = Format(decAmount, "0.00")
     End Sub
 
-    Private Sub btnAddCA_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAddCA.Click
+    Private Sub btnAddCA_Click(sender As Object, e As EventArgs) Handles btnAddCA.Click
         AddCashTip()
     End Sub
 
-    Private Sub btnClearCA_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClearCA.Click
+    Private Sub btnClearCA_Click(sender As Object, e As EventArgs) Handles btnClearCA.Click
         txtCAAmount.Clear()
         If cboCAServer.SelectedIndex = -1 Then
             cboCAServer.Text = ""
@@ -860,17 +860,17 @@ Public Class frmEnterTips
         cboCAServer.Focus()
     End Sub
 
-    Private Sub mnuDeleteCATip_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDeleteCATip.Click
-        If Me.CashDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuDeleteCATip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCATip.Click
+        If CashDataGridView.Rows.Count = 0 Then Exit Sub
 
-        Dim intTipID As Integer = CInt(Me.CashDataGridView.Item("CAID", Me.CashTipsBindingSource.Position).Value)
+        Dim intTipID = CInt(CashDataGridView.Item("CAID", CashTipsBindingSource.Position).Value)
 
         Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
         Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
+        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
 
@@ -878,19 +878,19 @@ Public Class frmEnterTips
         UpdateCATotals()
     End Sub
 
-    Private Sub mnuReassignCATip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignCATip.Click
-        If Me.CashDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuReassignCATip_Click(sender As Object, e As EventArgs) Handles mnuReassignCATip.Click
+        If CashDataGridView.Rows.Count = 0 Then Exit Sub
 
         frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
-        If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmSelectServer.ShowDialog <> DialogResult.OK Then
             frmSelectServer.Dispose()
             Exit Sub
         End If
 
-        Dim strSourceServerNumber As String = Me.CashDataGridView.Item("CAServerNumber", Me.CashTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID As Integer = CInt(Me.CashDataGridView.Item("CAID", Me.CashTipsBindingSource.Position).Value)
+        Dim strSourceServerNumber As String = CashDataGridView.Item("CAServerNumber", CashTipsBindingSource.Position).Value.ToString
+        Dim intSourceTipID = CInt(CashDataGridView.Item("CAID", CashTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
@@ -901,13 +901,13 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
         Dim strSpecialFunction As String
         If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
         Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
@@ -928,13 +928,13 @@ Public Class frmEnterTips
         frmSelectServer.Dispose()
     End Sub
 
-    Private Sub mnuEditCATip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuEditCATip.Click, CashDataGridView.DoubleClick
-        If Me.CashDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuEditCATip_Click(sender As Object, e As EventArgs) Handles mnuEditCATip.Click, CashDataGridView.DoubleClick
+        If CashDataGridView.Rows.Count = 0 Then Exit Sub
 
-        Dim intSourceTipID As Integer = CInt(Me.CashDataGridView.Item("CAID", Me.CashTipsBindingSource.Position).Value)
+        Dim intSourceTipID = CInt(CashDataGridView.Item("CAID", CashTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
@@ -944,7 +944,7 @@ Public Class frmEnterTips
             .m_dsParentDataSet = Data.FileDataSet
         End With
 
-        If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmEditTip.ShowDialog <> DialogResult.OK Then
             frmEditTip.Dispose()
             Exit Sub
         End If
@@ -970,7 +970,7 @@ Public Class frmEnterTips
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
-            If frmSelectFunction.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
                 frmSelectFunction.Dispose()
                 frmEditTip.Dispose()
                 Exit Sub
@@ -1006,7 +1006,7 @@ Public Class frmEnterTips
         UpdateCATotals()
     End Sub
 
-    Private Sub btnQuickAddCashTips_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnQuickAddCashTips.Click
+    Private Sub btnQuickAddCashTips_Click(sender As Object, e As EventArgs) Handles btnQuickAddCashTips.Click
         Dim dvServers As New DataView
         dvServers.Table = Data.FileDataSet.Servers
         dvServers.Sort = "LastName, FirstName"
@@ -1016,18 +1016,18 @@ Public Class frmEnterTips
             Exit Sub
 
         Else
-            For i As Integer = 0 To dvServers.Count - 1
+            For i = 0 To dvServers.Count - 1
                 Dim strServerNumber As String = dvServers(i)("ServerNumber").ToString
                 Dim strFirstName As String = dvServers(i)("FirstName").ToString
                 Dim strLastName As String = dvServers(i)("LastName").ToString
 
                 frmQuickAdd.txtServerName.Text = strLastName & ", " & strFirstName
-                If frmQuickAdd.ShowDialog <> Windows.Forms.DialogResult.OK Then
+                If frmQuickAdd.ShowDialog <> DialogResult.OK Then
                     frmQuickAdd.Dispose()
                     Exit Sub
                 End If
 
-                Dim decTipAmount As Decimal = CDec(frmQuickAdd.txtTipAmount.Text)
+                Dim decTipAmount = CDec(frmQuickAdd.txtTipAmount.Text)
 
                 If decTipAmount <> 0 Then
                     Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
@@ -1107,14 +1107,14 @@ Public Class frmEnterTips
     Private Sub UpdateSFTotals()
         Dim decAmount As Decimal = 0
 
-        For Each row As DataGridViewRow In Me.SpecialFunctionDataGridView.Rows
+        For Each row As DataGridViewRow In SpecialFunctionDataGridView.Rows
             decAmount += CDec(row.Cells.Item("SFAmount").Value)
         Next
 
         lblSFTotal.Text = "Total: " & Format(decAmount, "c")
     End Sub
 
-    Private Sub txtSFAmount_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtSFAmount.KeyPress
+    Private Sub txtSFAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtSFAmount.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             AddSpecialFunctionTip()
@@ -1139,11 +1139,11 @@ Public Class frmEnterTips
         txtSFAmount.Text = Format(decAmount, "0.00")
     End Sub
 
-    Private Sub btnAddSF_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAddSF.Click
+    Private Sub btnAddSF_Click(sender As Object, e As EventArgs) Handles btnAddSF.Click
         AddSpecialFunctionTip()
     End Sub
 
-    Private Sub btnClearSF_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClearSF.Click
+    Private Sub btnClearSF_Click(sender As Object, e As EventArgs) Handles btnClearSF.Click
         txtSFAmount.Clear()
         If cboSFServer.SelectedIndex = -1 Then
             cboSFServer.Text = ""
@@ -1153,40 +1153,40 @@ Public Class frmEnterTips
         cboSFServer.Focus()
     End Sub
 
-    Private Sub mnuDeleteSFTip_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuDeleteSFTip.Click
-        If Me.SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuDeleteSFTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteSFTip.Click
+        If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
 
-        Dim intTipID As Integer = CInt(Me.SpecialFunctionDataGridView.Item("SFID", Me.SpecialFunctionTipsBindingSource.Position).Value)
+        Dim intTipID = CInt(SpecialFunctionDataGridView.Item("SFID", SpecialFunctionTipsBindingSource.Position).Value)
 
         Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
         Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
         Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
 
         If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
+        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
 
         Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
     End Sub
 
-    Private Sub SpecialFunctionDataGridView_RowStateChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
+    Private Sub SpecialFunctionDataGridView_RowStateChanged(sender As Object, e As DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
         UpdateSFTotals()
     End Sub
 
-    Private Sub mnuReassignSFTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuReassignSFTip.Click
-        If Me.SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuReassignSFTip_Click(sender As Object, e As EventArgs) Handles mnuReassignSFTip.Click
+        If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
 
         frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the tip recipient:"
 
-        If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmSelectServer.ShowDialog <> DialogResult.OK Then
             frmSelectServer.Dispose()
             Exit Sub
         End If
 
-        Dim strSourceServerNumber As String = Me.SpecialFunctionDataGridView.Item("SFServerNumber", Me.SpecialFunctionTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID As Integer = CInt(Me.SpecialFunctionDataGridView.Item("SFID", Me.SpecialFunctionTipsBindingSource.Position).Value)
+        Dim strSourceServerNumber As String = SpecialFunctionDataGridView.Item("SFServerNumber", SpecialFunctionTipsBindingSource.Position).Value.ToString
+        Dim intSourceTipID = CInt(SpecialFunctionDataGridView.Item("SFID", SpecialFunctionTipsBindingSource.Position).Value)
 
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
@@ -1197,13 +1197,13 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
         Dim strSpecialFunction As String
         If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
             strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
         End If
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
 
         Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
 
@@ -1224,13 +1224,13 @@ Public Class frmEnterTips
         frmSelectServer.Dispose()
     End Sub
 
-    Private Sub mnuEditSFTip_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuEditSFTip.Click, SpecialFunctionDataGridView.DoubleClick
-        If Me.SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
+    Private Sub mnuEditSFTip_Click(sender As Object, e As EventArgs) Handles mnuEditSFTip.Click, SpecialFunctionDataGridView.DoubleClick
+        If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
 
-        Dim intSourceTipID As Integer = CInt(Me.SpecialFunctionDataGridView.Item("SFID", Me.SpecialFunctionTipsBindingSource.Position).Value)
+        Dim intSourceTipID = CInt(SpecialFunctionDataGridView.Item("SFID", SpecialFunctionTipsBindingSource.Position).Value)
 
-        Dim decAmount As Decimal = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate As Date = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
+        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
+        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
         Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
 
         With frmEditTip
@@ -1240,7 +1240,7 @@ Public Class frmEnterTips
             .m_dsParentDataSet = Data.FileDataSet
         End With
 
-        If frmEditTip.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmEditTip.ShowDialog <> DialogResult.OK Then
             frmEditTip.Dispose()
             Exit Sub
         End If
@@ -1266,7 +1266,7 @@ Public Class frmEnterTips
                 frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
             Next
 
-            If frmSelectFunction.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
                 frmSelectFunction.Dispose()
                 frmEditTip.Dispose()
                 Exit Sub
@@ -1305,21 +1305,21 @@ Public Class frmEnterTips
 
     'End of tip operations
 
-    Private Sub mnuManageSpecialFunctions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuManageSpecialFunctions.Click
+    Private Sub mnuManageSpecialFunctions_Click(sender As Object, e As EventArgs) Handles mnuManageSpecialFunctions.Click
         With frmManageSpecialFunctions
             .m_dsParentDataSet = Data.FileDataSet
             .ShowDialog()
             .Dispose()
         End With
 
-        Me.SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
-        Me.cboSelectSpecialFunction.SelectedIndex = -1
+        SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
+        cboSelectSpecialFunction.SelectedIndex = -1
     End Sub
 
-    Private Sub cboSelectSpecialFunction_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboSelectSpecialFunction.SelectedIndexChanged
+    Private Sub cboSelectSpecialFunction_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboSelectSpecialFunction.SelectedIndexChanged
         If cboSelectSpecialFunction.SelectedIndex = -1 Then
             Try
-                Me.SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
+                SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
             Catch ex As Exception
             End Try
 
@@ -1328,8 +1328,8 @@ Public Class frmEnterTips
 
         Dim strSpecialFunction As String = cboSelectSpecialFunction.SelectedValue.ToString
         'If Me.mnuSortByOrderEntered.Checked Then
-        Me.SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & strSpecialFunction & "'"
-        Me.SpecialFunctionTipsBindingSource.Sort = "TipID"
+        SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & strSpecialFunction & "'"
+        SpecialFunctionTipsBindingSource.Sort = "TipID"
         'Else
         '    Me.SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & strSpecialFunction & "'"
         '    Me.SpecialFunctionTipsBindingSource.Sort = "LastName"
@@ -1338,14 +1338,14 @@ Public Class frmEnterTips
         cboSFServer.Focus()
     End Sub
 
-    Private Sub mnuExportTips_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExportTips.Click
+    Private Sub mnuExportTips_Click(sender As Object, e As EventArgs) Handles mnuExportTips.Click
         frmExportTips.m_dsParentDataSet = Data.FileDataSet
         frmExportTips.ShowDialog()
         frmExportTips.Dispose()
     End Sub
 
-    Private Sub mnuAddServer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuAddServer.Click
-        Dim blnErrorState As Boolean = True
+    Private Sub mnuAddServer_Click(sender As Object, e As EventArgs) Handles mnuAddServer.Click
+        Dim blnErrorState = True
 
         Using frmAddEditServer As New frmAddEditServer()
             frmAddEditServer.Text = "Add Server"
@@ -1370,7 +1370,7 @@ Public Class frmEnterTips
 
             Data.FileDataSet.Servers.Rows.Add(drNewRow)
 
-            Dim frmMain As frmMain = DirectCast(MdiParent, frmMain)
+            Dim frmMain = DirectCast(MdiParent, frmMain)
 
             If frmMain.IsServerInTemplate(frmAddEditServer.ServerNumber) Then Exit Sub
 
@@ -1383,11 +1383,11 @@ Public Class frmEnterTips
         LoadServerCombos()
     End Sub
 
-    Private Sub mnuEditSelectedServer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuEditSelectedServer.Click, ServersDataGridView.DoubleClick
-        Dim strServerNumber As String = Me.ServersDataGridView.Item("ServersServerNumber", Me.ServersBindingSource.Position).Value.ToString
+    Private Sub mnuEditSelectedServer_Click(sender As Object, e As EventArgs) Handles mnuEditSelectedServer.Click, ServersDataGridView.DoubleClick
+        Dim strServerNumber As String = ServersDataGridView.Item("ServersServerNumber", ServersBindingSource.Position).Value.ToString
         Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
         Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
-        Dim blnSuppressChit As Boolean = CBool(Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit"))
+        Dim blnSuppressChit = CBool(Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit"))
 
         With frmAddEditServer
             .Text = "Edit Server"
@@ -1398,7 +1398,7 @@ Public Class frmEnterTips
             .LastName = strLastName
             .SuppressChit = blnSuppressChit
 
-            If .ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If .ShowDialog <> DialogResult.OK Then
                 .Dispose()
                 Exit Sub
             End If
@@ -1418,16 +1418,16 @@ Public Class frmEnterTips
         LoadServerCombos()
     End Sub
 
-    Private Sub btnShowAllTips_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnShowAllTips.Click
-        Me.SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
+    Private Sub btnShowAllTips_Click(sender As Object, e As EventArgs) Handles btnShowAllTips.Click
+        SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
 
         'If Me.mnuSortByOrderEntered.Checked Then
-        Me.SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
+        SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
         'Else
         'Me.SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, LastName"
         'End If
 
-        Me.cboSelectSpecialFunction.SelectedIndex = -1
+        cboSelectSpecialFunction.SelectedIndex = -1
 
         If cboSFServer.SelectedIndex <> -1 Then
             cboSFServer.SelectedIndex = -1
@@ -1436,16 +1436,16 @@ Public Class frmEnterTips
         End If
     End Sub
 
-    Private Sub mnuMergeDuplicate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuMergeDuplicate.Click
+    Private Sub mnuMergeDuplicate_Click(sender As Object, e As EventArgs) Handles mnuMergeDuplicate.Click
         frmSelectServer.m_dsParentDataSet = Data.FileDataSet
         frmSelectServer.lblSelectServer.Text = "Select the merge recipient:"
 
-        If frmSelectServer.ShowDialog <> Windows.Forms.DialogResult.OK Then
+        If frmSelectServer.ShowDialog <> DialogResult.OK Then
             frmSelectServer.Dispose()
             Exit Sub
         End If
 
-        Dim strSourceServerNumber As String = Me.ServersDataGridView.Item("ServersServerNumber", Me.ServersBindingSource.Position).Value.ToString
+        Dim strSourceServerNumber As String = ServersDataGridView.Item("ServersServerNumber", ServersBindingSource.Position).Value.ToString
         Dim strDestServerNumber As String = frmSelectServer.ServerNumber
         Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
         Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
@@ -1462,7 +1462,7 @@ Public Class frmEnterTips
 
         Dim drNewRow As DataRow
 
-        For i As Integer = 0 To dv.Count - 1
+        For i = 0 To dv.Count - 1
             drNewRow = Data.FileDataSet.Tips.NewRow
 
             drNewRow("Amount") = CDec(dv(i)("Amount"))
@@ -1487,26 +1487,26 @@ Public Class frmEnterTips
         frmSelectServer.Dispose()
     End Sub
 
-    Private Sub mnuCopyFromTemplate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuCopyFromTemplate.Click
+    Private Sub mnuCopyFromTemplate_Click(sender As Object, e As EventArgs) Handles mnuCopyFromTemplate.Click
         Data.FileDataSet.Servers.Merge(DirectCast(MdiParent, frmMain).GetTemplateServers())
     End Sub
 
-    Private Sub mnuPrintTipChits_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPrintRegularTipChits.Click
+    Private Sub mnuPrintTipChits_Click(sender As Object, e As EventArgs) Handles mnuPrintRegularTipChits.Click
         frmPrintRegularTipChits.m_dsParentDataset = Data.FileDataSet
         frmPrintRegularTipChits.ShowDialog()
         frmPrintRegularTipChits.Dispose()
     End Sub
 
-    Private Sub btnManageFunctions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnManageFunctions.Click
+    Private Sub btnManageFunctions_Click(sender As Object, e As EventArgs) Handles btnManageFunctions.Click
         With frmManageSpecialFunctions
             .m_dsParentDataSet = Data.FileDataSet
             .ShowDialog()
             .Dispose()
         End With
 
-        Me.SpecialFunctionBindingSource.ResetBindings(False)
-        Me.SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
-        Me.cboSelectSpecialFunction.SelectedIndex = -1
+        SpecialFunctionBindingSource.ResetBindings(False)
+        SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
+        cboSelectSpecialFunction.SelectedIndex = -1
 
         If cboSFServer.SelectedIndex <> -1 Then
             cboSFServer.SelectedIndex = -1
@@ -1515,19 +1515,19 @@ Public Class frmEnterTips
         End If
     End Sub
 
-    Private Sub mnuTipReports_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuTipReports.Click
+    Private Sub mnuTipReports_Click(sender As Object, e As EventArgs) Handles mnuTipReports.Click
         frmPrintTipReportsV2.m_dsParentDataSet = Data.FileDataSet
         frmPrintTipReportsV2.ShowDialog()
         frmPrintTipReportsV2.Dispose()
     End Sub
 
-    Private Sub mnuSpecialFunctionReports_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSpecialFunctionReports.Click
+    Private Sub mnuSpecialFunctionReports_Click(sender As Object, e As EventArgs) Handles mnuSpecialFunctionReports.Click
         frmPrintSpecialFunctionReportV2.m_dsParentDataSet = Data.FileDataSet
         frmPrintSpecialFunctionReportV2.ShowDialog()
         frmPrintSpecialFunctionReportV2.Dispose()
     End Sub
 
-    Private Sub mnuPayrollBalancingReport_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPayrollBalancingReport.Click
+    Private Sub mnuPayrollBalancingReport_Click(sender As Object, e As EventArgs) Handles mnuPayrollBalancingReport.Click
         Dim docReport As New PrintDocument
         Dim dlgPrint As New PrintDialog
 
@@ -1553,7 +1553,7 @@ Public Class frmEnterTips
 
         dlgPrint.Document = docReport
 
-        If dlgPrint.ShowDialog() <> Windows.Forms.DialogResult.OK Then
+        If dlgPrint.ShowDialog() <> DialogResult.OK Then
             dlgPrint.Dispose()
             docReport = Nothing
             Exit Sub
@@ -1570,26 +1570,26 @@ Public Class frmEnterTips
         docReport = Nothing
     End Sub
 
-    Private Sub PrintPayrollBalancingReport(ByVal sender As Object, ByVal e As PrintPageEventArgs)
-        Dim font As New System.Drawing.Font("Calibri", 12)
-        Dim fontBold As New System.Drawing.Font("Calibri", 12, FontStyle.Bold)
+    Private Sub PrintPayrollBalancingReport(sender As Object, e As PrintPageEventArgs)
+        Dim font As New Font("Calibri", 12)
+        Dim fontBold As New Font("Calibri", 12, FontStyle.Bold)
 
         Dim fmt As New StringFormat(StringFormatFlags.LineLimit)
 
         'Initialize local static variables that contain the current line position and
         'the current page number.
         Dim intPosition As Single = e.MarginBounds.Top
-        Dim intPageNumber As Integer = 1
+        Dim intPageNumber = 1
 
-        Const intLineSpacing As Integer = 18
-        Const intExtraLineSpacing As Integer = 36
-        Const intIndent As Integer = 425
+        Const intLineSpacing = 18
+        Const intExtraLineSpacing = 36
+        Const intIndent = 425
 
         Dim intStrLen As Integer
 
         'Initialize local constants that contain the normal line spacing and padded 
         'line spacing (double spacing).
-        Dim intPrintAreaHeight, intPrintAreaWidth, marginLeft, marginTop As Int32
+        Dim intPrintAreaHeight, intPrintAreaWidth, marginLeft, marginTop As Integer
 
         With e.MarginBounds
             ' Initialize local variables that contain the bounds of the printing 
@@ -1608,7 +1608,7 @@ Public Class frmEnterTips
         e.Graphics.DrawString("Payroll Balancing Report", font, Brushes.Black, marginLeft, intPosition)
         intPosition += intLineSpacing
 
-        e.Graphics.DrawString(Format(DateTime.Now, "MM/dd/yyyy") & " " & Format(DateTime.Now, "t"), font, Brushes.Black, marginLeft, intPosition)
+        e.Graphics.DrawString(Format(Date.Now, "MM/dd/yyyy") & " " & Format(Date.Now, "t"), font, Brushes.Black, marginLeft, intPosition)
         intPosition += intLineSpacing
 
         e.Graphics.DrawString("Page " & intPageNumber, font, Brushes.Black, marginLeft, intPosition)
@@ -1625,14 +1625,14 @@ Public Class frmEnterTips
         Dim decChargeTips As Decimal = 0
         Dim decCATotal As Decimal = 0
 
-        Dim intCCs As Integer = 0
-        Dim intRCs As Integer = 0
-        Dim intSFs As Integer = 0
-        Dim intCAs As Integer = 0
+        Dim intCCs = 0
+        Dim intRCs = 0
+        Dim intSFs = 0
+        Dim intCAs = 0
 
-        For i As Integer = 0 To dvTips.Count - 1
+        For i = 0 To dvTips.Count - 1
             Dim strDescription As String = dvTips.Item(i)("Description").ToString
-            Dim decAmount As Decimal = CDec(dvTips.Item(i)("Amount"))
+            Dim decAmount = CDec(dvTips.Item(i)("Amount"))
 
             Select Case strDescription
                 Case "Credit Card"
@@ -1706,7 +1706,7 @@ Public Class frmEnterTips
         'Draw total charge tips.
         e.Graphics.DrawString("Total Charge Tips", fontBold, Brushes.Black, marginLeft, intPosition)
 
-        Dim strCharges As String = CStr(intCCs + intRCs + intSFs)
+        Dim strCharges = CStr(intCCs + intRCs + intSFs)
         intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
                     Len(intSFs.ToString), 1).Width)
 
@@ -1741,7 +1741,7 @@ Public Class frmEnterTips
         'Draw total tips.
         e.Graphics.DrawString("TOTAL TIPS", fontBold, Brushes.Black, marginLeft, intPosition)
 
-        Dim strTotal As String = CStr(intCCs + intRCs + intSFs + intCAs)
+        Dim strTotal = CStr(intCCs + intRCs + intSFs + intCAs)
         intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
                     Len(intSFs.ToString), 1).Width)
 
@@ -1759,13 +1759,13 @@ Public Class frmEnterTips
         e.HasMorePages = False
     End Sub
 
-    Private Sub mnuAutoAddServers_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuAutoAddServers.Click
-        Dim blnError As Boolean = True
+    Private Sub mnuAutoAddServers_Click(sender As Object, e As EventArgs) Handles mnuAutoAddServers.Click
+        Dim blnError = True
         Dim intSeed As Integer
         Dim blnSuppressChits As Boolean
 
         While blnError = True
-            If frmAutoAddInput.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If frmAutoAddInput.ShowDialog <> DialogResult.OK Then
                 frmAutoAddInput.Dispose()
                 Exit Sub
             End If
@@ -1796,7 +1796,7 @@ Public Class frmEnterTips
             frmAutoAddServers.ServerNumber = CStr(intCurrentServerNumber)
             frmAutoAddServers.SuppressChits = blnSuppressChits
 
-            If frmAutoAddServers.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If frmAutoAddServers.ShowDialog <> DialogResult.OK Then
                 frmAutoAddServers.Dispose()
                 Exit Do
             End If
@@ -1821,7 +1821,7 @@ Public Class frmEnterTips
         LoadServerCombos()
     End Sub
 
-    Private Sub mnuOptimizeFile_Click(ByVal sender As Object, ByVal e As EventArgs) Handles mnuOptimizeFile.Click
+    Private Sub mnuOptimizeFile_Click(sender As Object, e As EventArgs) Handles mnuOptimizeFile.Click
         If MessageBox.Show("This function will compact credit card, room charge, and cash tips so that there is only one entry per" &
         " server per day.  It will also remove all servers who do not have tips.  It is recommended that this function" &
         " only be performed after the pay period is balanced and all reports have been printed.  Optimization may take several" &
@@ -1835,7 +1835,7 @@ Public Class frmEnterTips
         Dim dvServers, dvtips As New DataView
         dvServers.Table = Data.FileDataSet.Servers
 
-        Dim intServer As Integer = 0
+        Dim intServer = 0
 
         Do Until intServer = dvServers.Count
             lblInfo.Visible = True
@@ -1862,13 +1862,13 @@ Public Class frmEnterTips
         Dim dvTips As New DataView
         dvTips.Table = Data.FileDataSet.Tips
 
-        Dim dteDate As Date = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dteDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
 
         Do Until dteDate > CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
             dvTips.RowFilter = "WorkingDate = '" & Format(dteDate, "MM/dd/yyyy") & "' AND Description <> 'Special Function'"
             dvTips.Sort = "ServerNumber, Description"
 
-            Dim intTip As Integer = 0
+            Dim intTip = 0
 
             Do Until intTip = dvTips.Count
                 If intTip <> dvTips.Count - 1 Then
@@ -1876,7 +1876,7 @@ Public Class frmEnterTips
                     Dim strThisDescription As String = dvTips.Item(intTip)("Description").ToString
                     Dim strNextServer As String = dvTips.Item(intTip + 1)("ServerNumber").ToString
                     Dim strNextDescription As String = dvTips.Item(intTip + 1)("Description").ToString
-                    Dim decTotal As Decimal = CDec(dvTips.Item(intTip)("Amount"))
+                    Dim decTotal = CDec(dvTips.Item(intTip)("Amount"))
 
                     If strThisServer = strNextServer And strThisDescription = strNextDescription Then
                         decTotal += CDec(dvTips.Item(intTip + 1)("Amount"))
@@ -1894,33 +1894,33 @@ Public Class frmEnterTips
         dvTips.Dispose()
     End Sub
 
-    Private Sub ServersDataGridView_CellMouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles ServersDataGridView.CellMouseDown
+    Private Sub ServersDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles ServersDataGridView.CellMouseDown
         If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            Me.ServersDataGridView.CurrentCell = Me.ServersDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+            ServersDataGridView.CurrentCell = ServersDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         End If
     End Sub
 
-    Private Sub CreditCardDataGridView_CellMouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles CreditCardDataGridView.CellMouseDown
+    Private Sub CreditCardDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles CreditCardDataGridView.CellMouseDown
         If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            Me.CreditCardDataGridView.CurrentCell = Me.CreditCardDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+            CreditCardDataGridView.CurrentCell = CreditCardDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         End If
     End Sub
 
-    Private Sub RoomChargeDataGridView_CellMouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles RoomChargeDataGridView.CellMouseDown
+    Private Sub RoomChargeDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles RoomChargeDataGridView.CellMouseDown
         If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            Me.RoomChargeDataGridView.CurrentCell = Me.RoomChargeDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+            RoomChargeDataGridView.CurrentCell = RoomChargeDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         End If
     End Sub
 
-    Private Sub CashDataGridView_CellMouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles CashDataGridView.CellMouseDown
+    Private Sub CashDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles CashDataGridView.CellMouseDown
         If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            Me.CashDataGridView.CurrentCell = Me.CashDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+            CashDataGridView.CurrentCell = CashDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         End If
     End Sub
 
-    Private Sub SpecialFunctionDataGridView_CellMouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles SpecialFunctionDataGridView.CellMouseDown
+    Private Sub SpecialFunctionDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles SpecialFunctionDataGridView.CellMouseDown
         If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            Me.SpecialFunctionDataGridView.CurrentCell = Me.SpecialFunctionDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+            SpecialFunctionDataGridView.CurrentCell = SpecialFunctionDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         End If
     End Sub
 
