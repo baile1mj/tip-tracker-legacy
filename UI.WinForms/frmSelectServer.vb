@@ -3,13 +3,13 @@ Imports TipTracker.Common.Data.PayPeriod
 Public Class frmSelectServer
     Friend m_dsParentDataSet As New FileDataSet
 
-    Friend ReadOnly Property ServerNumber() As String
+    Friend ReadOnly Property ServerNumber As String
         Get
             Return ExtractServerNumber()
         End Get
     End Property
 
-    Private Sub frmSelectServer_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub frmSelectServer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PopulateComboBox()
     End Sub
 
@@ -30,7 +30,7 @@ Public Class frmSelectServer
     End Sub
 
     Private Function ExtractServerNumber() As String
-        Dim strExtractedNumber As String = ""
+        Dim strExtractedNumber = ""
 
         For i As Integer = Len(cboSelectServer.SelectedItem.ToString) To 1 Step -1
             Dim c As Char = GetChar(cboSelectServer.SelectedItem.ToString, i)
@@ -45,18 +45,18 @@ Public Class frmSelectServer
         Return strExtractedNumber
     End Function
 
-    Private Sub btnCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        Me.Close()
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Close()
     End Sub
 
-    Private Sub btnOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnOK.Click
+    Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         If cboSelectServer.SelectedIndex = -1 Then
             MessageBox.Show("You must select a server.", "Select Server", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
+        DialogResult = DialogResult.OK
+        Close()
     End Sub
 
 End Class

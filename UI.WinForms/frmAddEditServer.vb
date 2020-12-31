@@ -7,7 +7,7 @@ Public Class frmAddEditServer
         Me.New(New Server(), True)
     End Sub
 
-    Public Sub New(ByVal editServer As Server, ByVal allowNumberChange As Boolean)
+    Public Sub New(editServer As Server, allowNumberChange As Boolean)
         InitializeComponent()
 
         If IsNothing(editServer) Then
@@ -22,47 +22,47 @@ Public Class frmAddEditServer
         optSuppressChit.DataBindings.Add(NameOf(optSuppressChit.Checked), Server, NameOf(Server.SuppressChit))
     End Sub
 
-    Friend Property ServerNumber() As String
+    Friend Property ServerNumber As String
         Get
             Return txtServerNumber.Text
         End Get
-        Set(ByVal value As String)
+        Set(value As String)
             txtServerNumber.Text = value
         End Set
     End Property
 
-    Friend Property FirstName() As String
+    Friend Property FirstName As String
         Get
             Return txtFirstName.Text
         End Get
-        Set(ByVal value As String)
+        Set(value As String)
             txtFirstName.Text = value
         End Set
     End Property
 
-    Friend Property LastName() As String
+    Friend Property LastName As String
         Get
             Return txtLastName.Text
         End Get
-        Set(ByVal value As String)
+        Set(value As String)
             txtLastName.Text = value
         End Set
     End Property
 
-    Friend Property SuppressChit() As Boolean
+    Friend Property SuppressChit As Boolean
         Get
             Return optSuppressChit.Checked
         End Get
-        Set(ByVal value As Boolean)
+        Set(value As Boolean)
             optSuppressChit.Checked = value
         End Set
     End Property
 
-    Private Sub btnCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        Me.Close()
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Close()
     End Sub
 
-    Private Sub btnOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnOk.Click
+    Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         If txtServerNumber.Text = "" Then
             MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
             txtServerNumber.Focus()
@@ -81,15 +81,15 @@ Public Class frmAddEditServer
             Exit Sub
         End If
 
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
+        DialogResult = DialogResult.OK
+        Close()
     End Sub
 
-    Private Sub txtServerNumber_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtServerNumber.GotFocus
+    Private Sub txtServerNumber_GotFocus(sender As Object, e As EventArgs) Handles txtServerNumber.GotFocus
         If txtServerNumber.Text <> "" Then txtServerNumber.SelectAll()
     End Sub
 
-    Private Sub txtServerNumber_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtServerNumber.KeyPress
+    Private Sub txtServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtServerNumber.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             txtFirstName.Focus()
@@ -99,11 +99,11 @@ Public Class frmAddEditServer
         End If
     End Sub
 
-    Private Sub txtFirstName_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtFirstName.GotFocus
+    Private Sub txtFirstName_GotFocus(sender As Object, e As EventArgs) Handles txtFirstName.GotFocus
         If txtFirstName.Text <> "" Then txtFirstName.SelectAll()
     End Sub
 
-    Private Sub txtFirstName_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtFirstName.KeyPress
+    Private Sub txtFirstName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtFirstName.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             txtLastName.Focus()
@@ -113,11 +113,11 @@ Public Class frmAddEditServer
         End If
     End Sub
 
-    Private Sub txtLastName_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtLastName.GotFocus
+    Private Sub txtLastName_GotFocus(sender As Object, e As EventArgs) Handles txtLastName.GotFocus
         If txtLastName.Text <> "" Then txtLastName.SelectAll()
     End Sub
 
-    Private Sub txtLastName_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtLastName.KeyPress
+    Private Sub txtLastName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtLastName.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
             btnOk.Focus()
