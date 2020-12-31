@@ -1,3 +1,4 @@
+Imports System.Linq
 Imports TipTracker.Core
 
 Public Class frmSelectServer
@@ -17,7 +18,12 @@ Public Class frmSelectServer
     Public Sub New(displayText As String, servers As List(Of Server))
         InitializeComponent()
         lblSelectServer.Text = displayText
-        servers.ForEach(Sub(s) cboSelectServer.Items.Add(New ServerWrapper(s)))
+
+        servers _
+            .OrderBy(Function(s) s.LastName) _
+            .ThenBy(Function(s) s.FirstName) _
+            .ToList() _
+            .ForEach(Sub(s) cboSelectServer.Items.Add(New ServerWrapper(s)))
     End Sub
 
     Public Function GetSelectedServer() As Server
