@@ -1,5 +1,6 @@
 Imports System.Drawing.Printing
 Imports System.IO
+Imports System.Linq
 Imports System.Reflection
 Imports TipTracker.Common.Data
 Imports TipTracker.Common.Data.GlobalSettings
@@ -118,9 +119,16 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuManageTemplateServers_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuManageTemplateServers.Click
-        Dim serversTable As DataTable = _globalSettings.GlobalDataSet.Servers.Copy()
+        Dim existingServers As List(Of Server) = _globalSettings.GlobalDataSet.Servers _
+            .AsEnumerable() _
+            .Select(Function(r) New Server() With {
+                .PosId = r("ServerNumber").ToString(),
+                .FirstName = r("FirstName").ToString(),
+                .LastName = r("LastName").ToString(),
+                .SuppressChit = CBool(r("SuppressChit"))}) _
+            .ToList()
 
-        Using serverManager As New frmManageServers(serversTable)
+        Using serverManager As New frmManageServers(existingServers)
             'The dialog only has a close button, so we'll assume there are changes.
             serverManager.ShowDialog()
 

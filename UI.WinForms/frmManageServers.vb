@@ -16,24 +16,6 @@ Public Class frmManageServers
         Servers = New SortableBindingList(Of Server)(existingServers)
     End Sub
 
-    Public Sub New(ByVal serversTable As DataTable)
-        InitializeComponent()
-
-        If IsNothing(serversTable) Then
-            Throw New ArgumentException("Cannot modify a null object.", NameOf(serversTable))
-        End If
-
-        Dim existingServers As List(Of Server) = serversTable _
-            .AsEnumerable() _
-            .Select(Function(ByVal r) New Server() With {
-                .PosId = r("ServerNumber").ToString(),
-                .FirstName = r("FirstName").ToString(),
-                .LastName = r("LastName").ToString(),
-                .SuppressChit = CBool(r("SuppressChit"))}) _
-            .ToList()
-        Servers = New SortableBindingList(Of Server)(existingServers)
-    End Sub
-
     Private Sub frmManageServers_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
         ServerBindingSource.DataSource = Servers
         ServerBindingSource.Sort = NameOf(Server.PosId)
