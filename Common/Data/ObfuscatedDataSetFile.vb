@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Text.Encoding
 
 Namespace Data
     ''' <summary>
@@ -63,6 +64,7 @@ Namespace Data
             Dim streamWriter As New StreamWriter(fileStream)
 
             fileStream.Seek(0, 0)
+            fileStream.SetLength(ASCII.GetByteCount(fileContents))
             streamWriter.Write(fileContents)
             streamWriter.Flush()
         End Sub
