@@ -1195,14 +1195,8 @@ Public Class frmEnterTips
         End If
 
         Dim strSpecialFunction As String = cboSelectSpecialFunction.SelectedValue.ToString
-        'If Me.mnuSortByOrderEntered.Checked Then
         SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & strSpecialFunction & "'"
         SpecialFunctionTipsBindingSource.Sort = "TipID"
-        'Else
-        '    Me.SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & strSpecialFunction & "'"
-        '    Me.SpecialFunctionTipsBindingSource.Sort = "LastName"
-        'End If
-
         cboSFServer.Focus()
     End Sub
 
@@ -1288,13 +1282,7 @@ Public Class frmEnterTips
 
     Private Sub btnShowAllTips_Click(sender As Object, e As EventArgs) Handles btnShowAllTips.Click
         SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
-
-        'If Me.mnuSortByOrderEntered.Checked Then
         SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
-        'Else
-        'Me.SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, LastName"
-        'End If
-
         cboSelectSpecialFunction.SelectedIndex = -1
 
         If cboSFServer.SelectedIndex <> -1 Then
