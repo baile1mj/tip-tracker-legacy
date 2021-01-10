@@ -369,6 +369,20 @@ Public Class frmEnterTips
         formControls(0).Focus()
     End Sub
 
+    Private Function ConfirmTipDeletion(tipRow As FileDataSet.TipsRow) As Boolean
+        Return MessageBox.Show($"Delete ${tipRow.Amount} tip for {tipRow.FirstName} {tipRow.LastName}?",
+            "Confirm Delete", MessageBoxButtons.YesNo) = DialogResult.Yes
+    End Function
+
+    Private Sub PerformTipDeletion(bindingSource As BindingSource, amountLabel As Label, tipType As TipTypes, Optional specialFunction As String = Nothing)
+        Dim selectedRow = DirectCast(DirectCast(bindingSource.Current, DataRowView).Row, FileDataSet.TipsRow)
+
+        If Not ConfirmTipDeletion(selectedRow) Then Exit Sub
+
+        selectedRow.Delete()
+        UpdateTotal(amountLabel, tipType, specialFunction)
+    End Sub
+
     'Credit card operations begin below:
 #Region "CreditCardOperations"
 
@@ -450,20 +464,7 @@ Public Class frmEnterTips
 
     Private Sub mnuDeleteCCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCCTip.Click
         If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim intTipID = CInt(CreditCardDataGridView.Item("CCID", CreditCardTipsBindingSource.Position).Value)
-
-        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
-
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
-            Exit Sub
-        End If
-
-        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
-        UpdateCCTotals()
+        PerformTipDeletion(CreditCardTipsBindingSource, lblCCTotal, TipTypes.CreditCard)
     End Sub
 
     Private Sub txtCCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtCCServerName.GotFocus
@@ -679,19 +680,7 @@ Public Class frmEnterTips
 
     Private Sub mnuDeleteRCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteRCTip.Click
         If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
-        Dim intTipID = CInt(RoomChargeDataGridView.Item("RCID", RoomChargeTipsBindingSource.Position).Value)
-
-        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
-
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
-            Exit Sub
-        End If
-
-        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
-        UpdateRCTotals()
+        PerformTipDeletion(RoomChargeTipsBindingSource, lblRCTotal, TipTypes.RoomCharge)
     End Sub
 
     Private Sub txtRCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtRCServerName.GotFocus
@@ -884,20 +873,7 @@ Public Class frmEnterTips
 
     Private Sub mnuDeleteCATip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCATip.Click
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim intTipID = CInt(CashDataGridView.Item("CAID", CashTipsBindingSource.Position).Value)
-
-        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
-
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
-            Exit Sub
-        End If
-
-        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
-        UpdateCATotals()
+        PerformTipDeletion(CashTipsBindingSource, lblCATotal, TipTypes.Cash)
     End Sub
 
     Private Sub mnuReassignCATip_Click(sender As Object, e As EventArgs) Handles mnuReassignCATip.Click
@@ -1131,19 +1107,9 @@ Public Class frmEnterTips
 
     Private Sub mnuDeleteSFTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteSFTip.Click
         If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
+        Dim specialFunction = cboSelectSpecialFunction.SelectedValue?.ToString()
 
-        Dim intTipID = CInt(SpecialFunctionDataGridView.Item("SFID", SpecialFunctionTipsBindingSource.Position).Value)
-
-        Dim strTipAmount As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("Amount").ToString
-        Dim strFirstName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Tips.FindByTipID(intTipID)("LastName").ToString
-
-        If MessageBox.Show("Are you sure you want to delete this $" & strTipAmount & " tip for " &
-        strFirstName & " " & strLastName & "?", "Confirm Delete", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
-            Exit Sub
-        End If
-
-        Data.FileDataSet.Tips.FindByTipID(intTipID).Delete()
+        PerformTipDeletion(SpecialFunctionTipsBindingSource, lblSFTotal, TipTypes.SpecialFunction, specialFunction)
     End Sub
 
     Private Sub SpecialFunctionDataGridView_RowStateChanged(sender As Object, e As DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
