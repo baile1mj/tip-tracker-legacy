@@ -1899,34 +1899,14 @@ Public Class frmEnterTips
         dvTips.Dispose()
     End Sub
 
-    Private Sub ServersDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles ServersDataGridView.CellMouseDown
+    Private Sub SelectDataGridViewRowOnRightClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles ServersDataGridView.CellMouseDown,
+        CreditCardDataGridView.CellMouseDown, RoomChargeDataGridView.CellMouseDown, CashDataGridView.CellMouseDown,
+        SpecialFunctionDataGridView.CellMouseDown
+        If e.Button = MouseButtons.Left OrElse TypeOf sender IsNot DataGridView Then Exit Sub
+
         If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            ServersDataGridView.CurrentCell = ServersDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+            Dim dgv = DirectCast(sender, DataGridView)
+            dgv.CurrentCell = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex)
         End If
     End Sub
-
-    Private Sub CreditCardDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles CreditCardDataGridView.CellMouseDown
-        If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            CreditCardDataGridView.CurrentCell = CreditCardDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        End If
-    End Sub
-
-    Private Sub RoomChargeDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles RoomChargeDataGridView.CellMouseDown
-        If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            RoomChargeDataGridView.CurrentCell = RoomChargeDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        End If
-    End Sub
-
-    Private Sub CashDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles CashDataGridView.CellMouseDown
-        If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            CashDataGridView.CurrentCell = CashDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        End If
-    End Sub
-
-    Private Sub SpecialFunctionDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles SpecialFunctionDataGridView.CellMouseDown
-        If e.ColumnIndex >= 0 And e.RowIndex >= 0 Then
-            SpecialFunctionDataGridView.CurrentCell = SpecialFunctionDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        End If
-    End Sub
-
 End Class
