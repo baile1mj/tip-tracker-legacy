@@ -385,13 +385,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub UpdateCCTotals()
-        Dim decAmount As Decimal = 0
-
-        For Each row As DataGridViewRow In CreditCardDataGridView.Rows
-            decAmount += CDec(row.Cells.Item("CCAmount").Value)
-        Next
-
-        lblCCTotal.Text = "Total: " & Format(decAmount, "c")
+        UpdateTotal(lblCCTotal, TipTypes.CreditCard)
     End Sub
 
     Private Sub txtCCServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCCServerNumber.KeyPress
@@ -620,13 +614,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub UpdateRCTotals()
-        Dim decAmount As Decimal = 0
-
-        For Each row As DataGridViewRow In RoomChargeDataGridView.Rows
-            decAmount += CDec(row.Cells.Item("RCAmount").Value)
-        Next
-
-        lblRCTotal.Text = "Total: " & Format(decAmount, "c")
+        UpdateTotal(lblRCTotal, TipTypes.RoomCharge)
     End Sub
 
     Private Sub txtRCServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRCServerNumber.KeyPress
@@ -852,13 +840,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub UpdateCATotals()
-        Dim decAmount As Decimal = 0
-
-        For Each row As DataGridViewRow In CashDataGridView.Rows
-            decAmount += CDec(row.Cells.Item("CAAmount").Value)
-        Next
-
-        lblCATotal.Text = "Total: " & Format(decAmount, "c")
+        UpdateTotal(lblCATotal, TipTypes.Cash)
     End Sub
 
     Private Sub txtCAAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCAAmount.KeyPress
@@ -1105,13 +1087,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub UpdateSFTotals()
-        Dim decAmount As Decimal = 0
-
-        For Each row As DataGridViewRow In SpecialFunctionDataGridView.Rows
-            decAmount += CDec(row.Cells.Item("SFAmount").Value)
-        Next
-
-        lblSFTotal.Text = "Total: " & Format(decAmount, "c")
+        UpdateTotal(lblSFTotal, TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
     End Sub
 
     Private Sub txtSFAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtSFAmount.KeyPress
