@@ -3,6 +3,7 @@ Imports System.IO
 Imports TipTracker.Common.Data.PayPeriod
 Imports TipTracker.Core
 Imports System.Linq
+Imports TipTracker.Utilities
 
 Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile
@@ -249,47 +250,138 @@ Public Class frmEnterTips
         SetSelectionFilters()
     End Sub
 
+    Private Function GetServerRow(serverTextBox As TextBox) As FileDataSet.ServersRow
+        If String.IsNullOrEmpty(serverTextBox.Text) Then
+            MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
+            serverTextBox.Focus()
+            Return Nothing
+        End If
+
+        Return Data.FileDataSet.Servers.FindByServerNumber(serverTextBox.Text)
+    End Function
+
+    Private Function GetServerRow(serverComboBox As ComboBox) As FileDataSet.ServersRow
+        If serverComboBox.SelectedIndex = -1 Then
+            If serverComboBox.Text = "" Then
+                MessageBox.Show("You must select the server this tip belongs to.", "Select Server", MessageBoxButtons.OK)
+                serverComboBox.Focus()
+                Return Nothing
+            Else
+                MessageBox.Show("The server name you entered was not found in the data file.  You must add the server before you can add the tip.", "Server Not Found", MessageBoxButtons.OK)
+                serverComboBox.Text = ""
+                serverComboBox.Focus()
+                Return Nothing
+            End If
+        End If
+
+        Dim serverNumber = serverComboBox.SelectedValue.ToString()
+        Return Data.FileDataSet.Servers.FindByServerNumber(serverNumber)
+    End Function
+
+    Private Function GetTipAmount(amountTextBox As TextBox) As Decimal?
+        If String.IsNullOrEmpty(amountTextBox.Text) Then
+            MessageBox.Show("You must enter a tip amount.", "Invalid Entry", MessageBoxButtons.OK)
+            amountTextBox.Focus()
+            Return Nothing
+        End If
+
+        If Not IsNumeric(amountTextBox.Text) Then
+            MessageBox.Show("The tip amount must be a number.", "Invalid Entry", MessageBoxButtons.OK)
+            amountTextBox.Clear()
+            amountTextBox.Focus()
+            Return Nothing
+        End If
+
+        Return If(amountTextBox.Text.Contains("."),
+            CDec(amountTextBox.Text),
+            CDec(amountTextBox.Text) / 100)
+    End Function
+
+    Private Function GetSelectedFunction(specialFunctionComboBox As ComboBox) As FileDataSet.SpecialFunctionsRow
+        If specialFunctionComboBox.SelectedIndex = -1 Then
+            MessageBox.Show("You must select a special function.", "Invalid Selection", MessageBoxButtons.OK)
+            specialFunctionComboBox.Focus()
+            Return Nothing
+        End If
+
+        Dim selectedFunction = specialFunctionComboBox.SelectedValue.ToString()
+        Return FileDataSet.SpecialFunctions.FindBySpecialFunction(selectedFunction)
+    End Function
+
+    Private Sub AddTip(server As FileDataSet.ServersRow, tipAmount As Decimal, tipType As TipTypes,
+        Optional specialFunction As FileDataSet.SpecialFunctionsRow = Nothing)
+        Dim newTipRow = Data.FileDataSet.Tips.NewTipsRow()
+
+        With newTipRow
+            .Amount = tipAmount.ToString("0.00")
+            .ServerNumber = server.ServerNumber
+            .FirstName = server.FirstName
+            .LastName = server.LastName
+            .Description = tipType.Name
+
+            If specialFunction IsNot Nothing Then
+                .SpecialFunction = specialFunction.SpecialFunction
+                .WorkingDate = specialFunction._Date
+            ElseIf tipType Is TipTypes.Cash Then
+                .WorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd").Value)
+            Else
+                .WorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate").Value)
+            End If
+        End With
+
+        Data.FileDataSet.Tips.AddTipsRow(newTipRow)
+    End Sub
+
+    Private Sub UpdateTotal(amountLabel As Label, tipType As TipTypes, Optional specialFunction As String = Nothing)
+        Dim isCandidateTip As Func(Of FileDataSet.TipsRow, Boolean) = Function(r) _
+            r.RowState <> DataRowState.Deleted _
+            AndAlso r.RowState <> DataRowState.Detached _
+            AndAlso r.Description = tipType.Name
+        Dim affectsTotal As Func(Of FileDataSet.TipsRow, Boolean)
+
+        If tipType Is TipTypes.CreditCard OrElse tipType Is TipTypes.RoomCharge Then
+            'Credit card and room charge tips are filtered date
+            Dim workingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate").Value)
+            affectsTotal = Function(r) r.WorkingDate = workingDate
+        ElseIf tipType Is TipTypes.SpecialFunction AndAlso specialFunction IsNot Nothing Then
+            'When a function is selected, only the tips for that function should be totaled.
+            affectsTotal = Function(r) r.SpecialFunction = specialFunction
+        Else
+            'When no function is selected, all special function tips should be shown/totaled.
+            'Cash tips apply for the entire pay period, so all cash tips should be totaled.
+            affectsTotal = Function(r) True
+        End If
+
+        Dim dailyTotal = Data.FileDataSet.Tips _
+            .AsEnumerable() _
+            .Where(Function(r) isCandidateTip(r) AndAlso affectsTotal(r)) _
+            .Select(Function(r) CDec(r.Amount)) _
+            .Sum()
+
+        amountLabel.Text = $"Total: {dailyTotal:c}"
+    End Sub
+
+    Private Sub ResetEntryForm(ParamArray formControls As Control())
+        For Each control In formControls
+            control.ResetText()
+        Next
+
+        formControls(0).Focus()
+    End Sub
+
     'Credit card operations begin below:
 #Region "CreditCardOperations"
 
     Private Sub AddCreditCardTip()
-        If txtCCServerNumber.Text = "" Then
-            MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtCCServerNumber.Focus()
-            Exit Sub
-        End If
+        Dim server = GetServerRow(txtCCServerNumber)
+        If server Is Nothing Then Exit Sub
 
-        If Not IsNumeric(txtCCAmount.Text) Then
-            MessageBox.Show("The tip amount must be a number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtCCAmount.Clear()
-            txtCCAmount.Focus()
-            Exit Sub
-        End If
+        Dim amount = GetTipAmount(txtCCAmount)
+        If amount Is Nothing Then Exit Sub
 
-        If txtCCAmount.Text = "" Then
-            MessageBox.Show("You must enter a tip amount.", "Invalid Entry", MessageBoxButtons.OK)
-            txtCCAmount.Focus()
-            Exit Sub
-        End If
-
-        AutoInsertCCDecimal()
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = txtCCAmount.Text
-        drNewRow("ServerNumber") = txtCCServerNumber.Text
-        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("FirstName").ToString
-        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(txtCCServerNumber.Text)("LastName").ToString
-        drNewRow("Description") = "Credit Card"
-        drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        UpdateCCTotals()
-
-        txtCCAmount.Clear()
-        txtCCServerNumber.Clear()
-        txtCCServerName.Clear()
-        txtCCServerNumber.Focus()
+        AddTip(server, amount.Value, TipTypes.CreditCard)
+        UpdateTotal(lblCCTotal, TipTypes.CreditCard)
+        ResetEntryForm(txtCCServerNumber, txtCCAmount, txtCCServerName)
     End Sub
 
     Private Sub UpdateCCTotals()
@@ -516,43 +608,15 @@ Public Class frmEnterTips
     'Room charge operations begin below:
 #Region "RoomChargeOperations"
     Private Sub AddRoomChargeTip()
-        If txtRCServerNumber.Text = "" Then
-            MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtRCServerNumber.Focus()
-            Exit Sub
-        End If
+        Dim server = GetServerRow(txtRCServerNumber)
+        If server Is Nothing Then Exit Sub
 
-        If Not IsNumeric(txtRCAmount.Text) Then
-            MessageBox.Show("The tip amount must be a number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtRCAmount.Clear()
-            txtRCAmount.Focus()
-            Exit Sub
-        End If
+        Dim amount = GetTipAmount(txtRCAmount)
+        If amount Is Nothing Then Exit Sub
 
-        If txtRCAmount.Text = "" Then
-            MessageBox.Show("You must enter a tip amount.", "Invalid Entry", MessageBoxButtons.OK)
-            txtRCAmount.Focus()
-            Exit Sub
-        End If
-
-        AutoInsertRCDecimal()
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = txtRCAmount.Text
-        drNewRow("ServerNumber") = txtRCServerNumber.Text
-        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("FirstName").ToString
-        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(txtRCServerNumber.Text)("LastName").ToString
-        drNewRow("Description") = "Room Charge"
-        drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        UpdateRCTotals()
-
-        txtRCAmount.Clear()
-        txtRCServerNumber.Clear()
-        txtRCServerName.Clear()
-        txtRCServerNumber.Focus()
+        AddTip(server, amount.Value, TipTypes.RoomCharge)
+        UpdateTotal(lblRCTotal, TipTypes.RoomCharge)
+        ResetEntryForm(txtRCServerNumber, txtRCAmount, txtRCServerName)
     End Sub
 
     Private Sub UpdateRCTotals()
@@ -776,49 +840,15 @@ Public Class frmEnterTips
     'Cash operations begin below:
 #Region "CashOperations"
     Private Sub AddCashTip()
-        If cboCAServer.SelectedIndex = -1 Then
-            If cboCAServer.Text = "" Then
-                MessageBox.Show("You must select the server this tip belongs to.", "Select Server", MessageBoxButtons.OK)
-                cboCAServer.Focus()
-                Exit Sub
-            Else
-                MessageBox.Show("The server name you entered was not found in the data file.  You must add the server before you can add the tip.", "Server Not Found", MessageBoxButtons.OK)
-                cboCAServer.Text = ""
-                cboCAServer.Focus()
-                Exit Sub
-            End If
-        End If
+        Dim server = GetServerRow(cboCAServer)
+        If server Is Nothing Then Exit Sub
 
-        If Not IsNumeric(txtCAAmount.Text) Then
-            MessageBox.Show("The tip amount must be a number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtCAAmount.Clear()
-            txtCAAmount.Focus()
-            Exit Sub
-        End If
+        Dim amount = GetTipAmount(txtCAAmount)
+        If amount Is Nothing Then Exit Sub
 
-        If txtCAAmount.Text = "" Then
-            MessageBox.Show("You must enter a tip amount.", "Invalid Entry", MessageBoxButtons.OK)
-            txtCAAmount.Focus()
-            Exit Sub
-        End If
-
-        AutoInsertCADecimal()
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = txtCAAmount.Text
-        drNewRow("ServerNumber") = cboCAServer.SelectedValue.ToString
-        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(cboCAServer.SelectedValue.ToString)("FirstName").ToString
-        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(cboCAServer.SelectedValue.ToString)("LastName").ToString
-        drNewRow("Description") = "Cash"
-        drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        UpdateCATotals()
-
-        txtCAAmount.Clear()
-        cboCAServer.SelectedIndex = -1
-        cboCAServer.Focus()
+        AddTip(server, amount.Value, TipTypes.Cash)
+        UpdateTotal(lblCATotal, TipTypes.Cash)
+        ResetEntryForm(cboCAServer, txtCAAmount)
     End Sub
 
     Private Sub UpdateCATotals()
@@ -1060,56 +1090,18 @@ Public Class frmEnterTips
     'Special function operations begin below:
 #Region "SpecialFunctionOperations"
     Private Sub AddSpecialFunctionTip()
-        If cboSFServer.SelectedIndex = -1 Then
-            If cboSFServer.Text = "" Then
-                MessageBox.Show("You must select the server this tip belongs to.", "Select Server", MessageBoxButtons.OK)
-                cboSFServer.Focus()
-                Exit Sub
-            Else
-                MessageBox.Show("The server name you entered was not found in the data file.  You must add the server before you can add the tip.", "Server Not Found", MessageBoxButtons.OK)
-                cboSFServer.Text = ""
-                cboSFServer.Focus()
-                Exit Sub
-            End If
-        End If
+        Dim specialFunction = GetSelectedFunction(cboSelectSpecialFunction)
+        If specialFunction Is Nothing Then Exit Sub
 
-        If Not IsNumeric(txtSFAmount.Text) Then
-            MessageBox.Show("The tip amount must be a number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtSFAmount.Clear()
-            txtSFAmount.Focus()
-            Exit Sub
-        End If
+        Dim server = GetServerRow(cboSFServer)
+        If server Is Nothing Then Exit Sub
 
-        If txtSFAmount.Text = "" Then
-            MessageBox.Show("You must enter a tip amount.", "Invalid Entry", MessageBoxButtons.OK)
-            txtSFAmount.Focus()
-            Exit Sub
-        End If
+        Dim amount = GetTipAmount(txtSFAmount)
+        If amount Is Nothing Then Exit Sub
 
-        If cboSelectSpecialFunction.SelectedIndex = -1 Then
-            MessageBox.Show("You must select a special function.", "Invalid Selection", MessageBoxButtons.OK)
-            cboSelectSpecialFunction.Focus()
-            Exit Sub
-        End If
-
-        AutoInsertSFDecimal()
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = txtSFAmount.Text
-        drNewRow("ServerNumber") = cboSFServer.SelectedValue.ToString
-        drNewRow("FirstName") = Data.FileDataSet.Servers.FindByServerNumber(cboSFServer.SelectedValue.ToString)("FirstName").ToString
-        drNewRow("LastName") = Data.FileDataSet.Servers.FindByServerNumber(cboSFServer.SelectedValue.ToString)("LastName").ToString
-        drNewRow("Description") = "Special Function"
-        drNewRow("SpecialFunction") = cboSelectSpecialFunction.SelectedValue
-        drNewRow("WorkingDate") = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(cboSelectSpecialFunction.SelectedValue.ToString)("Date"))
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        UpdateSFTotals()
-
-        txtSFAmount.Clear()
-        cboSFServer.SelectedIndex = -1
-        cboSFServer.Focus()
+        AddTip(server, amount.Value, TipTypes.SpecialFunction, specialFunction)
+        UpdateTotal(lblSFTotal, TipTypes.SpecialFunction, specialFunction.SpecialFunction)
+        ResetEntryForm(cboSFServer, txtSFAmount)
     End Sub
 
     Private Sub UpdateSFTotals()
