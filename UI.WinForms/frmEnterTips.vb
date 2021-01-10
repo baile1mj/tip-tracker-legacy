@@ -433,24 +433,6 @@ Public Class frmEnterTips
         End If
     End Sub
 
-    Private Sub AutoInsertCCDecimal()
-        If txtCCAmount.Text = "" Then Exit Sub
-
-        Dim decAmount As Decimal
-
-        For Each c As Char In txtCCAmount.Text
-            If c = "." Then
-                decAmount = CDec(txtCCAmount.Text)
-                txtCCAmount.Text = Format(decAmount, "0.00")
-                Exit Sub
-            End If
-        Next
-
-        decAmount = CDec(txtCCAmount.Text)
-        decAmount = decAmount / 100
-        txtCCAmount.Text = Format(decAmount, "0.00")
-    End Sub
-
     Private Sub btnAddCC_Click(sender As Object, e As EventArgs) Handles btnAddCC.Click
         AddCreditCardTip()
     End Sub
@@ -649,24 +631,6 @@ Public Class frmEnterTips
         End If
     End Sub
 
-    Private Sub AutoInsertRCDecimal()
-        If txtRCAmount.Text = "" Then Exit Sub
-
-        Dim decAmount As Decimal
-
-        For Each c As Char In txtRCAmount.Text
-            If c = "." Then
-                decAmount = CDec(txtRCAmount.Text)
-                txtRCAmount.Text = Format(decAmount, "0.00")
-                Exit Sub
-            End If
-        Next
-
-        decAmount = CDec(txtRCAmount.Text)
-        decAmount = decAmount / 100
-        txtRCAmount.Text = Format(decAmount, "0.00")
-    End Sub
-
     Private Sub btnAddRC_Click(sender As Object, e As EventArgs) Handles btnAddRC.Click
         AddRoomChargeTip()
     End Sub
@@ -837,24 +801,6 @@ Public Class frmEnterTips
             e.Handled = True
             AddCashTip()
         End If
-    End Sub
-
-    Private Sub AutoInsertCADecimal()
-        If txtCAAmount.Text = "" Then Exit Sub
-
-        Dim decAmount As Decimal
-
-        For Each c As Char In txtCAAmount.Text
-            If c = "." Then
-                decAmount = CDec(txtCAAmount.Text)
-                txtCAAmount.Text = Format(decAmount, "0.00")
-                Exit Sub
-            End If
-        Next
-
-        decAmount = CDec(txtCAAmount.Text)
-        decAmount = decAmount / 100
-        txtCAAmount.Text = Format(decAmount, "0.00")
     End Sub
 
     Private Sub btnAddCA_Click(sender As Object, e As EventArgs) Handles btnAddCA.Click
@@ -1071,24 +1017,6 @@ Public Class frmEnterTips
             e.Handled = True
             AddSpecialFunctionTip()
         End If
-    End Sub
-
-    Private Sub AutoInsertSFDecimal()
-        If txtSFAmount.Text = "" Then Exit Sub
-
-        Dim decAmount As Decimal
-
-        For Each c As Char In txtSFAmount.Text
-            If c = "." Then
-                decAmount = CDec(txtSFAmount.Text)
-                txtSFAmount.Text = Format(decAmount, "0.00")
-                Exit Sub
-            End If
-        Next
-
-        decAmount = CDec(txtSFAmount.Text)
-        decAmount = decAmount / 100
-        txtSFAmount.Text = Format(decAmount, "0.00")
     End Sub
 
     Private Sub btnAddSF_Click(sender As Object, e As EventArgs) Handles btnAddSF.Click
