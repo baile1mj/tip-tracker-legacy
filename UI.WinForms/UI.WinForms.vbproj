@@ -261,6 +261,7 @@
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </Compile>
     <Compile Include="Utilities\SortableBindingList.vb" />
+    <Compile Include="Utilities\TipTypes.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmAbout.resx">
