@@ -438,10 +438,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnClearCC_Click(sender As Object, e As EventArgs) Handles btnClearCC.Click
-        txtCCAmount.Clear()
-        txtCCServerNumber.Clear()
-        txtCCServerName.Clear()
-        txtCCServerNumber.Focus()
+        ResetEntryForm(txtCCAmount, txtCCServerNumber, txtCCServerName)
     End Sub
 
     Private Sub mnuDeleteCCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCCTip.Click
@@ -636,10 +633,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnClearRC_Click(sender As Object, e As EventArgs) Handles btnClearRC.Click
-        txtRCAmount.Clear()
-        txtRCServerNumber.Clear()
-        txtRCServerName.Clear()
-        txtRCServerNumber.Focus()
+        ResetEntryForm(txtRCServerNumber, txtRCAmount, txtRCServerName)
     End Sub
 
     Private Sub mnuDeleteRCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteRCTip.Click
@@ -808,13 +802,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnClearCA_Click(sender As Object, e As EventArgs) Handles btnClearCA.Click
-        txtCAAmount.Clear()
-        If cboCAServer.SelectedIndex = -1 Then
-            cboCAServer.Text = ""
-        Else
-            cboCAServer.SelectedIndex = -1
-        End If
-        cboCAServer.Focus()
+        ResetEntryForm(cboCAServer, txtCAAmount)
     End Sub
 
     Private Sub mnuDeleteCATip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCATip.Click
@@ -1024,13 +1012,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnClearSF_Click(sender As Object, e As EventArgs) Handles btnClearSF.Click
-        txtSFAmount.Clear()
-        If cboSFServer.SelectedIndex = -1 Then
-            cboSFServer.Text = ""
-        Else
-            cboSFServer.SelectedIndex = -1
-        End If
-        cboSFServer.Focus()
+        ResetEntryForm(cboSFServer, txtSFAmount)
     End Sub
 
     Private Sub mnuDeleteSFTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteSFTip.Click
@@ -1758,5 +1740,13 @@ Public Class frmEnterTips
             Dim dgv = DirectCast(sender, DataGridView)
             dgv.CurrentCell = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex)
         End If
+    End Sub
+
+    Private Sub UnsetComboBoxSelectionOnEmptyText(sender As Object, e As EventArgs) Handles cboCAServer.TextChanged, cboSFServer.TextChanged,
+        cboSelectSpecialFunction.TextChanged
+        If TypeOf sender IsNot ComboBox Then Exit Sub
+
+        Dim sendingComboBox = DirectCast(sender, ComboBox)
+        If sendingComboBox.Text.Length = 0 Then sendingComboBox.SelectedIndex = -1
     End Sub
 End Class
