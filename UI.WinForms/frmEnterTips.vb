@@ -402,20 +402,6 @@ Public Class frmEnterTips
         UpdateTotal(lblCCTotal, TipTypes.CreditCard)
     End Sub
 
-    Private Sub txtCCServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCCServerNumber.KeyPress
-        If e.KeyChar = ChrW(13) Then
-            e.Handled = True
-            txtCCAmount.Focus()
-        End If
-    End Sub
-
-    Private Sub txtCCAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCCAmount.KeyPress
-        If e.KeyChar = ChrW(13) Then
-            e.Handled = True
-            AddCreditCardTip()
-        End If
-    End Sub
-
     Private Sub txtCCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtCCServerNumber.LostFocus
         If txtCCServerNumber.Text = "" Then Exit Sub
 
@@ -597,20 +583,6 @@ Public Class frmEnterTips
         UpdateTotal(lblRCTotal, TipTypes.RoomCharge)
     End Sub
 
-    Private Sub txtRCServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRCServerNumber.KeyPress
-        If e.KeyChar = ChrW(13) Then
-            e.Handled = True
-            txtRCAmount.Focus()
-        End If
-    End Sub
-
-    Private Sub txtRCAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRCAmount.KeyPress
-        If e.KeyChar = ChrW(13) Then
-            e.Handled = True
-            AddRoomChargeTip()
-        End If
-    End Sub
-
     Private Sub txtRCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtRCServerNumber.LostFocus
         If txtRCServerNumber.Text = "" Then Exit Sub
 
@@ -788,13 +760,6 @@ Public Class frmEnterTips
 
     Private Sub UpdateCATotals()
         UpdateTotal(lblCATotal, TipTypes.Cash)
-    End Sub
-
-    Private Sub txtCAAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCAAmount.KeyPress
-        If e.KeyChar = ChrW(13) Then
-            e.Handled = True
-            AddCashTip()
-        End If
     End Sub
 
     Private Sub btnAddCA_Click(sender As Object, e As EventArgs) Handles btnAddCA.Click
@@ -998,13 +963,6 @@ Public Class frmEnterTips
 
     Private Sub UpdateSFTotals()
         UpdateTotal(lblSFTotal, TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
-    End Sub
-
-    Private Sub txtSFAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtSFAmount.KeyPress
-        If e.KeyChar = ChrW(13) Then
-            e.Handled = True
-            AddSpecialFunctionTip()
-        End If
     End Sub
 
     Private Sub btnAddSF_Click(sender As Object, e As EventArgs) Handles btnAddSF.Click
@@ -1748,5 +1706,30 @@ Public Class frmEnterTips
 
         Dim sendingComboBox = DirectCast(sender, ComboBox)
         If sendingComboBox.Text.Length = 0 Then sendingComboBox.SelectedIndex = -1
+    End Sub
+
+    Private Sub SelectAmountControlOnEnterKey(sender As Object, e As KeyPressEventArgs) Handles txtCCServerNumber.KeyPress, txtRCServerNumber.KeyPress, cboCAServer.KeyPress
+        If e.KeyChar = ChrW(13) Then
+            e.Handled = True
+            Dim sendingControl = DirectCast(sender, Control)
+            sendingControl.Parent.SelectNextControl(sendingControl, True, True, True, True)
+
+        End If
+    End Sub
+
+    Private Sub AddTipOnEnterKeyInAmountControl(sender As Object, e As KeyPressEventArgs) Handles txtCCAmount.KeyPress, txtRCAmount.KeyPress, txtCAAmount.KeyPress, txtSFAmount.KeyPress
+        If e.KeyChar = ChrW(13) Then
+            e.Handled = True
+
+            Dim sendingControl = DirectCast(sender, Control)
+            Dim siblings = sendingControl.Parent.Controls.Cast(Of Control)
+
+            For Each sibling In siblings
+                If TypeOf sibling Is Button And sibling.Text = "Add" Then
+                    DirectCast(sibling, Button).PerformClick()
+                    Exit Sub
+                End If
+            Next
+        End If
     End Sub
 End Class
