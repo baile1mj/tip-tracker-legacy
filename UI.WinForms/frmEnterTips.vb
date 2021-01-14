@@ -166,44 +166,18 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub tabTipsTabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabTipsTabControl.SelectedIndexChanged
-        Dim creditCard As TabPage = tabCreditCard
-        Dim roomCharge As TabPage = tabRoomCharge
-        Dim cash As TabPage = tabCash
-        Dim specialFunction As TabPage = tabSpecialFunction
+        Dim sendingControl = DirectCast(sender, TabControl)
+        Dim selectedTab  = sendingControl.SelectedTab
+        
+        selectedTab.SelectNextControl(selectedTab, true, true, true, true)
 
-        If tabTipsTabControl.SelectedTab Is creditCard Then
-            SelectNextControl(creditCard, True, True, True, True)
-        ElseIf tabTipsTabControl.SelectedTab Is roomCharge Then
-            SelectNextControl(roomCharge, True, True, True, True)
-        ElseIf tabTipsTabControl.SelectedTab Is cash Then
-            SelectNextControl(cash, True, True, True, True)
-        ElseIf tabTipsTabControl.SelectedTab Is specialFunction Then
-            SelectNextControl(specialFunction, True, True, True, True)
-        End If
+        Dim entryControls = selectedTab.Controls.Cast(Of Control)() _
+            .Where(Function (c) (TypeOf c Is ComboBox) OrElse (TypeOf c Is TextBoxBase)) _
+            .OrderBy(Function (c) c.TabIndex) _
+            .ToArray()
 
+        ResetEntryForm(entryControls)
         lblCurrentTipType.Text = "Editing " & tabTipsTabControl.SelectedTab.Text & " Tips"
-
-        ''Make the tip ID columns invisible.
-        'Me.CCID.Visible = False
-        'Me.RCID.Visible = False
-        'Me.CAID.Visible = False
-        'Me.SFID.Visible = False
-
-        txtCCAmount.Clear()
-        txtCCServerNumber.Clear()
-        txtCCServerName.Clear()
-
-        txtRCAmount.Clear()
-        txtRCServerNumber.Clear()
-        txtRCServerName.Clear()
-
-        cboCAServer.SelectedIndex = -1
-        cboSFServer.SelectedIndex = -1
-
-        txtCAAmount.Clear()
-        txtSFAmount.Clear()
-
-        cboSelectSpecialFunction.SelectedIndex = -1
     End Sub
 
     Private Sub btnFinalize_Click(sender As Object, e As EventArgs) Handles btnFinalize.Click
