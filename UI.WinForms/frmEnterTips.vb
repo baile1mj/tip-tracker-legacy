@@ -149,8 +149,7 @@ Public Class frmEnterTips
 
         CashTipsBindingSource.Filter = "Description = 'Cash'"
         CashTipsBindingSource.Sort = "TipID"
-
-
+        
         If cboSelectSpecialFunction.SelectedIndex <> -1 Then
             SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function' AND SpecialFunction = '" & cboSelectSpecialFunction.SelectedValue.ToString & "'"
             SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
@@ -160,10 +159,10 @@ Public Class frmEnterTips
         End If
 
         SpecialFunctionBindingSource.Sort = "SpecialFunction"
-
-        UpdateCCTotals()
-        UpdateRCTotals()
-        UpdateCATotals()
+        
+        UpdateTotal(TipTypes.CreditCard)
+        UpdateTotal(TipTypes.RoomCharge)
+        UpdateTotal(TipTypes.Cash)
     End Sub
 
     Private Sub tabTipsTabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabTipsTabControl.SelectedIndexChanged
@@ -435,22 +434,6 @@ Public Class frmEnterTips
     'Credit card operations begin below:
 #Region "CreditCardOperations"
 
-    Private Sub AddCreditCardTip()
-        Dim server = GetServerRow(txtCCServerNumber)
-        If server Is Nothing Then Exit Sub
-
-        Dim amount = GetTipAmount(txtCCAmount)
-        If amount Is Nothing Then Exit Sub
-
-        AddTip(server, amount.Value, TipTypes.CreditCard)
-        UpdateTotal(TipTypes.CreditCard)
-        ResetEntryForm(txtCCServerNumber, txtCCAmount, txtCCServerName)
-    End Sub
-
-    Private Sub UpdateCCTotals()
-        UpdateTotal(TipTypes.CreditCard)
-    End Sub
-
     Private Sub txtCCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtCCServerNumber.LostFocus
         If txtCCServerNumber.Text = "" Then Exit Sub
 
@@ -469,7 +452,16 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnAddCC_Click(sender As Object, e As EventArgs) Handles btnAddCC.Click
-        AddCreditCardTip()
+
+        Dim server = GetServerRow(txtCCServerNumber)
+        If server Is Nothing Then Exit Sub
+
+        Dim amount = GetTipAmount(txtCCAmount)
+        If amount Is Nothing Then Exit Sub
+
+        AddTip(server, amount.Value, TipTypes.CreditCard)
+        UpdateTotal(TipTypes.CreditCard)
+        ResetEntryForm(txtCCServerNumber, txtCCAmount, txtCCServerName)
     End Sub
 
     Private Sub btnClearCC_Click(sender As Object, e As EventArgs) Handles btnClearCC.Click
@@ -532,7 +524,8 @@ Public Class frmEnterTips
 
         Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
 
-        UpdateCCTotals()
+
+        UpdateTotal(TipTypes.CreditCard)
     End Sub
     
     Private Sub mnuEditCCTip_Click(sender As Object, e As EventArgs) Handles mnuEditCCTip.Click, CreditCardDataGridView.DoubleClick
@@ -544,21 +537,6 @@ Public Class frmEnterTips
 
     'Room charge operations begin below:
 #Region "RoomChargeOperations"
-    Private Sub AddRoomChargeTip()
-        Dim server = GetServerRow(txtRCServerNumber)
-        If server Is Nothing Then Exit Sub
-
-        Dim amount = GetTipAmount(txtRCAmount)
-        If amount Is Nothing Then Exit Sub
-
-        AddTip(server, amount.Value, TipTypes.RoomCharge)
-        UpdateTotal(TipTypes.RoomCharge)
-        ResetEntryForm(txtRCServerNumber, txtRCAmount, txtRCServerName)
-    End Sub
-
-    Private Sub UpdateRCTotals()
-        UpdateTotal(TipTypes.RoomCharge)
-    End Sub
 
     Private Sub txtRCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtRCServerNumber.LostFocus
         If txtRCServerNumber.Text = "" Then Exit Sub
@@ -578,7 +556,16 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnAddRC_Click(sender As Object, e As EventArgs) Handles btnAddRC.Click
-        AddRoomChargeTip()
+
+        Dim server = GetServerRow(txtRCServerNumber)
+        If server Is Nothing Then Exit Sub
+
+        Dim amount = GetTipAmount(txtRCAmount)
+        If amount Is Nothing Then Exit Sub
+
+        AddTip(server, amount.Value, TipTypes.RoomCharge)
+        UpdateTotal(TipTypes.RoomCharge)
+        ResetEntryForm(txtRCServerNumber, txtRCAmount, txtRCServerName)
     End Sub
 
     Private Sub btnClearRC_Click(sender As Object, e As EventArgs) Handles btnClearRC.Click
@@ -650,7 +637,9 @@ Public Class frmEnterTips
 
     'Cash operations begin below:
 #Region "CashOperations"
-    Private Sub AddCashTip()
+
+    Private Sub btnAddCA_Click(sender As Object, e As EventArgs) Handles btnAddCA.Click
+
         Dim server = GetServerRow(cboCAServer)
         If server Is Nothing Then Exit Sub
 
@@ -660,14 +649,6 @@ Public Class frmEnterTips
         AddTip(server, amount.Value, TipTypes.Cash)
         UpdateTotal(TipTypes.Cash)
         ResetEntryForm(cboCAServer, txtCAAmount)
-    End Sub
-
-    Private Sub UpdateCATotals()
-        UpdateTotal(TipTypes.Cash)
-    End Sub
-
-    Private Sub btnAddCA_Click(sender As Object, e As EventArgs) Handles btnAddCA.Click
-        AddCashTip()
     End Sub
 
     Private Sub btnClearCA_Click(sender As Object, e As EventArgs) Handles btnClearCA.Click
@@ -766,7 +747,8 @@ Public Class frmEnterTips
                     drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
 
                     Data.FileDataSet.Tips.Rows.Add(drNewRow)
-                    UpdateCATotals()
+
+                    UpdateTotal(TipTypes.Cash)
                 End If
 
                 frmQuickAdd.Dispose()
@@ -777,7 +759,8 @@ Public Class frmEnterTips
 
     'Special function operations begin below:
 #Region "SpecialFunctionOperations"
-    Private Sub AddSpecialFunctionTip()
+    Private Sub btnAddSF_Click(sender As Object, e As EventArgs) Handles btnAddSF.Click
+
         Dim specialFunction = GetSelectedFunction(cboSelectSpecialFunction)
         If specialFunction Is Nothing Then Exit Sub
 
@@ -792,14 +775,6 @@ Public Class frmEnterTips
         ResetEntryForm(cboSFServer, txtSFAmount)
     End Sub
 
-    Private Sub UpdateSFTotals()
-        UpdateTotal(TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
-    End Sub
-
-    Private Sub btnAddSF_Click(sender As Object, e As EventArgs) Handles btnAddSF.Click
-        AddSpecialFunctionTip()
-    End Sub
-
     Private Sub btnClearSF_Click(sender As Object, e As EventArgs) Handles btnClearSF.Click
         ResetEntryForm(cboSFServer, txtSFAmount)
     End Sub
@@ -812,7 +787,8 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub SpecialFunctionDataGridView_RowStateChanged(sender As Object, e As DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
-        UpdateSFTotals()
+
+        UpdateTotal(TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
     End Sub
 
     Private Sub mnuReassignSFTip_Click(sender As Object, e As EventArgs) Handles mnuReassignSFTip.Click
