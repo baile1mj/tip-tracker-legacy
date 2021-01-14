@@ -16,6 +16,30 @@ Namespace Data.PayPeriod
         Public ReadOnly Property FileDataSet As FileDataSet
 
         ''' <summary>
+        ''' Gets the start date for the pay period.
+        ''' </summary>
+        ''' <returns>The first day of the pay period.</returns>
+        Public Function GetPayPeriodStart() As DateTime
+            Return CDate(FileDataSet.Settings.FindBySetting("PeriodStart").Value)
+        End Function
+
+        ''' <summary>
+        ''' Gets the end date for the pay period.
+        ''' </summary>
+        ''' <returns>The last day of the pay period.</returns>
+        Public Function GetPayPeriodEnd() As DateTime
+            Return CDate(FileDataSet.Settings.FindBySetting("PeriodEnd").Value)
+        End Function
+
+        ''' <summary>
+        ''' Gets the current business date.
+        ''' </summary>
+        ''' <returns>The current business date.</returns>
+        Public function GetWorkingDate() As DateTime
+            Return CDate(FileDataSet.Settings.FindBySetting("WorkingDate").Value)
+        End function
+
+        ''' <summary>
         ''' Gets the collection of warnings that were generated when the settings were loaded.
         ''' </summary>
         ''' <returns></returns>
