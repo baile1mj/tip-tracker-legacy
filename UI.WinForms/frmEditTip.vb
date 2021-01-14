@@ -1,166 +1,200 @@
+Imports System.Linq
 Imports TipTracker.Common.Data.PayPeriod
+Imports TipTracker.Utilities
 
 Public Class frmEditTip
-    Friend m_dsParentDataSet As New FileDataSet
+    Const DATE_FORMAT = "MM/dd/yyyy"
+    Const AMOUNT_FORMAT = "0.00"
 
-    Private Const intCreditCard As Integer = 0
-    Private Const intRoomCharge As Integer = 1
-    Private Const intSpecialFunction As Integer = 2
-    Private Const intCash As Integer = 3
+    Private _payPeriodStart As DateTime
+    Private _payPeriodEnd As DateTime
+    Private _amount As Decimal
+    Private _workingDate As DateTime
+    Private ReadOnly _workingDateTextBoxInitialValue As String
 
-    Friend Property TipAmount() As Decimal
+    Friend Property Amount As Decimal
         Get
-            Return CDec(txtAmount.Text)
+            Return _amount
         End Get
-        Set(ByVal value As Decimal)
-            txtAmount.Text = value.ToString
+        Set(value As Decimal)
+            _amount = value
+            txtAmount.Text = _amount.ToString(AMOUNT_FORMAT)
         End Set
     End Property
 
-    Friend Property WorkingDate() As Date
+    Friend Property WorkingDate As Date
         Get
-            Return CDate(txtWorkingDate.Text)
+            Return _workingDate
         End Get
-        Set(ByVal value As Date)
-            txtWorkingDate.Text = Format(value, "MM/dd/yyyy")
+        Set(value As Date)
+            _workingDate = value
+            txtWorkingDate.Text = Format(_workingDate, DATE_FORMAT)
         End Set
     End Property
 
-    Friend Property TipType() As String
+    Public Property TipType As TipTypes
         Get
-            Select Case cboTipTypes.SelectedItem.ToString
-                Case "Credit Card"
-                    Return "Credit Card"
-                Case "Room Charge"
-                    Return "Room Charge"
-                Case "Special Function"
-                    Return "Special Function"
-                Case "Cash"
-                    Return "Cash"
-                Case Else
-                    Return "Unknown"
-            End Select
+            Return DirectCast(cboTipTypes.SelectedItem, TipTypes)
         End Get
-        Set(ByVal value As String)
-            Select Case value
-                Case "Credit Card"
-                    cboTipTypes.SelectedIndex = intCreditCard
-                Case "Room Charge"
-                    cboTipTypes.SelectedIndex = intRoomCharge
-                Case "Special Function"
-                    cboTipTypes.SelectedIndex = intSpecialFunction
-                Case "Cash"
-                    cboTipTypes.SelectedIndex = intCash
-            End Select
+        Set(value As TipTypes)
+            cboTipTypes.SelectedItem = value
         End Set
     End Property
 
-    Private Sub AutoInsertDecimal()
-        If txtAmount.Text = "" Then Exit Sub
+    Public Property SpecialFunction As String
+        Get
+            Return cboSpecialFunction.SelectedItem?.ToString()
+        End Get
+        Set(value As String)
+            cboSpecialFunction.SelectedItem = value
+        End Set
+    End Property
 
-        Dim decAmount As Decimal
+    Public Sub New(amount As Decimal, periodStart As DateTime, periodEnd As DateTime, workingDate As DateTime,
+        currentType As TipTypes, functions As IEnumerable(Of String), Optional currentFunction As String = "")
+        InitializeComponent()
 
-        For Each c As Char In txtAmount.Text
-            If c = "." Then
-                decAmount = CDec(txtAmount.Text)
-                txtAmount.Text = Format(decAmount, "0.00")
-                Exit Sub
-            End If
-        Next
+        _workingDateTextBoxInitialValue = txtWorkingDate.Text
 
-        decAmount = CDec(txtAmount.Text)
-        decAmount = decAmount / 100
-        txtAmount.Text = Format(decAmount, "0.00")
+        cboTipTypes.Items.AddRange(TipTypes.Values.ToArray())
+        cboSpecialFunction.Items.Add("") 'Add blank function to allow no selection.
+        cboSpecialFunction.Items.AddRange(functions.ToArray())
+
+        _payPeriodStart = periodStart
+        _payPeriodEnd = periodEnd
+
+        Me.Amount = amount
+        Me.WorkingDate = workingDate
+        Me.cboTipTypes.SelectedItem = currentType
+        Me.cboSpecialFunction.SelectedItem = currentFunction
     End Sub
 
-    Private Sub txtAmount_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtAmount.KeyPress
-        If e.KeyChar = Chr(8) Then Exit Sub
-
-        If e.KeyChar = Chr(13) Then
+    Private Sub txtAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtAmount.KeyPress
+        If e.KeyChar = ChrW(13) Then
             e.Handled = True
             txtWorkingDate.Focus()
         End If
     End Sub
 
-    Private Sub txtAmount_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtAmount.LostFocus
+    Private Sub txtAmount_LostFocus(sender As Object, e As EventArgs) Handles txtAmount.LostFocus
         If txtAmount.Text = "" Then Exit Sub
-        If Not IsNumeric(txtAmount.Text) Then Exit Sub
-        AutoInsertDecimal()
+
+        If Not IsNumeric(txtAmount.Text) Then
+            TriggerInvalidMessage("Please enter a valid amount.", txtAmount)
+            Exit Sub
+        End If
+
+        If txtAmount.Text.Contains(".") Then
+            Amount = CDec(txtAmount.Text)
+        Else
+            Amount = CDec(txtAmount.Text) / 100
+        End If
+
+        txtAmount.Text = Amount.ToString(AMOUNT_FORMAT)
     End Sub
 
-    Private Function HasErrors() As Boolean
-        If txtAmount.Text = "" Then
-            MessageBox.Show("You must enter a tip amount.", "Invalid Entry", MessageBoxButtons.OK)
-            txtAmount.Focus()
-            Return True
-        End If
-        If Not IsNumeric(txtAmount.Text) Then
-            MessageBox.Show("The tip amount entry must be a number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtAmount.Clear()
-            txtAmount.Focus()
-            Return True
-        End If
-        If CDec(txtAmount.Text) = 0 Then
-            MessageBox.Show("You may not enter a $0.00 tip.", "Invalid Entry", MessageBoxButtons.OK)
-            txtAmount.Clear()
-            txtAmount.Focus()
-            Return True
-        End If
-
-        If txtWorkingDate.Text = "" Then
-            MessageBox.Show("You must enter a working date.", "Invalid Entry", MessageBoxButtons.OK)
-            txtWorkingDate.Focus()
-            Return True
-        End If
-
-        Dim dteTemp As Date
-        Try
-            dteTemp = CDate(txtWorkingDate.Text)
-        Catch ex As Exception
-            MessageBox.Show("That is not the proper format for a date", "Invalid Entry", MessageBoxButtons.OK)
-            txtWorkingDate.Clear()
-            txtWorkingDate.Focus()
-            Return True
-        End Try
-
-        Dim dtePeriodStart As Date = CDate(Me.m_dsParentDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd As Date = CDate(Me.m_dsParentDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        If dteTemp < dtePeriodStart Or dteTemp > dtePeriodEnd Then
-            MessageBox.Show("You must enter a date within the pay period.", "Invalid Entry", MessageBoxButtons.OK)
-            txtWorkingDate.Clear()
-            txtWorkingDate.Focus()
-            Return True
-        End If
-
-        If cboTipTypes.SelectedIndex = -1 Then
-            MessageBox.Show("You must select a tip type.", "Invalid Selection", MessageBoxButtons.OK)
+    Private Sub txtWorkingDate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtWorkingDate.KeyPress
+        If e.KeyChar = Chr(13) Then
+            e.Handled = True
             cboTipTypes.Focus()
-            Return True
+        End If
+    End Sub
+
+    Private Sub txtWorkingDate_LostFocus(sender As Object, e As EventArgs) Handles txtWorkingDate.LostFocus
+        If Not txtWorkingDate.Enabled Then Exit Sub
+        If txtWorkingDate.Text = _workingDateTextBoxInitialValue Then Exit Sub
+
+        Dim chosenDate As DateTime
+        
+        If Not txtWorkingDate.MaskCompleted Or Not DateTime.TryParse(txtWorkingDate.Text, chosenDate) Then
+            TriggerInvalidMessage("Please enter a valid date.", txtWorkingDate)
+            Exit Sub
         End If
 
-        Return False
+        If chosenDate < _payPeriodStart Or chosenDate > _payPeriodEnd Then
+            TriggerInvalidMessage($"Working date must fall within the pay period: " &
+                $"{_payPeriodStart.ToString(DATE_FORMAT)}-{_payPeriodEnd.ToString(DATE_FORMAT)}.", txtWorkingDate)
+            Exit Sub
+        End If
+
+        WorkingDate = chosenDate
+    End Sub
+
+    Private Sub txtWorkingDate_ReadOnlyChanged(sender As Object, e As EventArgs) Handles txtWorkingDate.ReadOnlyChanged
+        If txtWorkingDate.ReadOnly Then
+            txtWorkingDate.Clear()
+        Else
+            txtWorkingDate.Text = WorkingDate.ToString(DATE_FORMAT)
+        End If
+    End Sub
+
+    Private Sub cboTipTypes_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboTipTypes.SelectedValueChanged
+        Dim selectedType = DirectCast(cboTipTypes.SelectedItem, TipTypes)
+
+        txtWorkingDate.Enabled = selectedType.CanSpecifyDate
+        cboSpecialFunction.Enabled = selectedType.IsEventOriginated
+        TipType = selectedType
+    End Sub
+
+    Private Sub cboSpecialFunction_EnabledChanged(sender As Object, e As EventArgs) Handles cboSpecialFunction.EnabledChanged
+        If Not cboSpecialFunction.Enabled Then cboSpecialFunction.SelectedItem = Nothing
+    End Sub
+
+    Private Sub cboSpecialFunction_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboSpecialFunction.SelectedIndexChanged
+        SpecialFunction = cboSpecialFunction.SelectedItem?.ToString()
+    End Sub
+
+    Private Function ValidateForm() As Boolean
+        If txtAmount.Text = "" Then
+            TriggerInvalidMessage("You must enter a tip amount.", txtAmount)
+            Return False
+        End If
+
+        If Amount = 0 Then
+            TriggerInvalidMessage("You may not enter a $0.00 tip.", txtAmount)
+            Return False
+        End If
+
+        If cboTipTypes.SelectedIndex = -1 Then 
+            TriggerInvalidMessage("You must select a tip type.", cboTipTypes)
+            Return False
+        End If
+
+        If TipType.CanSpecifyDate AndAlso Not txtWorkingDate.MaskCompleted Then
+            TriggerInvalidMessage("You must select a working date.", txtWorkingDate)
+            Return False
+        End If
+
+        If TipType.IsEventOriginated AndAlso string.IsNullOrEmpty(cboSpecialFunction.SelectedItem.ToString()) Then
+            TriggerInvalidMessage("You must select a special function", cboSpecialFunction)
+            Return False
+        End If
+
+        Return True
     End Function
 
-    Private Sub CloseFormOK()
-        If HasErrors() = True Then Exit Sub
-
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
+    Private Sub TriggerInvalidMessage(message As String, invalidControl As TextBoxBase)
+        MessageBox.Show(message, "Invalid Entry", MessageBoxButtons.OK)
+        invalidControl.Clear()
+        invalidControl.Focus()
     End Sub
 
-    Private Sub btnCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        Me.Close()
+    Private Sub TriggerInvalidMessage(message As String, invalidControl As ComboBox)
+        MessageBox.Show(message, "Invalid Selection", MessageBoxButtons.OK)
+        invalidControl.Focus()
     End Sub
 
-    Private Sub btnOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnOK.Click
-        CloseFormOK()
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        DialogResult = DialogResult.Cancel
+        Close()
     End Sub
 
-    Private Sub txtWorkingDate_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtWorkingDate.KeyPress
-        If e.KeyChar = Chr(13) Then
-            e.Handled = True
-            cboTipTypes.Focus()
-        End If
-    End Sub
+    Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
+        If Not ValidateForm() Then Exit Sub
+        If cboSpecialFunction.SelectedIndex = 0 Then cboSpecialFunction.SelectedItem = Nothing 'Ignore the placeholder item.
 
+        DialogResult = DialogResult.OK
+        Close()
+    End Sub
+    
 End Class

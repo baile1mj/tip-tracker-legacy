@@ -8,9 +8,17 @@ Imports TipTracker.Utilities
 Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
-
+    
+    Private ReadOnly _totalLabelLookup As Dictionary(Of TipTypes, Label)
+    
     Public Sub New(file As PayPeriodFile, data As PayPeriodData)
         InitializeComponent()
+
+        _totalLabelLookup = New Dictionary(Of TipTypes, Label) From { _
+            {TipTypes.CreditCard, lblCCTotal}    , _
+            {TipTypes.RoomCharge, lblRCTotal}, _
+            {TipTypes.Cash, lblCATotal}, _
+            {TipTypes.SpecialFunction, lblSFTotal}}
 
         Me.File = file
         Me.Data = data
@@ -332,7 +340,45 @@ Public Class frmEnterTips
         Data.FileDataSet.Tips.AddTipsRow(newTipRow)
     End Sub
 
-    Private Sub UpdateTotal(amountLabel As Label, tipType As TipTypes, Optional specialFunction As String = Nothing)
+    Private Sub EditTip(bindingSource As BindingSource, sourceType As TipTypes)
+
+        Dim selectedTip = GetSelectedTip(bindingSource)
+        Dim periodStart  = Data.GetPayPeriodStart()
+        Dim periodEnd  = Data.GetPayPeriodEnd()
+        Dim workingDate  = Data.GetWorkingDate()
+        Dim functions = Data.FileDataSet.SpecialFunctions _
+            .AsEnumerable() _
+            .Select(Function(f) f.SpecialFunction) _
+            .ToList()
+        Dim specialFunction = selectedTip.SpecialFunctionsRow?.SpecialFunction
+        
+        Using editTip As New frmEditTip(CDec(selectedTip.Amount), periodStart, periodEnd, workingDate, sourceType, functions, specialFunction)
+            If editTip.ShowDialog() <> DialogResult.OK Then Return
+            
+            Dim newType = editTip.TipType
+
+            If newType.CanSpecifyDate Then
+                selectedTip.WorkingDate = editTip.WorkingDate
+            ElseIf newType.IsEventOriginated then
+                selectedTip.WorkingDate = Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(editTip.SpecialFunction)._Date
+                selectedTip.SpecialFunction = editTip.SpecialFunction
+            Else
+                selectedTip.WorkingDate = periodEnd
+            End If
+
+            If Not newType.IsEventOriginated Then selectedTip.SpecialFunctionsRow = Nothing
+
+            selectedTip.Amount = editTip.Amount.ToString("0.00")
+            selectedTip.Description = editTip.TipType.Name
+            
+            UpdateTotal(sourceType, specialFunction)
+
+            If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialFunction)
+        End Using
+    End Sub
+
+    Private Sub UpdateTotal(tipType As TipTypes, Optional specialFunction As String = Nothing)
+        Dim amountLabel = _totalLabelLookup(tipType)
         Dim isCandidateTip As Func(Of FileDataSet.TipsRow, Boolean) = Function(r) _
             r.RowState <> DataRowState.Deleted _
             AndAlso r.RowState <> DataRowState.Detached _
@@ -375,13 +421,16 @@ Public Class frmEnterTips
     End Function
 
     Private Sub PerformTipDeletion(bindingSource As BindingSource, amountLabel As Label, tipType As TipTypes, Optional specialFunction As String = Nothing)
-        Dim selectedRow = DirectCast(DirectCast(bindingSource.Current, DataRowView).Row, FileDataSet.TipsRow)
-
+        Dim selectedRow As FileDataSet.TipsRow = GetSelectedTip(bindingSource)
         If Not ConfirmTipDeletion(selectedRow) Then Exit Sub
 
         selectedRow.Delete()
-        UpdateTotal(amountLabel, tipType, specialFunction)
+        UpdateTotal(tipType, specialFunction)
     End Sub
+
+    Private Function GetSelectedTip(bindingSource As BindingSource) As FileDataSet.TipsRow
+        Return DirectCast(DirectCast(bindingSource.Current, DataRowView).Row, FileDataSet.TipsRow)
+    End Function
 
     'Credit card operations begin below:
 #Region "CreditCardOperations"
@@ -394,12 +443,12 @@ Public Class frmEnterTips
         If amount Is Nothing Then Exit Sub
 
         AddTip(server, amount.Value, TipTypes.CreditCard)
-        UpdateTotal(lblCCTotal, TipTypes.CreditCard)
+        UpdateTotal(TipTypes.CreditCard)
         ResetEntryForm(txtCCServerNumber, txtCCAmount, txtCCServerName)
     End Sub
 
     Private Sub UpdateCCTotals()
-        UpdateTotal(lblCCTotal, TipTypes.CreditCard)
+        UpdateTotal(TipTypes.CreditCard)
     End Sub
 
     Private Sub txtCCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtCCServerNumber.LostFocus
@@ -485,84 +534,12 @@ Public Class frmEnterTips
 
         UpdateCCTotals()
     End Sub
-
+    
     Private Sub mnuEditCCTip_Click(sender As Object, e As EventArgs) Handles mnuEditCCTip.Click, CreditCardDataGridView.DoubleClick
         If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim intSourceTipID = CInt(CreditCardDataGridView.Item("CCID", CreditCardTipsBindingSource.Position).Value)
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-
-        With frmEditTip
-            .TipAmount = decAmount
-            .WorkingDate = dteWorkingDate
-            .TipType = strDescription
-            .m_dsParentDataSet = Data.FileDataSet
-        End With
-
-        If frmEditTip.ShowDialog <> DialogResult.OK Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim strFunction As String
-
-        If frmEditTip.TipAmount = decAmount And frmEditTip.WorkingDate = dteWorkingDate And frmEditTip.TipType = strDescription Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim decNewAmount As Decimal = frmEditTip.TipAmount
-        Dim strNewDescription As String = frmEditTip.TipType
-        Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
-                frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
-            Next
-
-            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
-                frmSelectFunction.Dispose()
-                frmEditTip.Dispose()
-                Exit Sub
-            End If
-
-            strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
-        End If
-
-        If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        End If
-
-        frmSelectFunction.Dispose()
-
-        drNewRow("Amount") = decNewAmount
-        drNewRow("ServerNumber") = strServerNumber
-        drNewRow("FirstName") = strFirstName
-        drNewRow("LastName") = strLastName
-        drNewRow("Description") = strNewDescription
-        If strNewDescription = "Special Function" Then
-            drNewRow("SpecialFunction") = strFunction
-        End If
-        drNewRow("WorkingDate") = dteNewDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-        frmEditTip.Dispose()
-        UpdateCCTotals()
-        UpdateRCTotals()
-        UpdateSFTotals()
-        UpdateCATotals()
+        EditTip(CreditCardTipsBindingSource, TipTypes.CreditCard)
     End Sub
+    
 #End Region
 
     'Room charge operations begin below:
@@ -575,12 +552,12 @@ Public Class frmEnterTips
         If amount Is Nothing Then Exit Sub
 
         AddTip(server, amount.Value, TipTypes.RoomCharge)
-        UpdateTotal(lblRCTotal, TipTypes.RoomCharge)
+        UpdateTotal(TipTypes.RoomCharge)
         ResetEntryForm(txtRCServerNumber, txtRCAmount, txtRCServerName)
     End Sub
 
     Private Sub UpdateRCTotals()
-        UpdateTotal(lblRCTotal, TipTypes.RoomCharge)
+        UpdateTotal(TipTypes.RoomCharge)
     End Sub
 
     Private Sub txtRCServerNumber_LostFocus(sender As Object, e As EventArgs) Handles txtRCServerNumber.LostFocus
@@ -667,80 +644,7 @@ Public Class frmEnterTips
 
     Private Sub mnuEditRCTip_Click(sender As Object, e As EventArgs) Handles mnuEditRCTip.Click, RoomChargeDataGridView.DoubleClick
         If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim intSourceTipID = CInt(RoomChargeDataGridView.Item("RCID", RoomChargeTipsBindingSource.Position).Value)
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-
-        With frmEditTip
-            .TipAmount = decAmount
-            .WorkingDate = dteWorkingDate
-            .TipType = strDescription
-            .m_dsParentDataSet = Data.FileDataSet
-        End With
-
-        If frmEditTip.ShowDialog <> DialogResult.OK Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim strFunction As String
-
-        If frmEditTip.TipAmount = decAmount And frmEditTip.WorkingDate = dteWorkingDate And frmEditTip.TipType = strDescription Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim decNewAmount As Decimal = frmEditTip.TipAmount
-        Dim strNewDescription As String = frmEditTip.TipType
-        Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
-                frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
-            Next
-
-            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
-                frmSelectFunction.Dispose()
-                frmEditTip.Dispose()
-                Exit Sub
-            End If
-
-            strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
-        End If
-
-        If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        End If
-
-        frmSelectFunction.Dispose()
-
-        drNewRow("Amount") = decNewAmount
-        drNewRow("ServerNumber") = strServerNumber
-        drNewRow("FirstName") = strFirstName
-        drNewRow("LastName") = strLastName
-        drNewRow("Description") = strNewDescription
-        If strNewDescription = "Special Function" Then
-            drNewRow("SpecialFunction") = strFunction
-        End If
-        drNewRow("WorkingDate") = dteNewDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-        frmEditTip.Dispose()
-        UpdateCCTotals()
-        UpdateRCTotals()
-        UpdateSFTotals()
-        UpdateCATotals()
+        EditTip(RoomChargeTipsBindingSource, TipTypes.RoomCharge)
     End Sub
 #End Region
 
@@ -754,12 +658,12 @@ Public Class frmEnterTips
         If amount Is Nothing Then Exit Sub
 
         AddTip(server, amount.Value, TipTypes.Cash)
-        UpdateTotal(lblCATotal, TipTypes.Cash)
+        UpdateTotal(TipTypes.Cash)
         ResetEntryForm(cboCAServer, txtCAAmount)
     End Sub
 
     Private Sub UpdateCATotals()
-        UpdateTotal(lblCATotal, TipTypes.Cash)
+        UpdateTotal(TipTypes.Cash)
     End Sub
 
     Private Sub btnAddCA_Click(sender As Object, e As EventArgs) Handles btnAddCA.Click
@@ -825,80 +729,7 @@ Public Class frmEnterTips
 
     Private Sub mnuEditCATip_Click(sender As Object, e As EventArgs) Handles mnuEditCATip.Click, CashDataGridView.DoubleClick
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim intSourceTipID = CInt(CashDataGridView.Item("CAID", CashTipsBindingSource.Position).Value)
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-
-        With frmEditTip
-            .TipAmount = decAmount
-            .WorkingDate = dteWorkingDate
-            .TipType = strDescription
-            .m_dsParentDataSet = Data.FileDataSet
-        End With
-
-        If frmEditTip.ShowDialog <> DialogResult.OK Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim strFunction As String
-
-        If frmEditTip.TipAmount = decAmount And frmEditTip.WorkingDate = dteWorkingDate And frmEditTip.TipType = strDescription Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim decNewAmount As Decimal = frmEditTip.TipAmount
-        Dim strNewDescription As String = frmEditTip.TipType
-        Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
-                frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
-            Next
-
-            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
-                frmSelectFunction.Dispose()
-                frmEditTip.Dispose()
-                Exit Sub
-            End If
-
-            strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
-        End If
-
-        If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        End If
-
-        frmSelectFunction.Dispose()
-
-        drNewRow("Amount") = decNewAmount
-        drNewRow("ServerNumber") = strServerNumber
-        drNewRow("FirstName") = strFirstName
-        drNewRow("LastName") = strLastName
-        drNewRow("Description") = strNewDescription
-        If strNewDescription = "Special Function" Then
-            drNewRow("SpecialFunction") = strFunction
-        End If
-        drNewRow("WorkingDate") = dteNewDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-        frmEditTip.Dispose()
-        UpdateCCTotals()
-        UpdateRCTotals()
-        UpdateSFTotals()
-        UpdateCATotals()
+        EditTip(CashTipsBindingSource, TipTypes.Cash)
     End Sub
 
     Private Sub btnQuickAddCashTips_Click(sender As Object, e As EventArgs) Handles btnQuickAddCashTips.Click
@@ -957,12 +788,12 @@ Public Class frmEnterTips
         If amount Is Nothing Then Exit Sub
 
         AddTip(server, amount.Value, TipTypes.SpecialFunction, specialFunction)
-        UpdateTotal(lblSFTotal, TipTypes.SpecialFunction, specialFunction.SpecialFunction)
+        UpdateTotal(TipTypes.SpecialFunction, specialFunction.SpecialFunction)
         ResetEntryForm(cboSFServer, txtSFAmount)
     End Sub
 
     Private Sub UpdateSFTotals()
-        UpdateTotal(lblSFTotal, TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
+        UpdateTotal(TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
     End Sub
 
     Private Sub btnAddSF_Click(sender As Object, e As EventArgs) Handles btnAddSF.Click
@@ -1034,80 +865,7 @@ Public Class frmEnterTips
 
     Private Sub mnuEditSFTip_Click(sender As Object, e As EventArgs) Handles mnuEditSFTip.Click, SpecialFunctionDataGridView.DoubleClick
         If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim intSourceTipID = CInt(SpecialFunctionDataGridView.Item("SFID", SpecialFunctionTipsBindingSource.Position).Value)
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-
-        With frmEditTip
-            .TipAmount = decAmount
-            .WorkingDate = dteWorkingDate
-            .TipType = strDescription
-            .m_dsParentDataSet = Data.FileDataSet
-        End With
-
-        If frmEditTip.ShowDialog <> DialogResult.OK Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim strFunction As String
-
-        If frmEditTip.TipAmount = decAmount And frmEditTip.WorkingDate = dteWorkingDate And frmEditTip.TipType = strDescription And frmEditTip.TipType <> "Special Function" Then
-            frmEditTip.Dispose()
-            Exit Sub
-        End If
-
-        Dim decNewAmount As Decimal = frmEditTip.TipAmount
-        Dim strNewDescription As String = frmEditTip.TipType
-        Dim dteNewDate As Date = frmEditTip.WorkingDate
-        Dim strServerNumber As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("ServerNumber").ToString
-        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        If frmEditTip.TipType = "Special Function" Then
-            For Each row As DataRow In Data.FileDataSet.SpecialFunctions
-                frmSelectFunction.cboFunctions.Items.Add(row("SpecialFunction").ToString)
-            Next
-
-            If frmSelectFunction.ShowDialog <> DialogResult.OK Then
-                frmSelectFunction.Dispose()
-                frmEditTip.Dispose()
-                Exit Sub
-            End If
-
-            strFunction = frmSelectFunction.SelectedFunction
-            dteNewDate = CDate(Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(strFunction)("Date"))
-        End If
-
-        If frmEditTip.TipType = "Cash" Then
-            dteNewDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        End If
-
-        frmSelectFunction.Dispose()
-
-        drNewRow("Amount") = decNewAmount
-        drNewRow("ServerNumber") = strServerNumber
-        drNewRow("FirstName") = strFirstName
-        drNewRow("LastName") = strLastName
-        drNewRow("Description") = strNewDescription
-        If strNewDescription = "Special Function" Then
-            drNewRow("SpecialFunction") = strFunction
-        End If
-        drNewRow("WorkingDate") = dteNewDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-        frmEditTip.Dispose()
-        UpdateCCTotals()
-        UpdateRCTotals()
-        UpdateSFTotals()
-        UpdateCATotals()
+        EditTip(SpecialFunctionTipsBindingSource, TipTypes.SpecialFunction)
     End Sub
 #End Region
 
@@ -1732,4 +1490,5 @@ Public Class frmEnterTips
             Next
         End If
     End Sub
+
 End Class
