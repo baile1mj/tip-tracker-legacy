@@ -6,6 +6,8 @@ Imports System.Linq
 Imports TipTracker.Utilities
 
 Public Class frmEnterTips
+    Private Const DATE_FORMAT = "M/d/yyyy"
+
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
     
@@ -130,17 +132,13 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub UpdateDateLabels()
-        Dim dtePeriodStart = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
-
-        lblPeriodStart.Text = "Period Start: " & Format(dtePeriodStart, "M/d/yyyy")
-        lblPeriodEnd.Text = "Period End: " & Format(dtePeriodEnd, "M/d/yyyy")
-        lblWorkingDate.Text = "Working Date: " & Format(dteWorkingDate, "M/d/yyyy")
+        lblPeriodStart.Text = "Period Start: " & Data.GetPayPeriodEnd().ToString(DATE_FORMAT)
+        lblPeriodEnd.Text = "Period End: " & Data.GetPayPeriodEnd().ToString(DATE_FORMAT)
+        lblWorkingDate.Text = "Working Date: " & Data.GetWorkingDate().ToString(DATE_FORMAT)
     End Sub
 
     Private Sub SetSelectionFilters()
-        Dim strWorkingDate As String = Format(CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value")), "M/d/yyyy")
+        Dim strWorkingDate As String = Format(Data.GetWorkingDate(), "M/d/yyyy")
         CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
         CreditCardTipsBindingSource.Sort = "TipID"
 
@@ -181,8 +179,8 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnFinalize_Click(sender As Object, e As EventArgs) Handles btnFinalize.Click
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
-        Dim dtePeriodEnd = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Dim dteWorkingDate = Data.GetWorkingDate()
+        Dim dtePeriodEnd = Data.GetPayPeriodEnd()
 
         If dteWorkingDate = dtePeriodEnd Then
             MessageBox.Show("The current working date is the last day in the pay period.  You cannot " &
@@ -203,9 +201,9 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnSelectWorkingDate_Click(sender As Object, e As EventArgs) Handles btnSelectWorkingDate.Click
-        Dim dtePeriodStart = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-        Dim dtePeriodEnd = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate")("Value"))
+        Dim dtePeriodStart = Data.GetPayPeriodStart()
+        Dim dtePeriodEnd = Data.GetPayPeriodEnd()
+        Dim dteWorkingDate = Data.GetWorkingDate()
 
         With frmSelectDate
             .MinDate = dtePeriodStart
@@ -304,9 +302,9 @@ Public Class frmEnterTips
                 .SpecialFunction = specialFunction.SpecialFunction
                 .WorkingDate = specialFunction._Date
             ElseIf tipType Is TipTypes.Cash Then
-                .WorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd").Value)
+                .WorkingDate = Data.GetPayPeriodEnd()
             Else
-                .WorkingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate").Value)
+                .WorkingDate = Data.GetWorkingDate()
             End If
         End With
 
@@ -360,7 +358,7 @@ Public Class frmEnterTips
 
         If tipType Is TipTypes.CreditCard OrElse tipType Is TipTypes.RoomCharge Then
             'Credit card and room charge tips are filtered date
-            Dim workingDate = CDate(Data.FileDataSet.Settings.FindBySetting("WorkingDate").Value)
+            Dim workingDate = Data.GetWorkingDate()
             affectsTotal = Function(r) r.WorkingDate = workingDate
         ElseIf tipType Is TipTypes.SpecialFunction AndAlso specialFunction IsNot Nothing Then
             'When a function is selected, only the tips for that function should be totaled.
@@ -718,7 +716,7 @@ Public Class frmEnterTips
                     drNewRow("FirstName") = strFirstName
                     drNewRow("LastName") = strLastName
                     drNewRow("Description") = "Cash"
-                    drNewRow("WorkingDate") = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+                    drNewRow("WorkingDate") = Data.GetWorkingDate()
 
                     Data.FileDataSet.Tips.Rows.Add(drNewRow)
 
@@ -1365,9 +1363,9 @@ Public Class frmEnterTips
         Dim dvTips As New DataView
         dvTips.Table = Data.FileDataSet.Tips
 
-        Dim dteDate = CDate(Data.FileDataSet.Settings.FindBySetting("PeriodStart")("Value"))
+        Dim dteDate = Data.GetPayPeriodStart()
 
-        Do Until dteDate > CDate(Data.FileDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
+        Do Until dteDate > Data.GetPayPeriodEnd()
             dvTips.RowFilter = "WorkingDate = '" & Format(dteDate, "MM/dd/yyyy") & "' AND Description <> 'Special Function'"
             dvTips.Sort = "ServerNumber, Description"
 
