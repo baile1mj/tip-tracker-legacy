@@ -36,5 +36,18 @@
         ''' Defines tips received from cash sales.
         ''' </summary>
         Public Shared Cash As New TipTypes("Cash")
+
+        ''' <summary>
+        ''' Gets a collection containing all defined tip types.
+        ''' </summary>
+        ''' <returns>An enumerable of defined tip types.</returns>
+        Public Shared ReadOnly Iterator Property Values As IEnumerable(Of TipTypes)
+            Get
+                Yield CreditCard
+                Yield RoomCharge
+                Yield SpecialFunction
+                Yield Cash
+            End Get
+        End Property
     End Class
 End Namespace
