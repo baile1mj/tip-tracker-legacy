@@ -8,6 +8,7 @@ Imports TipTracker.Utilities
 Public Class frmEnterTips
     Private Const DATE_FORMAT = "M/d/yyyy"
     Private Const AMOUNT_FORMAT as String = "0.00"
+    Private const REPORT_DATE_TIME_FORMAT as String = "MM/dd/yyyy h:mm tt"
 
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
@@ -1111,7 +1112,7 @@ Public Class frmEnterTips
         e.Graphics.DrawString("Payroll Balancing Report", font, Brushes.Black, marginLeft, intPosition)
         intPosition += intLineSpacing
 
-        e.Graphics.DrawString(DateTime.Now.ToString("MM/dd/yyyy t"), font, Brushes.Black, marginLeft, intPosition)
+        e.Graphics.DrawString(DateTime.Now.ToString(REPORT_DATE_TIME_FORMAT), font, Brushes.Black, marginLeft, intPosition)
         intPosition += intLineSpacing
 
         e.Graphics.DrawString("Page " & intPageNumber, font, Brushes.Black, marginLeft, intPosition)
