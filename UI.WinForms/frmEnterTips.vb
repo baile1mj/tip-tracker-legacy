@@ -204,29 +204,12 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnSelectWorkingDate_Click(sender As Object, e As EventArgs) Handles btnSelectWorkingDate.Click
-        Dim dtePeriodStart = Data.PayPeriodStart
-        Dim dtePeriodEnd = Data.PayPeriodEnd
-        Dim dteWorkingDate = Data.WorkingDate
+        Using dateForm As New frmSelectDate(Data.PayPeriodStart, Data.PayPeriodEnd, Data.WorkingDate)
+            If dateForm.ShowDialog() <> DialogResult.OK Then Exit Sub
+            If dateForm.SelectedDate = Data.WorkingDate Then Exit Sub
 
-        With frmSelectDate
-            .MinDate = dtePeriodStart
-            .MaxDate = dtePeriodEnd
-            .CurrentDate = dteWorkingDate
-
-            If .ShowDialog <> DialogResult.OK Then
-                .Dispose()
-                Exit Sub
-            End If
-
-            If .SelectedDate = dteWorkingDate Then
-                .Dispose()
-                Exit Sub
-            End If
-
-            Data.WorkingDate = .SelectedDate
-
-            .Dispose()
-        End With
+            Data.WorkingDate = dateForm.SelectedDate
+        End Using
 
         UpdateDateLabels()
         SetSelectionFilters()

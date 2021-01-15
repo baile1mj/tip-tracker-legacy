@@ -22,38 +22,39 @@ Partial Class frmSelectDate
         Me.calCalendar = New System.Windows.Forms.MonthCalendar()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.SuspendLayout()
+        Me.SuspendLayout
         '
         'calCalendar
         '
         Me.calCalendar.Location = New System.Drawing.Point(18, 18)
         Me.calCalendar.MaxSelectionCount = 1
         Me.calCalendar.Name = "calCalendar"
+        Me.calCalendar.ShowTodayCircle = false
         Me.calCalendar.TabIndex = 0
         '
         'btnOK
         '
-        Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.btnOK.Location = New System.Drawing.Point(92, 182)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 23)
         Me.btnOK.TabIndex = 1
         Me.btnOK.Text = "&OK"
-        Me.btnOK.UseVisualStyleBackColor = True
+        Me.btnOK.UseVisualStyleBackColor = true
         '
         'btnCancel
         '
-        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.btnCancel.Location = New System.Drawing.Point(173, 182)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 2
         Me.btnCancel.Text = "&Cancel"
-        Me.btnCancel.UseVisualStyleBackColor = True
+        Me.btnCancel.UseVisualStyleBackColor = true
         '
         'frmSelectDate
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(260, 217)
         Me.Controls.Add(Me.btnCancel)
@@ -62,10 +63,10 @@ Partial Class frmSelectDate
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "frmSelectDate"
         Me.Text = "Select Date"
-        Me.ResumeLayout(False)
+        Me.ResumeLayout(false)
 
-    End Sub
-    Friend WithEvents calCalendar As System.Windows.Forms.MonthCalendar
+End Sub
     Friend WithEvents btnOK As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
+    Private WithEvents calCalendar As MonthCalendar
 End Class
