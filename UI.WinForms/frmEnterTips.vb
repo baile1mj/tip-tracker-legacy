@@ -42,7 +42,7 @@ Public Class frmEnterTips
     Private Sub frmEnterTips_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Set the form as an mdi child of frmMain.
         MdiParent = frmMain
-        lblSystemDate.Text = "System Date: " & Format(Date.Today, "M/d/yyyy")
+        lblSystemDate.Text = "System Date: " & Format(Date.Today, DATE_FORMAT)
         WindowState = FormWindowState.Maximized
 
         'Bind the data sources to the display.
@@ -138,7 +138,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub SetSelectionFilters()
-        Dim strWorkingDate As String = Format(Data.WorkingDate, "M/d/yyyy")
+        Dim strWorkingDate As String = Format(Data.WorkingDate, DATE_FORMAT)
         CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
         CreditCardTipsBindingSource.Sort = "TipID"
 
@@ -185,12 +185,12 @@ Public Class frmEnterTips
         If dteWorkingDate = dtePeriodEnd Then
             MessageBox.Show("The current working date is the last day in the pay period.  You cannot " &
             "advance the working date any further.  To work on tips for " &
-            Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), "M/d/yyyy") & " you must start a new file " &
+            Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), DATE_FORMAT) & " you must start a new file " &
             "for the new pay period.", "Cannot Change Working Date", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        If MessageBox.Show("The working date will be changed to " & Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), "M/d/yyyy") &
+        If MessageBox.Show("The working date will be changed to " & Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), DATE_FORMAT) &
         ".  Do you wish to continue?", "Confirm Date Change", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
