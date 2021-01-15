@@ -43,7 +43,7 @@ Public Class frmEnterTips
     Private Sub frmEnterTips_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Set the form as an mdi child of frmMain.
         MdiParent = frmMain
-        lblSystemDate.Text = "System Date: " & Format(Date.Today, DATE_FORMAT)
+        lblSystemDate.Text = "System Date: " & Date.Today.ToString(DATE_FORMAT)
         WindowState = FormWindowState.Maximized
 
         'Bind the data sources to the display.
@@ -139,7 +139,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub SetSelectionFilters()
-        Dim strWorkingDate As String = Format(Data.WorkingDate, DATE_FORMAT)
+        Dim strWorkingDate As String = Data.WorkingDate.ToString(DATE_FORMAT)
         CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
         CreditCardTipsBindingSource.Sort = "TipID"
 
@@ -182,16 +182,17 @@ Public Class frmEnterTips
     Private Sub btnFinalize_Click(sender As Object, e As EventArgs) Handles btnFinalize.Click
         Dim dteWorkingDate = Data.WorkingDate
         Dim dtePeriodEnd = Data.PayPeriodEnd
+        Dim newWorkingDate = dteWorkingDate.AddDays(1)
 
         If dteWorkingDate = dtePeriodEnd Then
             MessageBox.Show("The current working date is the last day in the pay period.  You cannot " &
             "advance the working date any further.  To work on tips for " &
-            Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), DATE_FORMAT) & " you must start a new file " &
+            newWorkingDate.ToString(DATE_FORMAT) & " you must start a new file " &
             "for the new pay period.", "Cannot Change Working Date", MessageBoxButtons.OK)
             Exit Sub
         End If
 
-        If MessageBox.Show("The working date will be changed to " & Format(DateAdd(DateInterval.Day, 1, dteWorkingDate), DATE_FORMAT) &
+        If MessageBox.Show("The working date will be changed to " & newWorkingDate.ToString(DATE_FORMAT) &
         ".  Do you wish to continue?", "Confirm Date Change", MessageBoxButtons.YesNo) <> DialogResult.Yes Then
             Exit Sub
         End If
@@ -1110,7 +1111,7 @@ Public Class frmEnterTips
         e.Graphics.DrawString("Payroll Balancing Report", font, Brushes.Black, marginLeft, intPosition)
         intPosition += intLineSpacing
 
-        e.Graphics.DrawString(Format(Date.Now, "MM/dd/yyyy") & " " & Format(Date.Now, "t"), font, Brushes.Black, marginLeft, intPosition)
+        e.Graphics.DrawString(DateTime.Now.ToString("MM/dd/yyyy t"), font, Brushes.Black, marginLeft, intPosition)
         intPosition += intLineSpacing
 
         e.Graphics.DrawString("Page " & intPageNumber, font, Brushes.Black, marginLeft, intPosition)
@@ -1162,7 +1163,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intCCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strCCTotal As String = Format(decCCTotal, AMOUNT_FORMAT)
+        Dim strCCTotal As String = decCCTotal.ToString(AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strCCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCCs.ToString), 1).Width)
@@ -1179,7 +1180,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intRCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strRCTotal As String = Format(decRCTotal, AMOUNT_FORMAT)
+        Dim strRCTotal As String = decRCTotal.ToString(AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strRCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intRCs.ToString), 1).Width)
@@ -1196,7 +1197,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intSFs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strSFTotal As String = Format(decSFTotal, AMOUNT_FORMAT)
+        Dim strSFTotal As String = decSFTotal.ToString(AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strSFTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
@@ -1214,7 +1215,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(strCharges, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strChargeTotal As String = Format(decChargeTips, AMOUNT_FORMAT)
+        Dim strChargeTotal As String = decChargeTips.ToString(AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strChargeTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
@@ -1231,7 +1232,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intCAs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strCATotal As String = Format(decCATotal, AMOUNT_FORMAT)
+        Dim strCATotal As String = decCATotal.ToString(AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strCATotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCAs.ToString), 1).Width)
@@ -1249,7 +1250,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(strTotal, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strGrandTotal As String = Format(decChargeTips + decCATotal, AMOUNT_FORMAT)
+        Dim strGrandTotal As String = (decChargeTips + decCATotal).ToString(AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strGrandTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
@@ -1367,7 +1368,7 @@ Public Class frmEnterTips
         Dim dteDate = Data.PayPeriodStart
 
         Do Until dteDate > Data.PayPeriodEnd
-            dvTips.RowFilter = "WorkingDate = '" & Format(dteDate, "MM/dd/yyyy") & "' AND Description <> 'Special Function'"
+            dvTips.RowFilter = "WorkingDate = '" & dteDate.ToString("MM/dd/yyyy") & "' AND Description <> 'Special Function'"
             dvTips.Sort = "ServerNumber, Description"
 
             Dim intTip = 0
