@@ -7,6 +7,7 @@ Namespace Data.PayPeriod
     ''' Contains the tip data for a particular pay period.
     ''' </summary>
     Public Class PayPeriodData
+        Private Const DATE_FORMAT = "M/d/yyyy"
 
         Private ReadOnly _warnings As New List(Of String)
 
@@ -32,12 +33,17 @@ Namespace Data.PayPeriod
         End Function
 
         ''' <summary>
-        ''' Gets the current business date.
+        ''' Gets or sets the current business date.
         ''' </summary>
         ''' <returns>The current business date.</returns>
-        Public function GetWorkingDate() As DateTime
-            Return CDate(FileDataSet.Settings.FindBySetting("WorkingDate").Value)
-        End function
+        Public Property WorkingDate As DateTime
+            Get
+                Return CDate(FileDataSet.Settings.FindBySetting("WorkingDate").Value)
+            End Get
+            Set
+                FileDataSet.Settings.FindBySetting("WorkingDate").Value = Value.ToString(DATE_FORMAT)
+            End Set
+        End Property
 
         ''' <summary>
         ''' Gets the collection of warnings that were generated when the settings were loaded.
