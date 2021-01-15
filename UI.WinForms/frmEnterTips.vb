@@ -196,7 +196,7 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Data.WorkingDate = DateAdd(DateInterval.Day, 1, dteWorkingDate)
+        Data.WorkingDate = newWorkingDate
         UpdateDateLabels()
         SetSelectionFilters()
     End Sub
@@ -1390,7 +1390,7 @@ Public Class frmEnterTips
                 End If
                 intTip += 1
             Loop
-            dteDate = DateAdd(DateInterval.Day, 1, dteDate)
+            dteDate = dteDate.AddDays(1)
         Loop
 
         dvTips.Dispose()
