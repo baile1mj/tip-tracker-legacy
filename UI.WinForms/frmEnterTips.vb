@@ -7,6 +7,7 @@ Imports TipTracker.Utilities
 
 Public Class frmEnterTips
     Private Const DATE_FORMAT = "M/d/yyyy"
+    Private Const AMOUNT_FORMAT as String = "0.00"
 
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
@@ -292,7 +293,7 @@ Public Class frmEnterTips
         Dim newTipRow = Data.FileDataSet.Tips.NewTipsRow()
 
         With newTipRow
-            .Amount = tipAmount.ToString("0.00")
+            .Amount = tipAmount.ToString(AMOUNT_FORMAT)
             .ServerNumber = server.ServerNumber
             .FirstName = server.FirstName
             .LastName = server.LastName
@@ -339,7 +340,7 @@ Public Class frmEnterTips
 
             If Not newType.IsEventOriginated Then selectedTip.SpecialFunctionsRow = Nothing
 
-            selectedTip.Amount = editTip.Amount.ToString("0.00")
+            selectedTip.Amount = editTip.Amount.ToString(AMOUNT_FORMAT)
             selectedTip.Description = editTip.TipType.Name
             
             UpdateTotal(sourceType, specialFunction)
@@ -1161,7 +1162,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intCCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strCCTotal As String = Format(decCCTotal, "0.00")
+        Dim strCCTotal As String = Format(decCCTotal, AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strCCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCCs.ToString), 1).Width)
@@ -1178,7 +1179,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intRCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strRCTotal As String = Format(decRCTotal, "0.00")
+        Dim strRCTotal As String = Format(decRCTotal, AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strRCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intRCs.ToString), 1).Width)
@@ -1195,7 +1196,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intSFs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strSFTotal As String = Format(decSFTotal, "0.00")
+        Dim strSFTotal As String = Format(decSFTotal, AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strSFTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
@@ -1213,7 +1214,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(strCharges, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strChargeTotal As String = Format(decChargeTips, "0.00")
+        Dim strChargeTotal As String = Format(decChargeTips, AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strChargeTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
@@ -1230,7 +1231,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(intCAs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strCATotal As String = Format(decCATotal, "0.00")
+        Dim strCATotal As String = Format(decCATotal, AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strCATotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intCAs.ToString), 1).Width)
@@ -1248,7 +1249,7 @@ Public Class frmEnterTips
 
         e.Graphics.DrawString(strTotal, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
 
-        Dim strGrandTotal As String = Format(decChargeTips + decCATotal, "0.00")
+        Dim strGrandTotal As String = Format(decChargeTips + decCATotal, AMOUNT_FORMAT)
 
         intStrLen = CInt(e.Graphics.MeasureString(strGrandTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
             Len(intSFs.ToString), 1).Width)
