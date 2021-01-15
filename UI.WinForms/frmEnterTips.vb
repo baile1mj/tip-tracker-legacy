@@ -132,8 +132,8 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub UpdateDateLabels()
-        lblPeriodStart.Text = "Period Start: " & Data.GetPayPeriodEnd().ToString(DATE_FORMAT)
-        lblPeriodEnd.Text = "Period End: " & Data.GetPayPeriodEnd().ToString(DATE_FORMAT)
+        lblPeriodStart.Text = "Period Start: " & Data.PayPeriodStart.ToString(DATE_FORMAT)
+        lblPeriodEnd.Text = "Period End: " & Data.PayPeriodEnd.ToString(DATE_FORMAT)
         lblWorkingDate.Text = "Working Date: " & Data.WorkingDate.ToString(DATE_FORMAT)
     End Sub
 
@@ -180,7 +180,7 @@ Public Class frmEnterTips
 
     Private Sub btnFinalize_Click(sender As Object, e As EventArgs) Handles btnFinalize.Click
         Dim dteWorkingDate = Data.WorkingDate
-        Dim dtePeriodEnd = Data.GetPayPeriodEnd()
+        Dim dtePeriodEnd = Data.PayPeriodEnd
 
         If dteWorkingDate = dtePeriodEnd Then
             MessageBox.Show("The current working date is the last day in the pay period.  You cannot " &
@@ -201,8 +201,8 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnSelectWorkingDate_Click(sender As Object, e As EventArgs) Handles btnSelectWorkingDate.Click
-        Dim dtePeriodStart = Data.GetPayPeriodStart()
-        Dim dtePeriodEnd = Data.GetPayPeriodEnd()
+        Dim dtePeriodStart = Data.PayPeriodStart
+        Dim dtePeriodEnd = Data.PayPeriodEnd
         Dim dteWorkingDate = Data.WorkingDate
 
         With frmSelectDate
@@ -302,7 +302,7 @@ Public Class frmEnterTips
                 .SpecialFunction = specialFunction.SpecialFunction
                 .WorkingDate = specialFunction._Date
             ElseIf tipType Is TipTypes.Cash Then
-                .WorkingDate = Data.GetPayPeriodEnd()
+                .WorkingDate = Data.PayPeriodEnd
             Else
                 .WorkingDate = Data.WorkingDate
             End If
@@ -314,8 +314,8 @@ Public Class frmEnterTips
     Private Sub EditTip(bindingSource As BindingSource, sourceType As TipTypes)
 
         Dim selectedTip = GetSelectedTip(bindingSource)
-        Dim periodStart  = Data.GetPayPeriodStart()
-        Dim periodEnd  = Data.GetPayPeriodEnd()
+        Dim periodStart  = Data.PayPeriodStart
+        Dim periodEnd  = Data.PayPeriodEnd
         Dim workingDate  = Data.WorkingDate
         Dim functions = Data.FileDataSet.SpecialFunctions _
             .AsEnumerable() _
@@ -1363,9 +1363,9 @@ Public Class frmEnterTips
         Dim dvTips As New DataView
         dvTips.Table = Data.FileDataSet.Tips
 
-        Dim dteDate = Data.GetPayPeriodStart()
+        Dim dteDate = Data.PayPeriodStart
 
-        Do Until dteDate > Data.GetPayPeriodEnd()
+        Do Until dteDate > Data.PayPeriodEnd
             dvTips.RowFilter = "WorkingDate = '" & Format(dteDate, "MM/dd/yyyy") & "' AND Description <> 'Special Function'"
             dvTips.Sort = "ServerNumber, Description"
 

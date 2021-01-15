@@ -7,9 +7,9 @@ Namespace Data.PayPeriod
     ''' Contains the tip data for a particular pay period.
     ''' </summary>
     Public Class PayPeriodData
-        Private Const DATE_FORMAT = "M/d/yyyy"
-
         Private ReadOnly _warnings As New List(Of String)
+        private _periodStart As DateTime?
+        Private _periodEnd as DateTime?
 
         ''' <summary>
         ''' Gets the data set containing the data from the file.
@@ -20,17 +20,29 @@ Namespace Data.PayPeriod
         ''' Gets the start date for the pay period.
         ''' </summary>
         ''' <returns>The first day of the pay period.</returns>
-        Public Function GetPayPeriodStart() As DateTime
-            Return CDate(FileDataSet.Settings.FindBySetting("PeriodStart").Value)
-        End Function
+        Public ReadOnly Property PayPeriodStart As DateTime
+            Get
+                If Not _periodStart.HasValue Then 
+                    _periodStart = CDate(FileDataSet.Settings.FindBySetting("PeriodStart").Value)
+                End If
 
+                Return _periodStart.Value
+            End Get
+        End Property
+        
         ''' <summary>
         ''' Gets the end date for the pay period.
         ''' </summary>
         ''' <returns>The last day of the pay period.</returns>
-        Public Function GetPayPeriodEnd() As DateTime
-            Return CDate(FileDataSet.Settings.FindBySetting("PeriodEnd").Value)
-        End Function
+        Public ReadOnly Property PayPeriodEnd As DateTime
+            Get
+                If Not _periodEnd.HasValue Then
+                    _periodEnd = CDate(FileDataSet.Settings.FindBySetting("PeriodEnd").Value)
+                End If
+                
+                Return _periodEnd.Value
+            End Get
+        End Property
 
         ''' <summary>
         ''' Gets or sets the current business date.
@@ -41,7 +53,7 @@ Namespace Data.PayPeriod
                 Return CDate(FileDataSet.Settings.FindBySetting("WorkingDate").Value)
             End Get
             Set
-                FileDataSet.Settings.FindBySetting("WorkingDate").Value = Value.ToString(DATE_FORMAT)
+                FileDataSet.Settings.FindBySetting("WorkingDate").Value = Value.ToString()
             End Set
         End Property
 
