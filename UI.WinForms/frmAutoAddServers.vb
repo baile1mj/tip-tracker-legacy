@@ -37,13 +37,13 @@ Public Class frmAutoAddServers
     Private Sub btnNext_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnNext.Click
         If txtFirstName.Text = "" Then
             MessageBox.Show("You must enter a first name.", "Invalid Entry", MessageBoxButtons.OK)
-            txtFirstName.Focus()
+            txtFirstName.Select()
             Exit Sub
         End If
 
         If txtLastName.Text = "" Then
             MessageBox.Show("You must enter a last name.", "Invalid Entry", MessageBoxButtons.OK)
-            txtLastName.Focus()
+            txtLastName.Select()
             Exit Sub
         End If
 
@@ -54,7 +54,7 @@ Public Class frmAutoAddServers
     Private Sub txtFirstName_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtFirstName.KeyPress
         If e.KeyChar = Chr(13) Then
             e.Handled = True
-            txtLastName.Focus()
+            txtLastName.Select()
         End If
     End Sub
 
@@ -64,13 +64,13 @@ Public Class frmAutoAddServers
 
             If txtFirstName.Text = "" Then
                 MessageBox.Show("You must enter a first name.", "Invalid Entry", MessageBoxButtons.OK)
-                txtFirstName.Focus()
+                txtFirstName.Select()
                 Exit Sub
             End If
 
             If txtLastName.Text = "" Then
                 MessageBox.Show("You must enter a last name.", "Invalid Entry", MessageBoxButtons.OK)
-                txtLastName.Focus()
+                txtLastName.Select()
                 Exit Sub
             End If
 

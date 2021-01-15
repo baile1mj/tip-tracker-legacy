@@ -92,7 +92,7 @@ Public Class frmManageSpecialFunctions
                 If dteTemp < dtePeriodStart Or dteTemp > dtePeriodEnd Then
                     MessageBox.Show("You must select a date within the pay period.", "Invalid Entry", MessageBoxButtons.OK)
                     .txtFunctionDate.Clear()
-                    .txtFunctionDate.Focus()
+                    .txtFunctionDate.Select()
                     Continue While
                 End If
 

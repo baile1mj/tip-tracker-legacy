@@ -17,7 +17,7 @@ Public Class frmQuickAdd
         If Not IsNumeric(txtTipAmount.Text) Then
             MessageBox.Show("The tip amount must be numeric.", "Invalid Entry", MessageBoxButtons.OK)
             txtTipAmount.Clear()
-            txtTipAmount.Focus()
+            txtTipAmount.Select()
             Return False
         End If
 

@@ -72,7 +72,7 @@ Public Class frmEditTip
     Private Sub txtAmount_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtAmount.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
-            txtWorkingDate.Focus()
+            txtWorkingDate.Select()
         End If
     End Sub
 
@@ -96,7 +96,7 @@ Public Class frmEditTip
     Private Sub txtWorkingDate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtWorkingDate.KeyPress
         If e.KeyChar = Chr(13) Then
             e.Handled = True
-            cboTipTypes.Focus()
+            cboTipTypes.Select()
         End If
     End Sub
 
@@ -176,12 +176,12 @@ Public Class frmEditTip
     Private Sub TriggerInvalidMessage(message As String, invalidControl As TextBoxBase)
         MessageBox.Show(message, "Invalid Entry", MessageBoxButtons.OK)
         invalidControl.Clear()
-        invalidControl.Focus()
+        invalidControl.Select()
     End Sub
 
     Private Sub TriggerInvalidMessage(message As String, invalidControl As ComboBox)
         MessageBox.Show(message, "Invalid Selection", MessageBoxButtons.OK)
-        invalidControl.Focus()
+        invalidControl.Select()
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

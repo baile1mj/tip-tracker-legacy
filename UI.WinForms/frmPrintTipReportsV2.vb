@@ -48,7 +48,7 @@ Public Class frmPrintTipReportsV2
         txtSelectedDate.Enabled = optSelectedDate.Checked
         txtSelectedDate.Text = ""
         If optSelectedDate.Checked = True Then
-            txtSelectedDate.Focus()
+            txtSelectedDate.Select()
         End If
     End Sub
 
@@ -60,7 +60,7 @@ Public Class frmPrintTipReportsV2
         If optSelectedDate.Checked = True Then
             If txtSelectedDate.Text = "" Then
                 MessageBox.Show("You must enter a date or select the option to include all dates.", "Invalid Selection", MessageBoxButtons.OK)
-                txtSelectedDate.Focus()
+                txtSelectedDate.Select()
                 Return True
             End If
 
@@ -73,14 +73,14 @@ Public Class frmPrintTipReportsV2
             Catch ex As Exception
                 MessageBox.Show("That is not the proper format for a date.", "Invalid Entry", MessageBoxButtons.OK)
                 txtSelectedDate.Clear()
-                txtSelectedDate.Focus()
+                txtSelectedDate.Select()
                 Return True
             End Try
 
             If dteSelectedDate < dtePeriodStart Or dteSelectedDate > dtePeriodEnd Then
                 MessageBox.Show("You must select a date within the pay period.", "Invalid Entry", MessageBoxButtons.OK)
                 txtSelectedDate.Clear()
-                txtSelectedDate.Focus()
+                txtSelectedDate.Select()
                 Return True
             End If
         End If

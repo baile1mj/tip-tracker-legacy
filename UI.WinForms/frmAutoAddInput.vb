@@ -26,14 +26,14 @@ Public Class frmAutoAddInput
         If txtSeed.Text = "" Then
             MessageBox.Show("You must enter a seed.", "Invalid Entry", MessageBoxButtons.OK)
             txtSeed.Clear()
-            txtSeed.Focus()
+            txtSeed.Select()
             Exit Sub
         End If
 
         If Not IsNumeric(Me.Seed) Then
             MessageBox.Show("You must enter a number.", "Invalid Entry", MessageBoxButtons.OK)
             txtSeed.Clear()
-            txtSeed.Focus()
+            txtSeed.Select()
             Exit Sub
         End If
 
@@ -50,14 +50,14 @@ Public Class frmAutoAddInput
             If txtSeed.Text = "" Then
                 MessageBox.Show("You must enter a seed.", "Invalid Entry", MessageBoxButtons.OK)
                 txtSeed.Clear()
-                txtSeed.Focus()
+                txtSeed.Select()
                 Exit Sub
             End If
 
             If Not IsNumeric(Me.Seed) Then
                 MessageBox.Show("You must enter a number.", "Invalid Entry", MessageBoxButtons.OK)
                 txtSeed.Clear()
-                txtSeed.Focus()
+                txtSeed.Select()
                 Exit Sub
             End If
 

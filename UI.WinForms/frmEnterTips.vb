@@ -81,7 +81,7 @@ Public Class frmEnterTips
 
         'Since the tab control doesn't like to focus on the first child control on it's own,
         'the child control needs to be selected manually.
-        txtCCServerNumber.Focus()
+        txtCCServerNumber.Select()
 
     End Sub
 
@@ -235,7 +235,7 @@ Public Class frmEnterTips
     Private Function GetServerRow(serverTextBox As TextBox) As FileDataSet.ServersRow
         If String.IsNullOrEmpty(serverTextBox.Text) Then
             MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
-            serverTextBox.Focus()
+            serverTextBox.Select()
             Return Nothing
         End If
 
@@ -246,12 +246,12 @@ Public Class frmEnterTips
         If serverComboBox.SelectedIndex = -1 Then
             If serverComboBox.Text = "" Then
                 MessageBox.Show("You must select the server this tip belongs to.", "Select Server", MessageBoxButtons.OK)
-                serverComboBox.Focus()
+                serverComboBox.Select()
                 Return Nothing
             Else
                 MessageBox.Show("The server name you entered was not found in the data file.  You must add the server before you can add the tip.", "Server Not Found", MessageBoxButtons.OK)
                 serverComboBox.Text = ""
-                serverComboBox.Focus()
+                serverComboBox.Select()
                 Return Nothing
             End If
         End If
@@ -263,14 +263,14 @@ Public Class frmEnterTips
     Private Function GetTipAmount(amountTextBox As TextBox) As Decimal?
         If String.IsNullOrEmpty(amountTextBox.Text) Then
             MessageBox.Show("You must enter a tip amount.", "Invalid Entry", MessageBoxButtons.OK)
-            amountTextBox.Focus()
+            amountTextBox.Select()
             Return Nothing
         End If
 
         If Not IsNumeric(amountTextBox.Text) Then
             MessageBox.Show("The tip amount must be a number.", "Invalid Entry", MessageBoxButtons.OK)
             amountTextBox.Clear()
-            amountTextBox.Focus()
+            amountTextBox.Select()
             Return Nothing
         End If
 
@@ -282,7 +282,7 @@ Public Class frmEnterTips
     Private Function GetSelectedFunction(specialFunctionComboBox As ComboBox) As FileDataSet.SpecialFunctionsRow
         If specialFunctionComboBox.SelectedIndex = -1 Then
             MessageBox.Show("You must select a special function.", "Invalid Selection", MessageBoxButtons.OK)
-            specialFunctionComboBox.Focus()
+            specialFunctionComboBox.Select()
             Return Nothing
         End If
 
@@ -386,7 +386,7 @@ Public Class frmEnterTips
             control.ResetText()
         Next
 
-        formControls(0).Focus()
+        formControls(0).Select()
     End Sub
 
     Private Function ConfirmTipDeletion(tipRow As FileDataSet.TipsRow) As Boolean
@@ -421,7 +421,7 @@ Public Class frmEnterTips
             MessageBox.Show("The server number you entered was not found in the data table.", "Server Not Found", MessageBoxButtons.OK)
             txtCCServerNumber.Clear()
             txtCCAmount.Clear()
-            txtCCServerNumber.Focus()
+            txtCCServerNumber.Select()
             Exit Sub
         End If
     End Sub
@@ -449,7 +449,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub txtCCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtCCServerName.GotFocus
-        txtCCServerNumber.Focus()
+        txtCCServerNumber.Select()
     End Sub
 
     Private Sub mnuReassignCCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignCCTip.Click
@@ -525,7 +525,7 @@ Public Class frmEnterTips
             MessageBox.Show("The server number you entered was not found in the data table.", "Server Not Found", MessageBoxButtons.OK)
             txtRCServerNumber.Clear()
             txtRCAmount.Clear()
-            txtRCServerNumber.Focus()
+            txtRCServerNumber.Select()
             Exit Sub
         End If
     End Sub
@@ -553,7 +553,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub txtRCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtRCServerName.GotFocus
-        txtRCServerNumber.Focus()
+        txtRCServerNumber.Select()
     End Sub
 
     Private Sub mnuReassignRCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignRCTip.Click
@@ -846,7 +846,7 @@ Public Class frmEnterTips
         Dim strSpecialFunction As String = cboSelectSpecialFunction.SelectedValue.ToString
         SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & strSpecialFunction & "'"
         SpecialFunctionTipsBindingSource.Sort = "TipID"
-        cboSFServer.Focus()
+        cboSFServer.Select()
     End Sub
 
     Private Sub mnuExportTips_Click(sender As Object, e As EventArgs) Handles mnuExportTips.Click

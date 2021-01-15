@@ -42,13 +42,13 @@ Public Class frmAddSpecialFunction
     Private Sub btnOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnOK.Click
         If txtFunctionName.Text = "" Then
             MessageBox.Show("You must enter the name of the function.", "Enter Function Name", MessageBoxButtons.OK)
-            txtFunctionName.Focus()
+            txtFunctionName.Select()
             Exit Sub
         End If
 
         If txtFunctionDate.Text = "" Then
             MessageBox.Show("You msut enter the date of the function.", "Enter Function Date", MessageBoxButtons.OK)
-            txtFunctionDate.Focus()
+            txtFunctionDate.Select()
             Exit Sub
         End If
 
@@ -57,7 +57,7 @@ Public Class frmAddSpecialFunction
         Catch ex As Exception
             MessageBox.Show("The value you entered in the date field is not a valid date entry.", "Invalid Entry", MessageBoxButtons.OK)
             txtFunctionDate.Clear()
-            txtFunctionDate.Focus()
+            txtFunctionDate.Select()
             Exit Sub
         End Try
 
@@ -73,11 +73,11 @@ Public Class frmAddSpecialFunction
 
             If txtFunctionName.Text = "" Then
                 MessageBox.Show("You must enter the name of the function.", "Enter Function Name", MessageBoxButtons.OK)
-                txtFunctionName.Focus()
+                txtFunctionName.Select()
                 Exit Sub
             End If
 
-            txtFunctionDate.Focus()
+            txtFunctionDate.Select()
         End If
     End Sub
 

@@ -65,19 +65,19 @@ Public Class frmAddEditServer
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         If txtServerNumber.Text = "" Then
             MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
-            txtServerNumber.Focus()
+            txtServerNumber.Select()
             Exit Sub
         End If
 
         If txtFirstName.Text = "" Then
             MessageBox.Show("You must enter a first name.", "Invalid Entry", MessageBoxButtons.OK)
-            txtFirstName.Focus()
+            txtFirstName.Select()
             Exit Sub
         End If
 
         If txtLastName.Text = "" Then
             MessageBox.Show("You must enter a last name.", "Invalid Entry", MessageBoxButtons.OK)
-            txtLastName.Focus()
+            txtLastName.Select()
             Exit Sub
         End If
 
@@ -92,7 +92,7 @@ Public Class frmAddEditServer
     Private Sub txtServerNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtServerNumber.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
-            txtFirstName.Focus()
+            txtFirstName.Select()
         End If
         If e.KeyChar = "|" Or e.KeyChar = " " Then
             e.Handled = True
@@ -106,7 +106,7 @@ Public Class frmAddEditServer
     Private Sub txtFirstName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtFirstName.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
-            txtLastName.Focus()
+            txtLastName.Select()
         End If
         If e.KeyChar = "|" Then
             e.Handled = True
@@ -120,7 +120,7 @@ Public Class frmAddEditServer
     Private Sub txtLastName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtLastName.KeyPress
         If e.KeyChar = ChrW(13) Then
             e.Handled = True
-            btnOk.Focus()
+            btnOk.Select()
         End If
         If e.KeyChar = "|" Then
             e.Handled = True
