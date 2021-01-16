@@ -220,12 +220,6 @@
     <Compile Include="frmSelectDate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSelectFunction.Designer.vb">
-      <DependentUpon>frmSelectFunction.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmSelectFunction.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmSelectServer.Designer.vb">
       <DependentUpon>frmSelectServer.vb</DependentUpon>
     </Compile>
@@ -335,10 +329,6 @@
     <EmbeddedResource Include="frmSelectDate.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmSelectDate.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSelectFunction.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSelectFunction.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSelectServer.resx">
       <SubType>Designer</SubType>
