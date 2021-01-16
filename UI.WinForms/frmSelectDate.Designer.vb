@@ -60,7 +60,9 @@ Partial Class frmSelectDate
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.calCalendar)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.MaximizeBox = false
+        Me.MinimizeBox = false
         Me.Name = "frmSelectDate"
         Me.Text = "Select Date"
         Me.ResumeLayout(false)

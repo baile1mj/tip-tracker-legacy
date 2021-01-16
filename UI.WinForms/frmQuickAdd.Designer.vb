@@ -19,17 +19,17 @@ Partial Class frmQuickAdd
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.txtTipAmount = New System.Windows.Forms.TextBox
-        Me.btnNext = New System.Windows.Forms.Button
-        Me.btnCancel = New System.Windows.Forms.Button
-        Me.txtServerName = New System.Windows.Forms.TextBox
-        Me.lblServer = New System.Windows.Forms.Label
-        Me.lblAmount = New System.Windows.Forms.Label
-        Me.SuspendLayout()
+        Me.txtTipAmount = New System.Windows.Forms.TextBox()
+        Me.btnNext = New System.Windows.Forms.Button()
+        Me.btnCancel = New System.Windows.Forms.Button()
+        Me.txtServerName = New System.Windows.Forms.TextBox()
+        Me.lblServer = New System.Windows.Forms.Label()
+        Me.lblAmount = New System.Windows.Forms.Label()
+        Me.SuspendLayout
         '
         'txtTipAmount
         '
-        Me.txtTipAmount.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTipAmount.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.txtTipAmount.Location = New System.Drawing.Point(201, 29)
         Me.txtTipAmount.Name = "txtTipAmount"
         Me.txtTipAmount.Size = New System.Drawing.Size(63, 20)
@@ -37,39 +37,39 @@ Partial Class frmQuickAdd
         '
         'btnNext
         '
-        Me.btnNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.btnNext.Location = New System.Drawing.Point(108, 62)
         Me.btnNext.Name = "btnNext"
         Me.btnNext.Size = New System.Drawing.Size(75, 23)
         Me.btnNext.TabIndex = 1
         Me.btnNext.Text = "&Next >"
-        Me.btnNext.UseVisualStyleBackColor = True
+        Me.btnNext.UseVisualStyleBackColor = true
         '
         'btnCancel
         '
-        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.btnCancel.Location = New System.Drawing.Point(189, 62)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 2
         Me.btnCancel.Text = "&Cancel"
-        Me.btnCancel.UseVisualStyleBackColor = True
+        Me.btnCancel.UseVisualStyleBackColor = true
         '
         'txtServerName
         '
-        Me.txtServerName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtServerName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.txtServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtServerName.Location = New System.Drawing.Point(12, 29)
         Me.txtServerName.Name = "txtServerName"
-        Me.txtServerName.ReadOnly = True
+        Me.txtServerName.ReadOnly = true
         Me.txtServerName.Size = New System.Drawing.Size(183, 20)
         Me.txtServerName.TabIndex = 4
-        Me.txtServerName.TabStop = False
+        Me.txtServerName.TabStop = false
         '
         'lblServer
         '
-        Me.lblServer.AutoSize = True
+        Me.lblServer.AutoSize = true
         Me.lblServer.Location = New System.Drawing.Point(12, 13)
         Me.lblServer.Name = "lblServer"
         Me.lblServer.Size = New System.Drawing.Size(41, 13)
@@ -78,7 +78,7 @@ Partial Class frmQuickAdd
         '
         'lblAmount
         '
-        Me.lblAmount.AutoSize = True
+        Me.lblAmount.AutoSize = true
         Me.lblAmount.Location = New System.Drawing.Point(201, 13)
         Me.lblAmount.Name = "lblAmount"
         Me.lblAmount.Size = New System.Drawing.Size(46, 13)
@@ -87,7 +87,7 @@ Partial Class frmQuickAdd
         '
         'frmQuickAdd
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(276, 97)
         Me.Controls.Add(Me.lblAmount)
@@ -96,15 +96,17 @@ Partial Class frmQuickAdd
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnNext)
         Me.Controls.Add(Me.txtTipAmount)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.MaximizeBox = false
+        Me.MinimizeBox = false
         Me.Name = "frmQuickAdd"
-        Me.ShowInTaskbar = False
+        Me.ShowInTaskbar = false
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Quick Add Tips"
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        Me.ResumeLayout(false)
+        Me.PerformLayout
 
-    End Sub
+End Sub
     Friend WithEvents txtTipAmount As System.Windows.Forms.TextBox
     Friend WithEvents btnNext As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
