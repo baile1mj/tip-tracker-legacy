@@ -385,7 +385,7 @@ Public Class frmEnterTips
             "Confirm Delete", MessageBoxButtons.YesNo) = DialogResult.Yes
     End Function
 
-    Private Sub PerformTipDeletion(bindingSource As BindingSource, amountLabel As Label, tipType As TipTypes, Optional specialFunction As String = Nothing)
+    Private Sub PerformTipDeletion(bindingSource As BindingSource, tipType As TipTypes, Optional specialFunction As String = Nothing)
         Dim selectedRow As FileDataSet.TipsRow = GetSelectedTip(bindingSource)
         If Not ConfirmTipDeletion(selectedRow) Then Exit Sub
 
@@ -436,7 +436,7 @@ Public Class frmEnterTips
 
     Private Sub mnuDeleteCCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCCTip.Click
         If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
-        PerformTipDeletion(CreditCardTipsBindingSource, lblCCTotal, TipTypes.CreditCard)
+        PerformTipDeletion(CreditCardTipsBindingSource, TipTypes.CreditCard)
     End Sub
 
     Private Sub txtCCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtCCServerName.GotFocus
@@ -489,7 +489,7 @@ Public Class frmEnterTips
 
     Private Sub mnuDeleteRCTip_Click(sender As Object, e As EventArgs) Handles mnuDeleteRCTip.Click
         If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
-        PerformTipDeletion(RoomChargeTipsBindingSource, lblRCTotal, TipTypes.RoomCharge)
+        PerformTipDeletion(RoomChargeTipsBindingSource, TipTypes.RoomCharge)
     End Sub
 
     Private Sub txtRCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtRCServerName.GotFocus
@@ -524,7 +524,7 @@ Public Class frmEnterTips
 
     Private Sub mnuDeleteCATip_Click(sender As Object, e As EventArgs) Handles mnuDeleteCATip.Click
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
-        PerformTipDeletion(CashTipsBindingSource, lblCATotal, TipTypes.Cash)
+        PerformTipDeletion(CashTipsBindingSource, TipTypes.Cash)
     End Sub
     
     Private Sub mnuEditCATip_Click(sender As Object, e As EventArgs) Handles mnuEditCATip.Click, CashDataGridView.DoubleClick
@@ -602,7 +602,7 @@ Public Class frmEnterTips
         If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
         Dim specialFunction = cboSelectSpecialFunction.SelectedValue?.ToString()
 
-        PerformTipDeletion(SpecialFunctionTipsBindingSource, lblSFTotal, TipTypes.SpecialFunction, specialFunction)
+        PerformTipDeletion(SpecialFunctionTipsBindingSource, TipTypes.SpecialFunction, specialFunction)
     End Sub
 
     Private Sub SpecialFunctionDataGridView_RowStateChanged(sender As Object, e As DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
