@@ -183,7 +183,6 @@ Partial Class frmEnterTips
         Me.TextBox10 = New System.Windows.Forms.TextBox()
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
-        Me.ImportFileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         CType(Me.ServersBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.FileDataSet,System.ComponentModel.ISupportInitialize).BeginInit
         Me.strStatusStrip.SuspendLayout
@@ -214,7 +213,6 @@ Partial Class frmEnterTips
         Me.mnuServersContextMenu.SuspendLayout
         CType(Me.DataGridView1,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.DataGridView4,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.ImportFileDataSet,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
         '
         'ServersBindingSource
@@ -1313,7 +1311,7 @@ Partial Class frmEnterTips
         '
         Me.mnuServersContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuAddServer, Me.mnuEditSelectedServer, Me.ToolStripSeparator7, Me.mnuMergeDuplicate, Me.ToolStripSeparator8, Me.mnuCopyFromTemplate})
         Me.mnuServersContextMenu.Name = "mnuServersContextMenu"
-        Me.mnuServersContextMenu.Size = New System.Drawing.Size(185, 126)
+        Me.mnuServersContextMenu.Size = New System.Drawing.Size(185, 104)
         '
         'mnuAddServer
         '
@@ -1621,12 +1619,6 @@ Partial Class frmEnterTips
         Me.TextBox12.TabIndex = 7
         Me.TextBox12.TabStop = false
         '
-        'ImportFileDataSet
-        '
-        Me.ImportFileDataSet.CaseSensitive = true
-        Me.ImportFileDataSet.DataSetName = "ImportFileDataSet"
-        Me.ImportFileDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
-        '
         'frmEnterTips
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -1676,7 +1668,6 @@ Partial Class frmEnterTips
         Me.mnuServersContextMenu.ResumeLayout(false)
         CType(Me.DataGridView1,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.DataGridView4,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ImportFileDataSet,System.ComponentModel.ISupportInitialize).EndInit
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1783,7 +1774,6 @@ End Sub
     Friend WithEvents mnuDeleteCATip As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuSFTips As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents mnuDeleteSFTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ImportFileDataSet As FileDataSet
     Friend WithEvents ServersServerNumber As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ServersFirstName As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ServersLastName As System.Windows.Forms.DataGridViewTextBoxColumn
