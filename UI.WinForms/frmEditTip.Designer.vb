@@ -30,6 +30,8 @@ Partial Class frmEditTip
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.lblSpecialFunction = New System.Windows.Forms.Label()
         Me.cboSpecialFunction = New System.Windows.Forms.ComboBox()
+        Me.lblServer = New System.Windows.Forms.Label()
+        Me.cboServers = New System.Windows.Forms.ComboBox()
         Me.TableLayoutPanel1.SuspendLayout
         Me.SuspendLayout
         '
@@ -48,10 +50,10 @@ Partial Class frmEditTip
         '
         Me.lblWorkingDate.AutoSize = true
         Me.lblWorkingDate.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblWorkingDate.Location = New System.Drawing.Point(3, 26)
+        Me.lblWorkingDate.Location = New System.Drawing.Point(3, 53)
         Me.lblWorkingDate.Name = "lblWorkingDate"
         Me.lblWorkingDate.Size = New System.Drawing.Size(86, 26)
-        Me.lblWorkingDate.TabIndex = 1
+        Me.lblWorkingDate.TabIndex = 4
         Me.lblWorkingDate.Text = "Working Date"
         Me.lblWorkingDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -59,10 +61,10 @@ Partial Class frmEditTip
         '
         Me.lblTipType.AutoSize = true
         Me.lblTipType.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblTipType.Location = New System.Drawing.Point(3, 52)
+        Me.lblTipType.Location = New System.Drawing.Point(3, 79)
         Me.lblTipType.Name = "lblTipType"
         Me.lblTipType.Size = New System.Drawing.Size(86, 27)
-        Me.lblTipType.TabIndex = 2
+        Me.lblTipType.TabIndex = 6
         Me.lblTipType.Text = "Tip Type"
         Me.lblTipType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -72,22 +74,22 @@ Partial Class frmEditTip
         Me.txtAmount.Location = New System.Drawing.Point(95, 3)
         Me.txtAmount.Name = "txtAmount"
         Me.txtAmount.Size = New System.Drawing.Size(273, 20)
-        Me.txtAmount.TabIndex = 4
+        Me.txtAmount.TabIndex = 1
         '
         'cboTipTypes
         '
         Me.cboTipTypes.Dock = System.Windows.Forms.DockStyle.Fill
         Me.cboTipTypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboTipTypes.FormattingEnabled = true
-        Me.cboTipTypes.Location = New System.Drawing.Point(95, 55)
+        Me.cboTipTypes.Location = New System.Drawing.Point(95, 82)
         Me.cboTipTypes.Name = "cboTipTypes"
         Me.cboTipTypes.Size = New System.Drawing.Size(273, 21)
-        Me.cboTipTypes.TabIndex = 6
+        Me.cboTipTypes.TabIndex = 7
         '
         'btnOK
         '
         Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.btnOK.Location = New System.Drawing.Point(227, 150)
+        Me.btnOK.Location = New System.Drawing.Point(227, 168)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 23)
         Me.btnOK.TabIndex = 1
@@ -97,7 +99,7 @@ Partial Class frmEditTip
         'btnCancel
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.btnCancel.Location = New System.Drawing.Point(308, 150)
+        Me.btnCancel.Location = New System.Drawing.Point(308, 168)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 2
@@ -107,7 +109,7 @@ Partial Class frmEditTip
         'txtWorkingDate
         '
         Me.txtWorkingDate.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtWorkingDate.Location = New System.Drawing.Point(95, 29)
+        Me.txtWorkingDate.Location = New System.Drawing.Point(95, 56)
         Me.txtWorkingDate.Mask = "00/00/0099"
         Me.txtWorkingDate.Name = "txtWorkingDate"
         Me.txtWorkingDate.Size = New System.Drawing.Size(273, 20)
@@ -123,32 +125,35 @@ Partial Class frmEditTip
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100!))
         Me.TableLayoutPanel1.Controls.Add(Me.lblAmount, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.txtWorkingDate, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtWorkingDate, 1, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.txtAmount, 1, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.cboTipTypes, 1, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.lblWorkingDate, 0, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.lblTipType, 0, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.lblSpecialFunction, 0, 3)
-        Me.TableLayoutPanel1.Controls.Add(Me.cboSpecialFunction, 1, 3)
+        Me.TableLayoutPanel1.Controls.Add(Me.cboTipTypes, 1, 3)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblWorkingDate, 0, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblTipType, 0, 3)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblSpecialFunction, 0, 4)
+        Me.TableLayoutPanel1.Controls.Add(Me.cboSpecialFunction, 1, 4)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblServer, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.cboServers, 1, 1)
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(12, 12)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 5
+        Me.TableLayoutPanel1.RowCount = 6
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(371, 132)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(371, 150)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'lblSpecialFunction
         '
         Me.lblSpecialFunction.AutoSize = true
         Me.lblSpecialFunction.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblSpecialFunction.Location = New System.Drawing.Point(3, 79)
+        Me.lblSpecialFunction.Location = New System.Drawing.Point(3, 106)
         Me.lblSpecialFunction.Name = "lblSpecialFunction"
         Me.lblSpecialFunction.Size = New System.Drawing.Size(86, 27)
-        Me.lblSpecialFunction.TabIndex = 3
+        Me.lblSpecialFunction.TabIndex = 8
         Me.lblSpecialFunction.Text = "Special Function"
         Me.lblSpecialFunction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -157,16 +162,37 @@ Partial Class frmEditTip
         Me.cboSpecialFunction.Dock = System.Windows.Forms.DockStyle.Fill
         Me.cboSpecialFunction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboSpecialFunction.FormattingEnabled = true
-        Me.cboSpecialFunction.Location = New System.Drawing.Point(95, 82)
+        Me.cboSpecialFunction.Location = New System.Drawing.Point(95, 109)
         Me.cboSpecialFunction.Name = "cboSpecialFunction"
         Me.cboSpecialFunction.Size = New System.Drawing.Size(273, 21)
-        Me.cboSpecialFunction.TabIndex = 7
+        Me.cboSpecialFunction.TabIndex = 9
+        '
+        'lblServer
+        '
+        Me.lblServer.AutoSize = true
+        Me.lblServer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblServer.Location = New System.Drawing.Point(3, 26)
+        Me.lblServer.Name = "lblServer"
+        Me.lblServer.Size = New System.Drawing.Size(86, 27)
+        Me.lblServer.TabIndex = 2
+        Me.lblServer.Text = "Server"
+        Me.lblServer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'cboServers
+        '
+        Me.cboServers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cboServers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboServers.FormattingEnabled = true
+        Me.cboServers.Location = New System.Drawing.Point(95, 29)
+        Me.cboServers.Name = "cboServers"
+        Me.cboServers.Size = New System.Drawing.Size(273, 21)
+        Me.cboServers.TabIndex = 3
         '
         'frmEditTip
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(395, 185)
+        Me.ClientSize = New System.Drawing.Size(395, 203)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOK)
@@ -195,4 +221,6 @@ End Sub
     Private WithEvents btnOK As Button
     Private WithEvents btnCancel As Button
     Private WithEvents txtWorkingDate As MaskedTextBox
+    Friend WithEvents lblServer As Label
+    Friend WithEvents cboServers As ComboBox
 End Class

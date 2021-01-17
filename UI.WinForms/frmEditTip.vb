@@ -1,5 +1,6 @@
 Imports System.Linq
 Imports TipTracker.Common.Data.PayPeriod
+Imports TipTracker.Core
 Imports TipTracker.Utilities
 
 Public Class frmEditTip
@@ -32,6 +33,15 @@ Public Class frmEditTip
         End Set
     End Property
 
+    Public property Server As Server
+        Get
+            Return DirectCast(cboServers.SelectedItem, Server)
+        End Get
+        Set(value As Server)
+            cboServers.SelectedItem = value
+        End Set
+    End Property
+
     Public Property TipType As TipTypes
         Get
             Return DirectCast(cboTipTypes.SelectedItem, TipTypes)
@@ -51,11 +61,13 @@ Public Class frmEditTip
     End Property
 
     Public Sub New(amount As Decimal, periodStart As DateTime, periodEnd As DateTime, workingDate As DateTime,
-        currentType As TipTypes, functions As IEnumerable(Of String), Optional currentFunction As String = "")
+        currentType As TipTypes, currentServer As Server, allServers As List(Of Server), functions As IEnumerable(Of String), _
+        Optional currentFunction As String = "")
         InitializeComponent()
 
         _workingDateTextBoxInitialValue = txtWorkingDate.Text
 
+        cboServers.Items.AddRange(allServers.ToArray())
         cboTipTypes.Items.AddRange(TipTypes.Values.ToArray())
         cboSpecialFunction.Items.Add("") 'Add blank function to allow no selection.
         cboSpecialFunction.Items.AddRange(functions.ToArray())
@@ -65,6 +77,7 @@ Public Class frmEditTip
 
         Me.Amount = amount
         Me.WorkingDate = workingDate
+        Me.cboServers.SelectedItem = currentServer
         Me.cboTipTypes.SelectedItem = currentType
         Me.cboSpecialFunction.SelectedItem = currentFunction
     End Sub
@@ -152,6 +165,11 @@ Public Class frmEditTip
 
         If Amount = 0 Then
             TriggerInvalidMessage("You may not enter a $0.00 tip.", txtAmount)
+            Return False
+        End If
+
+        If cboServers.SelectedIndex = -1 Then
+            TriggerInvalidMessage("You must select a server.", cboServers)
             Return False
         End If
 

@@ -61,10 +61,13 @@ Partial Class frmEnterTips
         Me.tabTipsTabControl = New System.Windows.Forms.TabControl()
         Me.tabCreditCard = New System.Windows.Forms.TabPage()
         Me.CreditCardDataGridView = New System.Windows.Forms.DataGridView()
+        Me.CCID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CCAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CCServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CCFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CCLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.mnuCCTips = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.mnuEditCCTip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuReassignCCTip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator12 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuDeleteCCTip = New System.Windows.Forms.ToolStripMenuItem()
         Me.CreditCardTipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.btnClearCC = New System.Windows.Forms.Button()
@@ -77,10 +80,13 @@ Partial Class frmEnterTips
         Me.txtCCServerName = New System.Windows.Forms.TextBox()
         Me.tabRoomCharge = New System.Windows.Forms.TabPage()
         Me.RoomChargeDataGridView = New System.Windows.Forms.DataGridView()
+        Me.RCID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RCAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RCServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RCFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RCLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.mnuRCTips = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.mnuEditRCTip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuReassignRCTip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator13 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuDeleteRCTip = New System.Windows.Forms.ToolStripMenuItem()
         Me.RoomChargeTipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.btnClearRC = New System.Windows.Forms.Button()
@@ -98,10 +104,13 @@ Partial Class frmEnterTips
         Me.ServersLookupDataset = New TipTracker.ServersLookupDataset()
         Me.lblCAServerName = New System.Windows.Forms.Label()
         Me.CashDataGridView = New System.Windows.Forms.DataGridView()
+        Me.CAID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CALastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.mnuCATips = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.mnuEditCATip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuReassignCATip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator14 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuDeleteCATip = New System.Windows.Forms.ToolStripMenuItem()
         Me.CashTipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.btnClearCA = New System.Windows.Forms.Button()
@@ -119,10 +128,14 @@ Partial Class frmEnterTips
         Me.cboSelectSpecialFunction = New System.Windows.Forms.ComboBox()
         Me.SpecialFunctionBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.SpecialFunctionDataGridView = New System.Windows.Forms.DataGridView()
+        Me.SFID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SFServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SFFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SFLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SFSpecialFunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.mnuSFTips = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.mnuEditSFTip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator15 = New System.Windows.Forms.ToolStripSeparator()
-        Me.mnuReassignSFTip = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuDeleteSFTip = New System.Windows.Forms.ToolStripMenuItem()
         Me.SpecialFunctionTipsBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.btnClearSF = New System.Windows.Forms.Button()
@@ -171,27 +184,6 @@ Partial Class frmEnterTips
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
         Me.ImportFileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
-        Me.CCID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CCAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CCServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CCFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CCLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RCID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RCAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RCServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RCFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RCLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CALastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SFID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SFServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SFFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SFLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SFSpecialFunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.ServersBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.FileDataSet,System.ComponentModel.ISupportInitialize).BeginInit
         Me.strStatusStrip.SuspendLayout
@@ -501,33 +493,65 @@ Partial Class frmEnterTips
         Me.CreditCardDataGridView.TabIndex = 8
         Me.CreditCardDataGridView.TabStop = false
         '
+        'CCID
+        '
+        Me.CCID.DataPropertyName = "TipID"
+        Me.CCID.HeaderText = "Tip No."
+        Me.CCID.Name = "CCID"
+        Me.CCID.ReadOnly = true
+        Me.CCID.Width = 75
+        '
+        'CCAmount
+        '
+        Me.CCAmount.DataPropertyName = "Amount"
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle1
+        Me.CCAmount.HeaderText = "Amount"
+        Me.CCAmount.Name = "CCAmount"
+        Me.CCAmount.ReadOnly = true
+        Me.CCAmount.Width = 75
+        '
+        'CCServerNumber
+        '
+        Me.CCServerNumber.DataPropertyName = "ServerNumber"
+        Me.CCServerNumber.HeaderText = "Server No."
+        Me.CCServerNumber.Name = "CCServerNumber"
+        Me.CCServerNumber.ReadOnly = true
+        '
+        'CCFirstName
+        '
+        Me.CCFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.CCFirstName.DataPropertyName = "FirstName"
+        Me.CCFirstName.FillWeight = 90!
+        Me.CCFirstName.HeaderText = "First Name"
+        Me.CCFirstName.Name = "CCFirstName"
+        Me.CCFirstName.ReadOnly = true
+        '
+        'CCLastName
+        '
+        Me.CCLastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.CCLastName.DataPropertyName = "LastName"
+        Me.CCLastName.HeaderText = "Last Name"
+        Me.CCLastName.Name = "CCLastName"
+        Me.CCLastName.ReadOnly = true
+        '
         'mnuCCTips
         '
-        Me.mnuCCTips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditCCTip, Me.mnuReassignCCTip, Me.ToolStripSeparator12, Me.mnuDeleteCCTip})
+        Me.mnuCCTips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditCCTip, Me.mnuDeleteCCTip})
         Me.mnuCCTips.Name = "mnuCCTips"
-        Me.mnuCCTips.Size = New System.Drawing.Size(168, 76)
+        Me.mnuCCTips.Size = New System.Drawing.Size(155, 48)
         '
         'mnuEditCCTip
         '
         Me.mnuEditCCTip.Name = "mnuEditCCTip"
-        Me.mnuEditCCTip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuEditCCTip.Size = New System.Drawing.Size(154, 22)
         Me.mnuEditCCTip.Text = "Edit Selected"
-        '
-        'mnuReassignCCTip
-        '
-        Me.mnuReassignCCTip.Name = "mnuReassignCCTip"
-        Me.mnuReassignCCTip.Size = New System.Drawing.Size(167, 22)
-        Me.mnuReassignCCTip.Text = "Reassign Selected"
-        '
-        'ToolStripSeparator12
-        '
-        Me.ToolStripSeparator12.Name = "ToolStripSeparator12"
-        Me.ToolStripSeparator12.Size = New System.Drawing.Size(164, 6)
         '
         'mnuDeleteCCTip
         '
         Me.mnuDeleteCCTip.Name = "mnuDeleteCCTip"
-        Me.mnuDeleteCCTip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuDeleteCCTip.Size = New System.Drawing.Size(154, 22)
         Me.mnuDeleteCCTip.Text = "Delete Selected"
         '
         'CreditCardTipsBindingSource
@@ -652,33 +676,64 @@ Partial Class frmEnterTips
         Me.RoomChargeDataGridView.TabIndex = 8
         Me.RoomChargeDataGridView.TabStop = false
         '
+        'RCID
+        '
+        Me.RCID.DataPropertyName = "TipID"
+        Me.RCID.HeaderText = "Tip No."
+        Me.RCID.Name = "RCID"
+        Me.RCID.ReadOnly = true
+        Me.RCID.Width = 75
+        '
+        'RCAmount
+        '
+        Me.RCAmount.DataPropertyName = "Amount"
+        DataGridViewCellStyle2.Format = "N2"
+        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle2
+        Me.RCAmount.HeaderText = "Amount"
+        Me.RCAmount.Name = "RCAmount"
+        Me.RCAmount.ReadOnly = true
+        Me.RCAmount.Width = 75
+        '
+        'RCServerNumber
+        '
+        Me.RCServerNumber.DataPropertyName = "ServerNumber"
+        Me.RCServerNumber.HeaderText = "Server No."
+        Me.RCServerNumber.Name = "RCServerNumber"
+        Me.RCServerNumber.ReadOnly = true
+        '
+        'RCFirstName
+        '
+        Me.RCFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.RCFirstName.DataPropertyName = "FirstName"
+        Me.RCFirstName.FillWeight = 90!
+        Me.RCFirstName.HeaderText = "First Name"
+        Me.RCFirstName.Name = "RCFirstName"
+        Me.RCFirstName.ReadOnly = true
+        '
+        'RCLastName
+        '
+        Me.RCLastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.RCLastName.DataPropertyName = "LastName"
+        Me.RCLastName.HeaderText = "Last Name"
+        Me.RCLastName.Name = "RCLastName"
+        Me.RCLastName.ReadOnly = true
+        '
         'mnuRCTips
         '
-        Me.mnuRCTips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditRCTip, Me.mnuReassignRCTip, Me.ToolStripSeparator13, Me.mnuDeleteRCTip})
+        Me.mnuRCTips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditRCTip, Me.mnuDeleteRCTip})
         Me.mnuRCTips.Name = "mnuCCTips"
-        Me.mnuRCTips.Size = New System.Drawing.Size(168, 76)
+        Me.mnuRCTips.Size = New System.Drawing.Size(155, 48)
         '
         'mnuEditRCTip
         '
         Me.mnuEditRCTip.Name = "mnuEditRCTip"
-        Me.mnuEditRCTip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuEditRCTip.Size = New System.Drawing.Size(154, 22)
         Me.mnuEditRCTip.Text = "Edit Selected"
-        '
-        'mnuReassignRCTip
-        '
-        Me.mnuReassignRCTip.Name = "mnuReassignRCTip"
-        Me.mnuReassignRCTip.Size = New System.Drawing.Size(167, 22)
-        Me.mnuReassignRCTip.Text = "Reassign Selected"
-        '
-        'ToolStripSeparator13
-        '
-        Me.ToolStripSeparator13.Name = "ToolStripSeparator13"
-        Me.ToolStripSeparator13.Size = New System.Drawing.Size(164, 6)
         '
         'mnuDeleteRCTip
         '
         Me.mnuDeleteRCTip.Name = "mnuDeleteRCTip"
-        Me.mnuDeleteRCTip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuDeleteRCTip.Size = New System.Drawing.Size(154, 22)
         Me.mnuDeleteRCTip.Text = "Delete Selected"
         '
         'RoomChargeTipsBindingSource
@@ -844,33 +899,64 @@ Partial Class frmEnterTips
         Me.CashDataGridView.TabIndex = 5
         Me.CashDataGridView.TabStop = false
         '
+        'CAID
+        '
+        Me.CAID.DataPropertyName = "TipID"
+        Me.CAID.HeaderText = "Tip No."
+        Me.CAID.Name = "CAID"
+        Me.CAID.ReadOnly = true
+        Me.CAID.Width = 75
+        '
+        'CAAmount
+        '
+        Me.CAAmount.DataPropertyName = "Amount"
+        DataGridViewCellStyle3.Format = "N2"
+        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle3
+        Me.CAAmount.HeaderText = "Amount"
+        Me.CAAmount.Name = "CAAmount"
+        Me.CAAmount.ReadOnly = true
+        Me.CAAmount.Width = 75
+        '
+        'CAServerNumber
+        '
+        Me.CAServerNumber.DataPropertyName = "ServerNumber"
+        Me.CAServerNumber.HeaderText = "Server No."
+        Me.CAServerNumber.Name = "CAServerNumber"
+        Me.CAServerNumber.ReadOnly = true
+        '
+        'CAFirstName
+        '
+        Me.CAFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.CAFirstName.DataPropertyName = "FirstName"
+        Me.CAFirstName.FillWeight = 90!
+        Me.CAFirstName.HeaderText = "First Name"
+        Me.CAFirstName.Name = "CAFirstName"
+        Me.CAFirstName.ReadOnly = true
+        '
+        'CALastName
+        '
+        Me.CALastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.CALastName.DataPropertyName = "LastName"
+        Me.CALastName.HeaderText = "Last Name"
+        Me.CALastName.Name = "CALastName"
+        Me.CALastName.ReadOnly = true
+        '
         'mnuCATips
         '
-        Me.mnuCATips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditCATip, Me.mnuReassignCATip, Me.ToolStripSeparator14, Me.mnuDeleteCATip})
+        Me.mnuCATips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditCATip, Me.mnuDeleteCATip})
         Me.mnuCATips.Name = "mnuCCTips"
-        Me.mnuCATips.Size = New System.Drawing.Size(168, 76)
+        Me.mnuCATips.Size = New System.Drawing.Size(155, 48)
         '
         'mnuEditCATip
         '
         Me.mnuEditCATip.Name = "mnuEditCATip"
-        Me.mnuEditCATip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuEditCATip.Size = New System.Drawing.Size(154, 22)
         Me.mnuEditCATip.Text = "Edit Selected"
-        '
-        'mnuReassignCATip
-        '
-        Me.mnuReassignCATip.Name = "mnuReassignCATip"
-        Me.mnuReassignCATip.Size = New System.Drawing.Size(167, 22)
-        Me.mnuReassignCATip.Text = "Reassign Selected"
-        '
-        'ToolStripSeparator14
-        '
-        Me.ToolStripSeparator14.Name = "ToolStripSeparator14"
-        Me.ToolStripSeparator14.Size = New System.Drawing.Size(164, 6)
         '
         'mnuDeleteCATip
         '
         Me.mnuDeleteCATip.Name = "mnuDeleteCATip"
-        Me.mnuDeleteCATip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuDeleteCATip.Size = New System.Drawing.Size(154, 22)
         Me.mnuDeleteCATip.Text = "Delete Selected"
         '
         'CashTipsBindingSource
@@ -1044,33 +1130,72 @@ Partial Class frmEnterTips
         Me.SpecialFunctionDataGridView.TabIndex = 11
         Me.SpecialFunctionDataGridView.TabStop = false
         '
+        'SFID
+        '
+        Me.SFID.DataPropertyName = "TipID"
+        Me.SFID.HeaderText = "Tip No."
+        Me.SFID.Name = "SFID"
+        Me.SFID.ReadOnly = true
+        Me.SFID.Width = 75
+        '
+        'SFAmount
+        '
+        Me.SFAmount.DataPropertyName = "Amount"
+        DataGridViewCellStyle4.Format = "N2"
+        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle4
+        Me.SFAmount.HeaderText = "Amount"
+        Me.SFAmount.Name = "SFAmount"
+        Me.SFAmount.ReadOnly = true
+        Me.SFAmount.Width = 75
+        '
+        'SFServerNumber
+        '
+        Me.SFServerNumber.DataPropertyName = "ServerNumber"
+        Me.SFServerNumber.HeaderText = "Server No."
+        Me.SFServerNumber.Name = "SFServerNumber"
+        Me.SFServerNumber.ReadOnly = true
+        '
+        'SFFirstName
+        '
+        Me.SFFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.SFFirstName.DataPropertyName = "FirstName"
+        Me.SFFirstName.FillWeight = 90!
+        Me.SFFirstName.HeaderText = "First Name"
+        Me.SFFirstName.Name = "SFFirstName"
+        Me.SFFirstName.ReadOnly = true
+        '
+        'SFLastName
+        '
+        Me.SFLastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.SFLastName.DataPropertyName = "LastName"
+        Me.SFLastName.HeaderText = "Last Name"
+        Me.SFLastName.Name = "SFLastName"
+        Me.SFLastName.ReadOnly = true
+        '
+        'SFSpecialFunction
+        '
+        Me.SFSpecialFunction.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.SFSpecialFunction.DataPropertyName = "SpecialFunction"
+        Me.SFSpecialFunction.HeaderText = "Special Function"
+        Me.SFSpecialFunction.Name = "SFSpecialFunction"
+        Me.SFSpecialFunction.ReadOnly = true
+        '
         'mnuSFTips
         '
-        Me.mnuSFTips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditSFTip, Me.ToolStripSeparator15, Me.mnuReassignSFTip, Me.mnuDeleteSFTip})
+        Me.mnuSFTips.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditSFTip, Me.mnuDeleteSFTip})
         Me.mnuSFTips.Name = "mnuCCTips"
-        Me.mnuSFTips.Size = New System.Drawing.Size(168, 76)
+        Me.mnuSFTips.Size = New System.Drawing.Size(155, 48)
         '
         'mnuEditSFTip
         '
         Me.mnuEditSFTip.Name = "mnuEditSFTip"
-        Me.mnuEditSFTip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuEditSFTip.Size = New System.Drawing.Size(154, 22)
         Me.mnuEditSFTip.Text = "Edit Selected"
-        '
-        'ToolStripSeparator15
-        '
-        Me.ToolStripSeparator15.Name = "ToolStripSeparator15"
-        Me.ToolStripSeparator15.Size = New System.Drawing.Size(164, 6)
-        '
-        'mnuReassignSFTip
-        '
-        Me.mnuReassignSFTip.Name = "mnuReassignSFTip"
-        Me.mnuReassignSFTip.Size = New System.Drawing.Size(167, 22)
-        Me.mnuReassignSFTip.Text = "Reassign Selected"
         '
         'mnuDeleteSFTip
         '
         Me.mnuDeleteSFTip.Name = "mnuDeleteSFTip"
-        Me.mnuDeleteSFTip.Size = New System.Drawing.Size(167, 22)
+        Me.mnuDeleteSFTip.Size = New System.Drawing.Size(154, 22)
         Me.mnuDeleteSFTip.Text = "Delete Selected"
         '
         'SpecialFunctionTipsBindingSource
@@ -1188,7 +1313,7 @@ Partial Class frmEnterTips
         '
         Me.mnuServersContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuAddServer, Me.mnuEditSelectedServer, Me.ToolStripSeparator7, Me.mnuMergeDuplicate, Me.ToolStripSeparator8, Me.mnuCopyFromTemplate})
         Me.mnuServersContextMenu.Name = "mnuServersContextMenu"
-        Me.mnuServersContextMenu.Size = New System.Drawing.Size(185, 104)
+        Me.mnuServersContextMenu.Size = New System.Drawing.Size(185, 126)
         '
         'mnuAddServer
         '
@@ -1502,183 +1627,6 @@ Partial Class frmEnterTips
         Me.ImportFileDataSet.DataSetName = "ImportFileDataSet"
         Me.ImportFileDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
         '
-        'CCID
-        '
-        Me.CCID.DataPropertyName = "TipID"
-        Me.CCID.HeaderText = "Tip No."
-        Me.CCID.Name = "CCID"
-        Me.CCID.ReadOnly = true
-        Me.CCID.Width = 75
-        '
-        'CCAmount
-        '
-        Me.CCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle1.Format = "N2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle1
-        Me.CCAmount.HeaderText = "Amount"
-        Me.CCAmount.Name = "CCAmount"
-        Me.CCAmount.ReadOnly = true
-        Me.CCAmount.Width = 75
-        '
-        'CCServerNumber
-        '
-        Me.CCServerNumber.DataPropertyName = "ServerNumber"
-        Me.CCServerNumber.HeaderText = "Server No."
-        Me.CCServerNumber.Name = "CCServerNumber"
-        Me.CCServerNumber.ReadOnly = true
-        '
-        'CCFirstName
-        '
-        Me.CCFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.CCFirstName.DataPropertyName = "FirstName"
-        Me.CCFirstName.FillWeight = 90!
-        Me.CCFirstName.HeaderText = "First Name"
-        Me.CCFirstName.Name = "CCFirstName"
-        Me.CCFirstName.ReadOnly = true
-        '
-        'CCLastName
-        '
-        Me.CCLastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.CCLastName.DataPropertyName = "LastName"
-        Me.CCLastName.HeaderText = "Last Name"
-        Me.CCLastName.Name = "CCLastName"
-        Me.CCLastName.ReadOnly = true
-        '
-        'RCID
-        '
-        Me.RCID.DataPropertyName = "TipID"
-        Me.RCID.HeaderText = "Tip No."
-        Me.RCID.Name = "RCID"
-        Me.RCID.ReadOnly = true
-        Me.RCID.Width = 75
-        '
-        'RCAmount
-        '
-        Me.RCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle2.Format = "N2"
-        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle2
-        Me.RCAmount.HeaderText = "Amount"
-        Me.RCAmount.Name = "RCAmount"
-        Me.RCAmount.ReadOnly = true
-        Me.RCAmount.Width = 75
-        '
-        'RCServerNumber
-        '
-        Me.RCServerNumber.DataPropertyName = "ServerNumber"
-        Me.RCServerNumber.HeaderText = "Server No."
-        Me.RCServerNumber.Name = "RCServerNumber"
-        Me.RCServerNumber.ReadOnly = true
-        '
-        'RCFirstName
-        '
-        Me.RCFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.RCFirstName.DataPropertyName = "FirstName"
-        Me.RCFirstName.FillWeight = 90!
-        Me.RCFirstName.HeaderText = "First Name"
-        Me.RCFirstName.Name = "RCFirstName"
-        Me.RCFirstName.ReadOnly = true
-        '
-        'RCLastName
-        '
-        Me.RCLastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.RCLastName.DataPropertyName = "LastName"
-        Me.RCLastName.HeaderText = "Last Name"
-        Me.RCLastName.Name = "RCLastName"
-        Me.RCLastName.ReadOnly = true
-        '
-        'CAID
-        '
-        Me.CAID.DataPropertyName = "TipID"
-        Me.CAID.HeaderText = "Tip No."
-        Me.CAID.Name = "CAID"
-        Me.CAID.ReadOnly = true
-        Me.CAID.Width = 75
-        '
-        'CAAmount
-        '
-        Me.CAAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle3.Format = "N2"
-        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle3
-        Me.CAAmount.HeaderText = "Amount"
-        Me.CAAmount.Name = "CAAmount"
-        Me.CAAmount.ReadOnly = true
-        Me.CAAmount.Width = 75
-        '
-        'CAServerNumber
-        '
-        Me.CAServerNumber.DataPropertyName = "ServerNumber"
-        Me.CAServerNumber.HeaderText = "Server No."
-        Me.CAServerNumber.Name = "CAServerNumber"
-        Me.CAServerNumber.ReadOnly = true
-        '
-        'CAFirstName
-        '
-        Me.CAFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.CAFirstName.DataPropertyName = "FirstName"
-        Me.CAFirstName.FillWeight = 90!
-        Me.CAFirstName.HeaderText = "First Name"
-        Me.CAFirstName.Name = "CAFirstName"
-        Me.CAFirstName.ReadOnly = true
-        '
-        'CALastName
-        '
-        Me.CALastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.CALastName.DataPropertyName = "LastName"
-        Me.CALastName.HeaderText = "Last Name"
-        Me.CALastName.Name = "CALastName"
-        Me.CALastName.ReadOnly = true
-        '
-        'SFID
-        '
-        Me.SFID.DataPropertyName = "TipID"
-        Me.SFID.HeaderText = "Tip No."
-        Me.SFID.Name = "SFID"
-        Me.SFID.ReadOnly = true
-        Me.SFID.Width = 75
-        '
-        'SFAmount
-        '
-        Me.SFAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle4.Format = "N2"
-        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle4
-        Me.SFAmount.HeaderText = "Amount"
-        Me.SFAmount.Name = "SFAmount"
-        Me.SFAmount.ReadOnly = true
-        Me.SFAmount.Width = 75
-        '
-        'SFServerNumber
-        '
-        Me.SFServerNumber.DataPropertyName = "ServerNumber"
-        Me.SFServerNumber.HeaderText = "Server No."
-        Me.SFServerNumber.Name = "SFServerNumber"
-        Me.SFServerNumber.ReadOnly = true
-        '
-        'SFFirstName
-        '
-        Me.SFFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.SFFirstName.DataPropertyName = "FirstName"
-        Me.SFFirstName.FillWeight = 90!
-        Me.SFFirstName.HeaderText = "First Name"
-        Me.SFFirstName.Name = "SFFirstName"
-        Me.SFFirstName.ReadOnly = true
-        '
-        'SFLastName
-        '
-        Me.SFLastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.SFLastName.DataPropertyName = "LastName"
-        Me.SFLastName.HeaderText = "Last Name"
-        Me.SFLastName.Name = "SFLastName"
-        Me.SFLastName.ReadOnly = true
-        '
-        'SFSpecialFunction
-        '
-        Me.SFSpecialFunction.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.SFSpecialFunction.DataPropertyName = "SpecialFunction"
-        Me.SFSpecialFunction.HeaderText = "Special Function"
-        Me.SFSpecialFunction.Name = "SFSpecialFunction"
-        Me.SFSpecialFunction.ReadOnly = true
-        '
         'frmEnterTips
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -1845,10 +1793,6 @@ End Sub
     Friend WithEvents btnShowAllTips As System.Windows.Forms.Button
     Friend WithEvents ToolStripSeparator7 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuMergeDuplicate As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuReassignCCTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuReassignRCTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuReassignCATip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuReassignSFTip As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuCopyFromTemplate As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents btnManageFunctions As System.Windows.Forms.Button
@@ -1869,13 +1813,9 @@ End Sub
     Friend WithEvents ToolStripSeparator11 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuOptimizeFile As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuEditCCTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator12 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuEditRCTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator13 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuEditCATip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator14 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuEditSFTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator15 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents lblInfo As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents CCID As DataGridViewTextBoxColumn
     Friend WithEvents CCAmount As DataGridViewTextBoxColumn

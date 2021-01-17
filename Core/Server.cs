@@ -66,5 +66,11 @@
                 && LastName == other.LastName
                 && SuppressChit == other.SuppressChit;
         }
+        
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"{LastName}, {FirstName} ({PosId})";
+        }
     }
 }

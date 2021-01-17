@@ -298,19 +298,26 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub EditTip(bindingSource As BindingSource, sourceType As TipTypes)
-
         Dim selectedTip = GetSelectedTip(bindingSource)
+        Dim servers = GetServers()
+        Dim server = servers.First(Function(s) s.PosId = selectedTip.ServerNumber)
         Dim periodStart  = Data.PayPeriodStart
         Dim periodEnd  = Data.PayPeriodEnd
-        Dim workingDate  = Data.WorkingDate
         Dim functions = Data.FileDataSet.SpecialFunctions _
             .AsEnumerable() _
             .Select(Function(f) f.SpecialFunction) _
             .ToList()
         Dim specialFunction = selectedTip.SpecialFunctionsRow?.SpecialFunction
         
-        Using editTip As New frmEditTip(selectedTip.Amount, periodStart, periodEnd, workingDate, sourceType, functions, specialFunction)
+        Using editTip As New frmEditTip(selectedTip.Amount, periodStart, periodEnd, selectedTip.WorkingDate, sourceType, server, _
+            servers, functions, specialFunction)
             If editTip.ShowDialog() <> DialogResult.OK Then Return
+            
+            Dim isUnchanged = editTip.Amount = selectedTip.Amount AndAlso editTip.Server Is server AndAlso _
+                editTip.WorkingDate = selectedTip.WorkingDate AndAlso editTip.TipType Is sourceType AndAlso _
+                editTip.SpecialFunction Is selectedTip.SpecialFunctionsRow?.SpecialFunction
+
+            If isUnchanged Then Exit Sub
             
             Dim newType = editTip.TipType
 
@@ -325,6 +332,7 @@ Public Class frmEnterTips
 
             If Not newType.IsEventOriginated Then selectedTip.SpecialFunctionsRow = Nothing
 
+            selectedTip.ServersRowParent = Data.FileDataSet.Servers.FindByServerNumber(editTip.Server.PosId)
             selectedTip.Amount = editTip.Amount
             selectedTip.Description = editTip.TipType.Name
             
@@ -434,57 +442,6 @@ Public Class frmEnterTips
     Private Sub txtCCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtCCServerName.GotFocus
         txtCCServerNumber.Select()
     End Sub
-
-    Private Sub mnuReassignCCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignCCTip.Click
-        If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim tipRecipient As Server
-
-        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
-            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
-
-            tipRecipient = selectServer.GetSelectedServer()
-        End Using
-
-        Dim strSourceServerNumber As String = CreditCardDataGridView.Item("CCServerNumber", CreditCardTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID = CInt(CreditCardDataGridView.Item("CCID", CreditCardTipsBindingSource.Position).Value)
-
-        Dim strDestServerNumber As String = tipRecipient.PosId
-        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
-
-        If strSourceServerNumber = strDestServerNumber Then
-            MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
-            Exit Sub
-        End If
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-        Dim strSpecialFunction = ""
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
-        End If
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = decAmount
-        drNewRow("ServerNumber") = strDestServerNumber
-        drNewRow("FirstName") = strDestFirstName
-        drNewRow("LastName") = strDestLastName
-        drNewRow("Description") = strDescription
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            drNewRow("SpecialFunction") = strSpecialFunction
-        End If
-        drNewRow("WorkingDate") = dteWorkingDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-
-
-        UpdateTotal(TipTypes.CreditCard)
-    End Sub
     
     Private Sub mnuEditCCTip_Click(sender As Object, e As EventArgs) Handles mnuEditCCTip.Click, CreditCardDataGridView.DoubleClick
         If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
@@ -538,55 +495,7 @@ Public Class frmEnterTips
     Private Sub txtRCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtRCServerName.GotFocus
         txtRCServerNumber.Select()
     End Sub
-
-    Private Sub mnuReassignRCTip_Click(sender As Object, e As EventArgs) Handles mnuReassignRCTip.Click
-        If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim tipRecipient As Server
-
-        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
-            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
-
-            tipRecipient = selectServer.GetSelectedServer()
-        End Using
-
-        Dim strSourceServerNumber As String = RoomChargeDataGridView.Item("RCServerNumber", RoomChargeTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID = CInt(RoomChargeDataGridView.Item("RCID", RoomChargeTipsBindingSource.Position).Value)
-
-        Dim strDestServerNumber As String = tipRecipient.PosId
-        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
-
-        If strSourceServerNumber = strDestServerNumber Then
-            MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
-            Exit Sub
-        End If
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-        Dim strSpecialFunction As String
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
-        End If
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = decAmount
-        drNewRow("ServerNumber") = strDestServerNumber
-        drNewRow("FirstName") = strDestFirstName
-        drNewRow("LastName") = strDestLastName
-        drNewRow("Description") = strDescription
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            drNewRow("SpecialFunction") = strSpecialFunction
-        End If
-        drNewRow("WorkingDate") = dteWorkingDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-    End Sub
-
+    
     Private Sub mnuEditRCTip_Click(sender As Object, e As EventArgs) Handles mnuEditRCTip.Click, RoomChargeDataGridView.DoubleClick
         If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
         EditTip(RoomChargeTipsBindingSource, TipTypes.RoomCharge)
@@ -617,55 +526,7 @@ Public Class frmEnterTips
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
         PerformTipDeletion(CashTipsBindingSource, lblCATotal, TipTypes.Cash)
     End Sub
-
-    Private Sub mnuReassignCATip_Click(sender As Object, e As EventArgs) Handles mnuReassignCATip.Click
-        If CashDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim tipRecipient As Server
-
-        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
-            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
-
-            tipRecipient = selectServer.GetSelectedServer()
-        End Using
-
-        Dim strSourceServerNumber As String = CashDataGridView.Item("CAServerNumber", CashTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID = CInt(CashDataGridView.Item("CAID", CashTipsBindingSource.Position).Value)
-
-        Dim strDestServerNumber As String = tipRecipient.PosId
-        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
-
-        If strSourceServerNumber = strDestServerNumber Then
-            MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
-            Exit Sub
-        End If
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-        Dim strSpecialFunction As String
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
-        End If
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = decAmount
-        drNewRow("ServerNumber") = strDestServerNumber
-        drNewRow("FirstName") = strDestFirstName
-        drNewRow("LastName") = strDestLastName
-        drNewRow("Description") = strDescription
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            drNewRow("SpecialFunction") = strSpecialFunction
-        End If
-        drNewRow("WorkingDate") = dteWorkingDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-    End Sub
-
+    
     Private Sub mnuEditCATip_Click(sender As Object, e As EventArgs) Handles mnuEditCATip.Click, CashDataGridView.DoubleClick
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
         EditTip(CashTipsBindingSource, TipTypes.Cash)
@@ -748,55 +609,7 @@ Public Class frmEnterTips
 
         UpdateTotal(TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
     End Sub
-
-    Private Sub mnuReassignSFTip_Click(sender As Object, e As EventArgs) Handles mnuReassignSFTip.Click
-        If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
-
-        Dim tipRecipient As Server
-
-        Using selectServer As New frmSelectServer("Select the tip recipient:", GetServers())
-            If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
-
-            tipRecipient = selectServer.GetSelectedServer()
-        End Using
-
-        Dim strSourceServerNumber As String = SpecialFunctionDataGridView.Item("SFServerNumber", SpecialFunctionTipsBindingSource.Position).Value.ToString
-        Dim intSourceTipID = CInt(SpecialFunctionDataGridView.Item("SFID", SpecialFunctionTipsBindingSource.Position).Value)
-
-        Dim strDestServerNumber As String = tipRecipient.PosId
-        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
-
-        If strSourceServerNumber = strDestServerNumber Then
-            MessageBox.Show("The selected tip cannot be reassigned to its original owner.", "Invalid Selection", MessageBoxButtons.OK)
-            Exit Sub
-        End If
-
-        Dim decAmount = CDec(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Amount"))
-        Dim strDescription As String = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("Description").ToString
-        Dim strSpecialFunction As String
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            strSpecialFunction = Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction").ToString
-        End If
-        Dim dteWorkingDate = CDate(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("WorkingDate"))
-
-        Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-        drNewRow("Amount") = decAmount
-        drNewRow("ServerNumber") = strDestServerNumber
-        drNewRow("FirstName") = strDestFirstName
-        drNewRow("LastName") = strDestLastName
-        drNewRow("Description") = strDescription
-        If Not IsDBNull(Data.FileDataSet.Tips.FindByTipID(intSourceTipID)("SpecialFunction")) Then
-            drNewRow("SpecialFunction") = strSpecialFunction
-        End If
-        drNewRow("WorkingDate") = dteWorkingDate
-
-        Data.FileDataSet.Tips.Rows.Add(drNewRow)
-
-        Data.FileDataSet.Tips.FindByTipID(intSourceTipID).Delete()
-    End Sub
-
+    
     Private Sub mnuEditSFTip_Click(sender As Object, e As EventArgs) Handles mnuEditSFTip.Click, SpecialFunctionDataGridView.DoubleClick
         If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
         EditTip(SpecialFunctionTipsBindingSource, TipTypes.SpecialFunction)
