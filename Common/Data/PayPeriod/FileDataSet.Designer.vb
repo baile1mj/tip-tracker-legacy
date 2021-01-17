@@ -33,9 +33,9 @@ Namespace Data.PayPeriod
     
         Private tableSpecialFunctions As SpecialFunctionsDataTable
     
-        Private relationFK_Servers_Tips1 As Global.System.Data.DataRelation
-    
         Private relationFK_SpecialFunctions_Tips As Global.System.Data.DataRelation
+    
+        Private relationFK_Servers_Tips1 As Global.System.Data.DataRelation
     
         Private _schemaSerializationMode As Global.System.Data.SchemaSerializationMode = Global.System.Data.SchemaSerializationMode.IncludeSchema
     
@@ -270,8 +270,8 @@ Namespace Data.PayPeriod
                     Me.tableSpecialFunctions.InitVars
                 End If
             End If
-            Me.relationFK_Servers_Tips1 = Me.Relations("FK_Servers_Tips1")
             Me.relationFK_SpecialFunctions_Tips = Me.Relations("FK_SpecialFunctions_Tips")
+            Me.relationFK_Servers_Tips1 = Me.Relations("FK_Servers_Tips1")
         End Sub
     
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -292,20 +292,20 @@ Namespace Data.PayPeriod
             Me.tableSpecialFunctions = New SpecialFunctionsDataTable()
             MyBase.Tables.Add(Me.tableSpecialFunctions)
             Dim fkc As Global.System.Data.ForeignKeyConstraint
-            fkc = New Global.System.Data.ForeignKeyConstraint("FK_Servers_Tips1", New Global.System.Data.DataColumn() {Me.tableServers.ServerNumberColumn, Me.tableServers.FirstNameColumn, Me.tableServers.LastNameColumn}, New Global.System.Data.DataColumn() {Me.tableTips.ServerNumberColumn, Me.tableTips.FirstNameColumn, Me.tableTips.LastNameColumn})
-            Me.tableTips.Constraints.Add(fkc)
-            fkc.AcceptRejectRule = Global.System.Data.AcceptRejectRule.Cascade
-            fkc.DeleteRule = Global.System.Data.Rule.Cascade
-            fkc.UpdateRule = Global.System.Data.Rule.Cascade
             fkc = New Global.System.Data.ForeignKeyConstraint("FK_SpecialFunctions_Tips", New Global.System.Data.DataColumn() {Me.tableSpecialFunctions.SpecialFunctionColumn}, New Global.System.Data.DataColumn() {Me.tableTips.SpecialFunctionColumn})
             Me.tableTips.Constraints.Add(fkc)
             fkc.AcceptRejectRule = Global.System.Data.AcceptRejectRule.Cascade
             fkc.DeleteRule = Global.System.Data.Rule.Cascade
             fkc.UpdateRule = Global.System.Data.Rule.Cascade
-            Me.relationFK_Servers_Tips1 = New Global.System.Data.DataRelation("FK_Servers_Tips1", New Global.System.Data.DataColumn() {Me.tableServers.ServerNumberColumn, Me.tableServers.FirstNameColumn, Me.tableServers.LastNameColumn}, New Global.System.Data.DataColumn() {Me.tableTips.ServerNumberColumn, Me.tableTips.FirstNameColumn, Me.tableTips.LastNameColumn}, false)
-            Me.Relations.Add(Me.relationFK_Servers_Tips1)
+            fkc = New Global.System.Data.ForeignKeyConstraint("FK_Servers_Tips1", New Global.System.Data.DataColumn() {Me.tableServers.ServerNumberColumn, Me.tableServers.FirstNameColumn, Me.tableServers.LastNameColumn}, New Global.System.Data.DataColumn() {Me.tableTips.ServerNumberColumn, Me.tableTips.FirstNameColumn, Me.tableTips.LastNameColumn})
+            Me.tableTips.Constraints.Add(fkc)
+            fkc.AcceptRejectRule = Global.System.Data.AcceptRejectRule.Cascade
+            fkc.DeleteRule = Global.System.Data.Rule.Cascade
+            fkc.UpdateRule = Global.System.Data.Rule.Cascade
             Me.relationFK_SpecialFunctions_Tips = New Global.System.Data.DataRelation("FK_SpecialFunctions_Tips", New Global.System.Data.DataColumn() {Me.tableSpecialFunctions.SpecialFunctionColumn}, New Global.System.Data.DataColumn() {Me.tableTips.SpecialFunctionColumn}, false)
             Me.Relations.Add(Me.relationFK_SpecialFunctions_Tips)
+            Me.relationFK_Servers_Tips1 = New Global.System.Data.DataRelation("FK_Servers_Tips1", New Global.System.Data.DataColumn() {Me.tableServers.ServerNumberColumn, Me.tableServers.FirstNameColumn, Me.tableServers.LastNameColumn}, New Global.System.Data.DataColumn() {Me.tableTips.ServerNumberColumn, Me.tableTips.FirstNameColumn, Me.tableTips.LastNameColumn}, false)
+            Me.Relations.Add(Me.relationFK_Servers_Tips1)
         End Sub
     
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -863,7 +863,7 @@ Namespace Data.PayPeriod
         
             <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
                 Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
-            Public Overloads Function AddTipsRow(ByVal Amount As String, ByVal ServerNumber As String, ByVal FirstName As String, ByVal LastName As String, ByVal Description As String, ByVal parentSpecialFunctionsRowByFK_SpecialFunctions_Tips As SpecialFunctionsRow, ByVal WorkingDate As Date) As TipsRow
+            Public Overloads Function AddTipsRow(ByVal Amount As Decimal, ByVal ServerNumber As String, ByVal FirstName As String, ByVal LastName As String, ByVal Description As String, ByVal parentSpecialFunctionsRowByFK_SpecialFunctions_Tips As SpecialFunctionsRow, ByVal WorkingDate As Date) As TipsRow
                 Dim rowTipsRow As TipsRow = CType(Me.NewRow,TipsRow)
                 Dim columnValuesArray() As Object = New Object() {Nothing, Amount, ServerNumber, FirstName, LastName, Description, Nothing, WorkingDate}
                 If (Not (parentSpecialFunctionsRowByFK_SpecialFunctions_Tips) Is Nothing) Then
@@ -912,7 +912,7 @@ Namespace Data.PayPeriod
             Private Sub InitClass()
                 Me.columnTipID = New Global.System.Data.DataColumn("TipID", GetType(Integer), Nothing, Global.System.Data.MappingType.Element)
                 MyBase.Columns.Add(Me.columnTipID)
-                Me.columnAmount = New Global.System.Data.DataColumn("Amount", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+                Me.columnAmount = New Global.System.Data.DataColumn("Amount", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
                 MyBase.Columns.Add(Me.columnAmount)
                 Me.columnServerNumber = New Global.System.Data.DataColumn("ServerNumber", GetType(String), Nothing, Global.System.Data.MappingType.Element)
                 MyBase.Columns.Add(Me.columnServerNumber)
@@ -1761,9 +1761,9 @@ Namespace Data.PayPeriod
         
             <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
                 Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
-            Public Property Amount() As String
+            Public Property Amount() As Decimal
                 Get
-                    Return CType(Me(Me.tableTips.AmountColumn),String)
+                    Return CType(Me(Me.tableTips.AmountColumn),Decimal)
                 End Get
                 Set
                     Me(Me.tableTips.AmountColumn) = value
@@ -1850,23 +1850,23 @@ Namespace Data.PayPeriod
         
             <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
                 Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
-            Public Property ServersRowParent() As ServersRow
-                Get
-                    Return CType(Me.GetParentRow(Me.Table.ParentRelations("FK_Servers_Tips1")),ServersRow)
-                End Get
-                Set
-                    Me.SetParentRow(value, Me.Table.ParentRelations("FK_Servers_Tips1"))
-                End Set
-            End Property
-        
-            <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-                Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
             Public Property SpecialFunctionsRow() As SpecialFunctionsRow
                 Get
                     Return CType(Me.GetParentRow(Me.Table.ParentRelations("FK_SpecialFunctions_Tips")),SpecialFunctionsRow)
                 End Get
                 Set
                     Me.SetParentRow(value, Me.Table.ParentRelations("FK_SpecialFunctions_Tips"))
+                End Set
+            End Property
+        
+            <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+                Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")>  _
+            Public Property ServersRowParent() As ServersRow
+                Get
+                    Return CType(Me.GetParentRow(Me.Table.ParentRelations("FK_Servers_Tips1")),ServersRow)
+                End Get
+                Set
+                    Me.SetParentRow(value, Me.Table.ParentRelations("FK_Servers_Tips1"))
                 End Set
             End Property
         

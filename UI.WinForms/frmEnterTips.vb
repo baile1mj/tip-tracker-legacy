@@ -1,8 +1,8 @@
 Imports System.Drawing.Printing
 Imports System.IO
+Imports System.Linq
 Imports TipTracker.Common.Data.PayPeriod
 Imports TipTracker.Core
-Imports System.Linq
 Imports TipTracker.Utilities
 
 Public Class frmEnterTips
@@ -278,7 +278,7 @@ Public Class frmEnterTips
         Dim newTipRow = Data.FileDataSet.Tips.NewTipsRow()
 
         With newTipRow
-            .Amount = tipAmount.ToString(AMOUNT_FORMAT)
+            .Amount = tipAmount
             .ServerNumber = server.ServerNumber
             .FirstName = server.FirstName
             .LastName = server.LastName
@@ -309,7 +309,7 @@ Public Class frmEnterTips
             .ToList()
         Dim specialFunction = selectedTip.SpecialFunctionsRow?.SpecialFunction
         
-        Using editTip As New frmEditTip(CDec(selectedTip.Amount), periodStart, periodEnd, workingDate, sourceType, functions, specialFunction)
+        Using editTip As New frmEditTip(selectedTip.Amount, periodStart, periodEnd, workingDate, sourceType, functions, specialFunction)
             If editTip.ShowDialog() <> DialogResult.OK Then Return
             
             Dim newType = editTip.TipType
@@ -325,7 +325,7 @@ Public Class frmEnterTips
 
             If Not newType.IsEventOriginated Then selectedTip.SpecialFunctionsRow = Nothing
 
-            selectedTip.Amount = editTip.Amount.ToString(AMOUNT_FORMAT)
+            selectedTip.Amount = editTip.Amount
             selectedTip.Description = editTip.TipType.Name
             
             UpdateTotal(sourceType, specialFunction)
@@ -358,7 +358,7 @@ Public Class frmEnterTips
         Dim dailyTotal = Data.FileDataSet.Tips _
             .AsEnumerable() _
             .Where(Function(r) isCandidateTip(r) AndAlso affectsTotal(r)) _
-            .Select(Function(r) CDec(r.Amount)) _
+            .Select(Function(r) r.Amount) _
             .Sum()
 
         amountLabel.Text = $"Total: {dailyTotal:c}"
@@ -1250,7 +1250,7 @@ Public Class frmEnterTips
         Dim blnError = True
         Dim intSeed As Integer
         Dim blnSuppressChits As Boolean
-
+        
         While blnError = True
             If frmAutoAddInput.ShowDialog <> DialogResult.OK Then
                 frmAutoAddInput.Dispose()
@@ -1338,12 +1338,12 @@ Public Class frmEnterTips
                 Do Until intTip > dvTips.Count - 2
                     Dim thisTip = DirectCast(dvTips.Item(intTip).Row, FileDataSet.TipsRow)
                     Dim nextTip = DirectCast(dvTips.Item(intTip + 1).Row, FileDataSet.TipsRow)
-                    Dim decTotal = CDec(thisTip.Amount)
+                    Dim decTotal = thisTip.Amount
 
                     If thisTip.ServerNumber = nextTip.ServerNumber AndAlso thisTip.Description = nextTip.Description Then
-                        decTotal += CDec(nextTip.Amount)
+                        decTotal += nextTip.Amount
                         nextTip.Delete()
-                        thisTip.Amount = decTotal.ToString(AMOUNT_FORMAT)
+                        thisTip.Amount = decTotal
                         Continue Do
                     End If
                     intTip += 1
@@ -1399,5 +1399,4 @@ Public Class frmEnterTips
             Next
         End If
     End Sub
-
 End Class
