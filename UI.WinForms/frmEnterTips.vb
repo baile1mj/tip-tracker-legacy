@@ -1319,66 +1319,41 @@ Public Class frmEnterTips
 
         Cursor.Current = Cursors.WaitCursor
 
-        Dim dvServers, dvtips As New DataView
-        dvServers.Table = Data.FileDataSet.Servers
+        Dim rowNotDeleted = Function (r As DataRow) Not(r.RowState = DataRowState.Deleted OrElse r.RowState = DataRowState.Detached)
+        Dim allServers = Data.FileDataSet.Servers.AsEnumerable().Where(rowNotDeleted).Select(Function(s) s.ServerNumber)
+        Dim serversWithTips = Data.FileDataSet.Tips.AsEnumerable().Where(rowNotDeleted).Select(Function (r) r.ServerNumber).Distinct()
+        Dim serversToRemove = allServers.Except(serversWithTips)
 
-        Dim intServer = 0
+        serversToRemove.ToList().ForEach(Sub (s) Data.FileDataSet.Servers.FindByServerNumber(s).Delete())
+        
+        Using dvTips = Data.FileDataSet.Tips.AsDataView()
+            Dim dteDate = Data.PayPeriodStart
 
-        Do Until intServer = dvServers.Count
-            lblInfo.Visible = True
-            lblInfo.Text = "Checking " & dvServers.Item(intServer)("FirstName").ToString & " " & dvServers.Item(intServer)("LastName").ToString
+            Do Until dteDate > Data.PayPeriodEnd
+                dvTips.RowFilter = "WorkingDate = '" & dteDate.ToString("MM/dd/yyyy") & "' AND Description <> 'Special Function'"
+                dvTips.Sort = "ServerNumber, Description"
 
-            dvtips.Table = Data.FileDataSet.Tips
-            dvtips.RowFilter = "ServerNumber = '" & dvServers.Item(intServer)("ServerNumber").ToString & "'"
+                Dim intTip = 0
 
-            If dvtips.Count = 0 Then
-                dvServers.Item(intServer).Delete()
-                Continue Do
-            End If
-            intServer += 1
-        Loop
+                Do Until intTip > dvTips.Count - 2
+                    Dim thisTip = DirectCast(dvTips.Item(intTip).Row, FileDataSet.TipsRow)
+                    Dim nextTip = DirectCast(dvTips.Item(intTip + 1).Row, FileDataSet.TipsRow)
+                    Dim decTotal = CDec(thisTip.Amount)
 
-        CompactTips()
-        Cursor.Current = Cursors.Default
-        lblInfo.Visible = False
-        dvServers.Dispose()
-        dvtips.Dispose()
-    End Sub
-
-    Private Sub CompactTips()
-        Dim dvTips As New DataView
-        dvTips.Table = Data.FileDataSet.Tips
-
-        Dim dteDate = Data.PayPeriodStart
-
-        Do Until dteDate > Data.PayPeriodEnd
-            dvTips.RowFilter = "WorkingDate = '" & dteDate.ToString("MM/dd/yyyy") & "' AND Description <> 'Special Function'"
-            dvTips.Sort = "ServerNumber, Description"
-
-            Dim intTip = 0
-
-            Do Until intTip = dvTips.Count
-                If intTip <> dvTips.Count - 1 Then
-                    Dim strThisServer As String = dvTips.Item(intTip)("ServerNumber").ToString
-                    Dim strThisDescription As String = dvTips.Item(intTip)("Description").ToString
-                    Dim strNextServer As String = dvTips.Item(intTip + 1)("ServerNumber").ToString
-                    Dim strNextDescription As String = dvTips.Item(intTip + 1)("Description").ToString
-                    Dim decTotal = CDec(dvTips.Item(intTip)("Amount"))
-
-                    If strThisServer = strNextServer And strThisDescription = strNextDescription Then
-                        decTotal += CDec(dvTips.Item(intTip + 1)("Amount"))
-                        dvTips.Item(intTip + 1).Delete()
-
-                        dvTips.Item(intTip)("Amount") = decTotal
+                    If thisTip.ServerNumber = nextTip.ServerNumber AndAlso thisTip.Description = nextTip.Description Then
+                        decTotal += CDec(nextTip.Amount)
+                        nextTip.Delete()
+                        thisTip.Amount = decTotal.ToString(AMOUNT_FORMAT)
                         Continue Do
                     End If
-                End If
-                intTip += 1
+                    intTip += 1
+                Loop
+                dteDate = dteDate.AddDays(1)
             Loop
-            dteDate = dteDate.AddDays(1)
-        Loop
+        End Using
 
-        dvTips.Dispose()
+        Cursor.Current = Cursors.Default
+        lblInfo.Visible = False
     End Sub
 
     Private Sub SelectDataGridViewRowOnRightClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles ServersDataGridView.CellMouseDown,
