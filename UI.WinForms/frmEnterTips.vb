@@ -533,46 +533,24 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnQuickAddCashTips_Click(sender As Object, e As EventArgs) Handles btnQuickAddCashTips.Click
-        Dim dvServers As New DataView
-        dvServers.Table = Data.FileDataSet.Servers
-        dvServers.Sort = "LastName, FirstName"
+        Dim servers = GetServers().OrderBy(Function (s) s.LastName).ThenBy(Function(s) s.FirstName).ToList()
 
-        If dvServers.Count = 0 Then
+        If Not servers.Any() Then
             MessageBox.Show("There are no server in the file.", "No Servers", MessageBoxButtons.OK)
             Exit Sub
+        End If 
 
-        Else
-            For i = 0 To dvServers.Count - 1
-                Dim strServerNumber As String = dvServers(i)("ServerNumber").ToString
-                Dim strFirstName As String = dvServers(i)("FirstName").ToString
-                Dim strLastName As String = dvServers(i)("LastName").ToString
+        Using quickAdd As New frmQuickAdd
+            For Each server In servers
+                If quickAdd.ShowDialog(server.ToString()) <> DialogResult.OK Then Exit Sub
 
-                frmQuickAdd.txtServerName.Text = strLastName & ", " & strFirstName
-                If frmQuickAdd.ShowDialog <> DialogResult.OK Then
-                    frmQuickAdd.Dispose()
-                    Exit Sub
-                End If
-
-                Dim decTipAmount = CDec(frmQuickAdd.txtTipAmount.Text)
-
-                If decTipAmount <> 0 Then
-                    Dim drNewRow As DataRow = Data.FileDataSet.Tips.NewRow
-
-                    drNewRow("Amount") = decTipAmount
-                    drNewRow("ServerNumber") = strServerNumber
-                    drNewRow("FirstName") = strFirstName
-                    drNewRow("LastName") = strLastName
-                    drNewRow("Description") = "Cash"
-                    drNewRow("WorkingDate") = Data.WorkingDate
-
-                    Data.FileDataSet.Tips.Rows.Add(drNewRow)
-
+                If quickAdd.TipAmount <> 0 Then
+                    Data.FileDataSet.Tips.AddTipsRow(quickAdd.TipAmount, server.PosId, server.FirstName,server.LastName, _
+                        TipTypes.Cash.Name, Nothing, Data.PayPeriodEnd)
                     UpdateTotal(TipTypes.Cash)
                 End If
-
-                frmQuickAdd.Dispose()
             Next
-        End If
+        End Using
     End Sub
 #End Region
 
@@ -606,7 +584,6 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub SpecialFunctionDataGridView_RowStateChanged(sender As Object, e As DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
-
         UpdateTotal(TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
     End Sub
     

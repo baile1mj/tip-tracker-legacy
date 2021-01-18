@@ -107,10 +107,11 @@ Partial Class frmQuickAdd
         Me.PerformLayout
 
 End Sub
-    Friend WithEvents txtTipAmount As System.Windows.Forms.TextBox
-    Friend WithEvents btnNext As System.Windows.Forms.Button
-    Friend WithEvents btnCancel As System.Windows.Forms.Button
-    Friend WithEvents txtServerName As System.Windows.Forms.TextBox
-    Friend WithEvents lblServer As System.Windows.Forms.Label
-    Friend WithEvents lblAmount As System.Windows.Forms.Label
+
+    Private WithEvents txtTipAmount As TextBox
+    Private WithEvents btnNext As Button
+    Private WithEvents btnCancel As Button
+    Private WithEvents txtServerName As TextBox
+    Private WithEvents lblServer As Label
+    Private WithEvents lblAmount As Label
 End Class
