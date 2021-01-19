@@ -42,11 +42,11 @@ Public Class frmEditTip
         End Set
     End Property
 
-    Public Property TipType As TipTypes
+    Public Property TipType As TipType
         Get
-            Return DirectCast(cboTipTypes.SelectedItem, TipTypes)
+            Return DirectCast(cboTipTypes.SelectedItem, TipType)
         End Get
-        Set(value As TipTypes)
+        Set(value As TipType)
             cboTipTypes.SelectedItem = value
         End Set
     End Property
@@ -61,7 +61,7 @@ Public Class frmEditTip
     End Property
 
     Public Sub New(amount As Decimal, periodStart As DateTime, periodEnd As DateTime, workingDate As DateTime,
-        currentType As TipTypes, currentServer As Server, allServers As List(Of Server), functions As IEnumerable(Of String), _
+        currentType As TipType, currentServer As Server, allServers As List(Of Server), functions As IEnumerable(Of String), _
         Optional currentFunction As String = "")
         InitializeComponent()
 
@@ -142,7 +142,7 @@ Public Class frmEditTip
     End Sub
 
     Private Sub cboTipTypes_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboTipTypes.SelectedValueChanged
-        Dim selectedType = DirectCast(cboTipTypes.SelectedItem, TipTypes)
+        Dim selectedType = DirectCast(cboTipTypes.SelectedItem, TipType)
 
         txtWorkingDate.Enabled = selectedType.CanSpecifyDate
         cboSpecialFunction.Enabled = selectedType.IsEventOriginated

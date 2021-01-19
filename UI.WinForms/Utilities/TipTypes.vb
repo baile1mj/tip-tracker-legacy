@@ -1,4 +1,6 @@
-﻿Namespace Utilities
+﻿Imports TipTracker.Core
+
+Namespace Utilities
     ''' <summary>
     ''' The collection of tip types supported by the application.
     ''' </summary>
@@ -41,28 +43,28 @@
         ''' <summary>
         ''' Defines tips received from credit card sales.
         ''' </summary>
-        Public Shared CreditCard As New TipTypes("Credit Card", True, False)
+        Public Shared CreditCard As New TipType("Credit Card", True, False)
 
         ''' <summary>
         ''' Defines tips received from room charge sales.
         ''' </summary>
-        Public Shared RoomCharge As New TipTypes("Room Charge", True, False)
+        Public Shared RoomCharge As New TipType("Room Charge", True, False)
 
         ''' <summary>
         ''' Defines tips received from special events.
         ''' </summary>
-        Public Shared SpecialFunction As New TipTypes("Special Function", False, True)
+        Public Shared SpecialFunction As New TipType("Special Function", False, True)
 
         ''' <summary>
         ''' Defines tips received from cash sales.
         ''' </summary>
-        Public Shared Cash As New TipTypes("Cash", False, False)
+        Public Shared Cash As New TipType("Cash", False, False)
 
         ''' <summary>
         ''' Gets a collection containing all defined tip types.
         ''' </summary>
         ''' <returns>An enumerable of defined tip types.</returns>
-        Public Shared ReadOnly Iterator Property Values As IEnumerable(Of TipTypes)
+        Public Shared ReadOnly Iterator Property Values As IEnumerable(Of TipType)
             Get
                 Yield CreditCard
                 Yield RoomCharge

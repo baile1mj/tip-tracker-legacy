@@ -13,12 +13,12 @@ Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
     
-    Private ReadOnly _totalLabelLookup As Dictionary(Of TipTypes, Label)
+    Private ReadOnly _totalLabelLookup As Dictionary(Of TipType, Label)
     
     Public Sub New(file As PayPeriodFile, data As PayPeriodData)
         InitializeComponent()
 
-        _totalLabelLookup = New Dictionary(Of TipTypes, Label) From { _
+        _totalLabelLookup = New Dictionary(Of TipType, Label) From { _
             {TipTypes.CreditCard, lblCCTotal}    , _
             {TipTypes.RoomCharge, lblRCTotal}, _
             {TipTypes.Cash, lblCATotal}, _
@@ -273,7 +273,7 @@ Public Class frmEnterTips
         Return FileDataSet.SpecialFunctions.FindBySpecialFunction(selectedFunction)
     End Function
 
-    Private Sub AddTip(server As FileDataSet.ServersRow, tipAmount As Decimal, tipType As TipTypes,
+    Private Sub AddTip(server As FileDataSet.ServersRow, tipAmount As Decimal, tipType As TipType,
         Optional specialFunction As FileDataSet.SpecialFunctionsRow = Nothing)
         Dim newTipRow = Data.FileDataSet.Tips.NewTipsRow()
 
@@ -297,7 +297,7 @@ Public Class frmEnterTips
         Data.FileDataSet.Tips.AddTipsRow(newTipRow)
     End Sub
 
-    Private Sub EditTip(bindingSource As BindingSource, sourceType As TipTypes)
+    Private Sub EditTip(bindingSource As BindingSource, sourceType As TipType)
         Dim selectedTip = GetSelectedTip(bindingSource)
         Dim servers = GetServers()
         Dim server = servers.First(Function(s) s.PosId = selectedTip.ServerNumber)
@@ -342,7 +342,7 @@ Public Class frmEnterTips
         End Using
     End Sub
 
-    Private Sub UpdateTotal(tipType As TipTypes, Optional specialFunction As String = Nothing)
+    Private Sub UpdateTotal(tipType As TipType, Optional specialFunction As String = Nothing)
         Dim amountLabel = _totalLabelLookup(tipType)
         Dim isCandidateTip As Func(Of FileDataSet.TipsRow, Boolean) = Function(r) _
             r.RowState <> DataRowState.Deleted _
@@ -385,7 +385,7 @@ Public Class frmEnterTips
             "Confirm Delete", MessageBoxButtons.YesNo) = DialogResult.Yes
     End Function
 
-    Private Sub PerformTipDeletion(bindingSource As BindingSource, tipType As TipTypes, Optional specialFunction As String = Nothing)
+    Private Sub PerformTipDeletion(bindingSource As BindingSource, tipType As TipType, Optional specialFunction As String = Nothing)
         Dim selectedRow As FileDataSet.TipsRow = GetSelectedTip(bindingSource)
         If Not ConfirmTipDeletion(selectedRow) Then Exit Sub
 
