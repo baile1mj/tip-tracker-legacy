@@ -41,24 +41,45 @@ Namespace Utilities
         End Function
 
         ''' <summary>
+        ''' Gets the <see cref="TipType"/> instance represented by a specified string.
+        ''' </summary>
+        ''' <param name="value">The value to parse.</param>
+        ''' <returns>The tip type represented by the specified string.</returns>
+        ''' <exception cref="ArgumentException">If the specified value does not represent a valid tip type.</exception>
+        Public Shared Function Parse(value As String) As TipType
+            Select Case value
+                Case CreditCard.Name
+                    Return CreditCard
+                Case RoomCharge.Name
+                    Return RoomCharge
+                Case Cash.Name
+                    Return Cash
+                Case SpecialFunction.Name
+                    Return SpecialFunction
+                Case Else
+                    Throw New ArgumentException($"The specified value {value} does not correspond to a valid tip type.")
+            End Select
+        End Function
+
+        ''' <summary>
         ''' Defines tips received from credit card sales.
         ''' </summary>
-        Public Shared CreditCard As New TipType("Credit Card", True, False)
+        Public Shared CreditCard As New TipType("Credit Card", TipClassification.ChargeTips, True, False)
 
         ''' <summary>
         ''' Defines tips received from room charge sales.
         ''' </summary>
-        Public Shared RoomCharge As New TipType("Room Charge", True, False)
+        Public Shared RoomCharge As New TipType("Room Charge", TipClassification.ChargeTips, True, False)
 
         ''' <summary>
         ''' Defines tips received from special events.
         ''' </summary>
-        Public Shared SpecialFunction As New TipType("Special Function", False, True)
+        Public Shared SpecialFunction As New TipType("Special Function", TipClassification.ChargeTips, False, True)
 
         ''' <summary>
         ''' Defines tips received from cash sales.
         ''' </summary>
-        Public Shared Cash As New TipType("Cash", False, False)
+        Public Shared Cash As New TipType("Cash", TipClassification.CashTips, False, False)
 
         ''' <summary>
         ''' Gets a collection containing all defined tip types.

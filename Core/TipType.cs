@@ -11,6 +11,11 @@
         public string Name { get; }
 
         /// <summary>
+        /// Gets the classification for this tip type.
+        /// </summary>
+        public TipClassification Classification { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the user can specify the business date for tips of this type.
         /// </summary>
         public bool CanSpecifyDate { get; }
@@ -24,12 +29,14 @@
         /// Creates a new <see cref="TipType"/> instance.
         /// </summary>
         /// <param name="name">The name of the type.</param>
+        /// <param name="classification">The classification for the tip type.</param>
         /// <param name="canSpecifyDate">True if the user can specify the date for tips of this type; false if the date
         /// is calculated.</param>
         /// <param name="isEventOriginated">True if tips of this type originate from events; otherwise, false.</param>
-        public TipType(string name, bool canSpecifyDate, bool isEventOriginated)
+        public TipType(string name, TipClassification classification, bool canSpecifyDate, bool isEventOriginated)
         {
             Name = name;
+            Classification = classification;
             CanSpecifyDate = canSpecifyDate;
             IsEventOriginated = isEventOriginated;
         }
