@@ -232,6 +232,7 @@
     <Compile Include="frmSettings.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Utilities\BusinessObjectService.vb" />
     <Compile Include="Utilities\GlobalFileDialogOptions.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
