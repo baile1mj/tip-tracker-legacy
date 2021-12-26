@@ -1,4 +1,6 @@
-﻿namespace TipTracker.Core
+﻿using System.Collections.Generic;
+
+namespace TipTracker.Core
 {
     /// <summary>
     /// Represents a server who receives tips.
@@ -26,6 +28,11 @@
         /// for this server.
         /// </summary>
         public bool SuppressChit { get; set; }
+
+        /// <summary>
+        /// Gets the collection of tips earned by the server.
+        /// </summary>
+        public List<Tip> Tips { get; } = new List<Tip>();
 
         /// <summary>
         /// Creates a deep copy of this instance.
