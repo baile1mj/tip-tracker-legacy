@@ -64,22 +64,22 @@ Namespace Utilities
         ''' <summary>
         ''' Defines tips received from credit card sales.
         ''' </summary>
-        Public Shared CreditCard As New TipType("Credit Card", TipClassification.ChargeTips, True, False)
+        Public Shared CreditCard As New TipType("Credit Card", TipClassification.ChargeTips, False)
 
         ''' <summary>
         ''' Defines tips received from room charge sales.
         ''' </summary>
-        Public Shared RoomCharge As New TipType("Room Charge", TipClassification.ChargeTips, True, False)
+        Public Shared RoomCharge As New TipType("Room Charge", TipClassification.ChargeTips, False)
 
         ''' <summary>
         ''' Defines tips received from special events.
         ''' </summary>
-        Public Shared SpecialFunction As New TipType("Special Function", TipClassification.ChargeTips, False, True)
+        Public Shared SpecialFunction As New TipType("Special Function", TipClassification.ChargeTips, True)
 
         ''' <summary>
         ''' Defines tips received from cash sales.
         ''' </summary>
-        Public Shared Cash As New TipType("Cash", TipClassification.CashTips, False, False)
+        Public Shared Cash As New TipType("Cash", TipClassification.CashTips, False)
 
         ''' <summary>
         ''' Gets a collection containing all defined tip types.

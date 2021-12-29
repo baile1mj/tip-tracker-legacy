@@ -16,9 +16,21 @@
         public TipClassification Classification { get; }
 
         /// <summary>
+        /// Gets a value indicating whether tips of this type are payable (or pre-paid) to the server.
+        /// </summary>
+        public bool IsPayable => Classification == TipClassification.ChargeTips;
+
+        /// <summary>
+        /// Gets a value indicating whether tips of this type are claimed by (or on behalf of)
+        /// the server for tax purposes.  Claimed tips apply to the pay period and not a specific
+        /// date within the pay period.
+        /// </summary>
+        public bool IsClaimedTip => !IsPayable;
+
+        /// <summary>
         /// Gets a value indicating whether the user can specify the business date for tips of this type.
         /// </summary>
-        public bool CanSpecifyDate { get; }
+        public bool CanSpecifyDate => IsPayable && !IsEventOriginated;
 
         /// <summary>
         /// Gets a value indicating whether tips of this type originate from events.
@@ -33,11 +45,10 @@
         /// <param name="canSpecifyDate">True if the user can specify the date for tips of this type; false if the date
         /// is calculated.</param>
         /// <param name="isEventOriginated">True if tips of this type originate from events; otherwise, false.</param>
-        public TipType(string name, TipClassification classification, bool canSpecifyDate, bool isEventOriginated)
+        public TipType(string name, TipClassification classification, bool isEventOriginated)
         {
             Name = name;
             Classification = classification;
-            CanSpecifyDate = canSpecifyDate;
             IsEventOriginated = isEventOriginated;
         }
 
