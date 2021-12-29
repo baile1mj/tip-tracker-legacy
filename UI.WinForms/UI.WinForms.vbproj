@@ -279,6 +279,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\PrintDocumentFactory.vb" />
     <Compile Include="Utilities\SortableBindingList.vb" />
     <Compile Include="Utilities\TipTypes.vb" />
   </ItemGroup>
@@ -363,6 +364,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmSettings.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmReportPreview.resx">
+      <DependentUpon>frmReportPreview.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -383,6 +387,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
     <None Include="ServersLookupDataset.xsc">
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </None>

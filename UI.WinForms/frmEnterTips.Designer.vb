@@ -23,10 +23,10 @@ Partial Class frmEnterTips
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEnterTips))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.FileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         Me.strStatusStrip = New System.Windows.Forms.StatusStrip()
@@ -183,6 +183,7 @@ Partial Class frmEnterTips
         Me.TextBox10 = New System.Windows.Forms.TextBox()
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
+        Me.ReportViewer1 = New Microsoft.Reporting.WinForms.ReportViewer()
         CType(Me.ServersBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.FileDataSet,System.ComponentModel.ISupportInitialize).BeginInit
         Me.strStatusStrip.SuspendLayout
@@ -502,9 +503,9 @@ Partial Class frmEnterTips
         'CCAmount
         '
         Me.CCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle1.Format = "N2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle5.Format = "N2"
+        DataGridViewCellStyle5.NullValue = Nothing
+        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle5
         Me.CCAmount.HeaderText = "Amount"
         Me.CCAmount.Name = "CCAmount"
         Me.CCAmount.ReadOnly = true
@@ -685,8 +686,8 @@ Partial Class frmEnterTips
         'RCAmount
         '
         Me.RCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle2.Format = "N2"
-        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle6.Format = "N2"
+        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle6
         Me.RCAmount.HeaderText = "Amount"
         Me.RCAmount.Name = "RCAmount"
         Me.RCAmount.ReadOnly = true
@@ -908,8 +909,8 @@ Partial Class frmEnterTips
         'CAAmount
         '
         Me.CAAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle3.Format = "N2"
-        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle7.Format = "N2"
+        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle7
         Me.CAAmount.HeaderText = "Amount"
         Me.CAAmount.Name = "CAAmount"
         Me.CAAmount.ReadOnly = true
@@ -1139,8 +1140,8 @@ Partial Class frmEnterTips
         'SFAmount
         '
         Me.SFAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle4.Format = "N2"
-        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle8.Format = "N2"
+        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle8
         Me.SFAmount.HeaderText = "Amount"
         Me.SFAmount.Name = "SFAmount"
         Me.SFAmount.ReadOnly = true
@@ -1619,6 +1620,13 @@ Partial Class frmEnterTips
         Me.TextBox12.TabIndex = 7
         Me.TextBox12.TabStop = false
         '
+        'ReportViewer1
+        '
+        Me.ReportViewer1.Location = New System.Drawing.Point(0, 0)
+        Me.ReportViewer1.Name = "ReportViewer"
+        Me.ReportViewer1.Size = New System.Drawing.Size(396, 246)
+        Me.ReportViewer1.TabIndex = 0
+        '
         'frmEnterTips
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -1828,4 +1836,5 @@ End Sub
     Friend WithEvents SFFirstName As DataGridViewTextBoxColumn
     Friend WithEvents SFLastName As DataGridViewTextBoxColumn
     Friend WithEvents SFSpecialFunction As DataGridViewTextBoxColumn
+    Friend WithEvents ReportViewer1 As Microsoft.Reporting.WinForms.ReportViewer
 End Class

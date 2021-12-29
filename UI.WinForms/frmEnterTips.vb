@@ -1,8 +1,10 @@
 Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Linq
+Imports Microsoft.Reporting.WinForms
 Imports TipTracker.Common.Data.PayPeriod
 Imports TipTracker.Core
+Imports TipTracker.Core.Reporting
 Imports TipTracker.Utilities
 
 Public Class frmEnterTips
@@ -768,10 +770,25 @@ Public Class frmEnterTips
         Data.FileDataSet.Servers.Merge(DirectCast(MdiParent, frmMain).GetTemplateServers())
     End Sub
 
+    Private Function GetServerTips() As IEnumerable(Of Server) 
+
+    End Function
+
     Private Sub mnuPrintTipChits_Click(sender As Object, e As EventArgs) Handles mnuPrintRegularTipChits.Click
-        frmPrintRegularTipChits.m_dsParentDataset = Data.FileDataSet
-        frmPrintRegularTipChits.ShowDialog()
-        frmPrintRegularTipChits.Dispose()
+        Dim objectService  As New BusinessObjectService(Data)
+        Dim types = TipTypes.Values
+        Dim payPeriod = objectService.GetPayPeriod()
+        Dim servers = objectService.GetTips() _
+            .Select(Function (t) t.EarnedBy) _
+            .Distinct() _
+            .Select(Function(s) s.Clone(New TipChitDataBuilder(payPeriod, s, types).GetPreparedTips())) _
+            .OrderBy(Function(s) s.LastName) _
+            .ThenBy(Function(s) s.FirstName) _
+            .ThenBy(Function(s) s.PosId)
+        
+        Using printer As New frmPrintRegularTipChits(servers)
+            printer.ShowDialog()
+        End Using
     End Sub
 
     Private Sub btnManageFunctions_Click(sender As Object, e As EventArgs) Handles btnManageFunctions.Click
