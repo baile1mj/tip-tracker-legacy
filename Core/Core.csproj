@@ -44,12 +44,22 @@
     <Compile Include="Event.cs" />
     <Compile Include="PayPeriod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reporting\ReportDefinitions.cs" />
     <Compile Include="Reporting\TipChitDataBuilder.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Tip.cs" />
     <Compile Include="TipClassification.cs" />
     <Compile Include="TipType.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reporting\TipChit.rdlc" />
+  </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="Properties\DataSources\Event.datasource" />
+    <None Include="Properties\DataSources\Server.datasource" />
+    <None Include="Properties\DataSources\Tip.datasource" />
+    <None Include="Properties\DataSources\TipType.datasource" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
