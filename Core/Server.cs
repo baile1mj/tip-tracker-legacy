@@ -35,18 +35,36 @@ namespace TipTracker.Core
         public List<Tip> Tips { get; } = new List<Tip>();
 
         /// <summary>
-        /// Creates a deep copy of this instance.
+        /// Creates a shallow copy of this instance.
         /// </summary>
         /// <returns>The copy of this server.</returns>
         public Server Clone()
         {
-            return new Server
+            var clone = new Server
             {
                 PosId = PosId,
                 FirstName = FirstName,
                 LastName = LastName,
                 SuppressChit = SuppressChit
             };
+
+            clone.Tips.AddRange(Tips);
+
+            return clone;
+        }
+
+        /// <summary>
+        /// Creates a shallow copy of this instance with the specified tips.
+        /// </summary>
+        /// <param name="tips">The tips to add to the instance.</param>
+        /// <returns>The copy of this server.</returns>
+        public Server Clone(IEnumerable<Tip> tips)
+        {
+            var clone = this.Clone();
+            clone.Tips.Clear();
+            clone.Tips.AddRange(tips);
+
+            return clone;
         }
 
         /// <summary>
