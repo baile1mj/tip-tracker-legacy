@@ -256,6 +256,8 @@
     <Compile Include="frmReportPreview.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Reporting\ReportBuilder.vb" />
+    <Compile Include="Reporting\TipChitBuilder.vb" />
     <Compile Include="Utilities\BusinessObjectService.vb" />
     <Compile Include="Utilities\GlobalFileDialogOptions.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

@@ -1,8 +1,6 @@
 Imports System.Linq
-Imports Microsoft.Reporting.WinForms
 Imports TipTracker.Core
-Imports TipTracker.Core.Reporting
-Imports TipTracker.Utilities
+Imports TipTracker.Reporting
 
 Public Class frmPrintRegularTipChits
     Private ReadOnly _servers as List(Of Server)
@@ -17,39 +15,13 @@ Public Class frmPrintRegularTipChits
 
         optAll.Checked = true
     End sub
-
-    Private Sub PrepareReport(report As LocalReport) 
+    
+    Private Function GetReportBuilder() As ReportBuilder
         Dim servers = If(cboSelectServer.SelectedItem IsNot Nothing, _
-            New List(Of Server) From { CType(cboSelectServer.SelectedItem, Server) }, _
+            New List(Of Server) From {CType(cboSelectServer.SelectedItem, Server)}, _
             _servers)
-        Dim tips = servers.SelectMany(Function (s) s.Tips)
-        Dim reportDefinition  = ReportDefinitions.TipChit
-        Dim serverDataSource  = New ReportDataSource("Servers", _servers _
-            .Select(Function(s) New With {
-                .PosId = s.PosId,
-                .LastName = s.LastName,
-                .FirstName = s.FirstName}))
-        Dim tipsDataSource = New ReportDataSource("Tips", tips _
-            .Select(Function(t) New With {
-                .Amount = t.Amount,
-                .EarnedBy = t.EarnedBy.PosId,
-                .EarnedOn = t.EarnedOn,
-                .Type = t.Type.Name,
-                .[Event] = If (IsNothing(t.Event), String.Empty, t.Event.Name)}))
-        Dim tipTypesDataSource = New ReportDataSource("TipTypes", TipTypes.Values)
 
-        report.DisplayName = "Tip Chits"
-        report.LoadReportDefinition(reportDefinition)
-        report.DataSources.Add(serverDataSource)
-        report.DataSources.Add(tipsDataSource)
-        report.DataSources.Add(tipTypesDataSource)
-    End Sub
-
-    Private Function BuildReport() As LocalReport
-        Dim report As New LocalReport()
-        PrepareReport(report)
-
-        Return report
+        Return New TipChitBuilder(servers)
     End Function
 
     Private Sub optAll_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles optAll.CheckedChanged
@@ -74,7 +46,8 @@ Public Class frmPrintRegularTipChits
 
         Cursor.Current = Cursors.WaitCursor
 
-        Using viewer As New frmReportPreview(AddressOf PrepareReport)            
+        Dim builder = GetReportBuilder()
+        Using viewer As New frmReportPreview(AddressOf builder.PrepareReport)            
             viewer.ShowDialog()
         End Using
         
@@ -89,7 +62,7 @@ Public Class frmPrintRegularTipChits
 
         Cursor.Current = Cursors.WaitCursor
 
-        Dim report = BuildReport()
+        Dim report = GetReportBuilder().BuildPreparedReport()
         Dim documentFactory As New PrintDocumentFactory(report)
         Dim document = documentFactory.BuildPrintDocument("Tip Chits")
         Dim dlgPrint As New PrintDialog
