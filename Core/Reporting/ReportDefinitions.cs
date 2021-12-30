@@ -13,5 +13,11 @@ namespace TipTracker.Core.Reporting
         /// </summary>
         public static Stream TipChit => Assembly.GetAssembly(typeof(ReportDefinitions))
                 .GetManifestResourceStream("TipTracker.Core.Reporting.TipChit.rdlc");
+
+        /// <summary>
+        /// Gets the payroll totals report definition.
+        /// </summary>
+        public static Stream PayrollTotals => Assembly.GetAssembly(typeof(ReportDefinitions))
+            .GetManifestResourceStream("TipTracker.Core.Reporting.PayrollTotals.rdlc");
     }
 }
