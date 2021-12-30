@@ -816,9 +816,14 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuSpecialFunctionReports_Click(sender As Object, e As EventArgs) Handles mnuSpecialFunctionReports.Click
-        frmPrintSpecialFunctionReportV2.m_dsParentDataSet = Data.FileDataSet
-        frmPrintSpecialFunctionReportV2.ShowDialog()
-        frmPrintSpecialFunctionReportV2.Dispose()
+        Dim objectService = New BusinessObjectService(Data)
+        Dim tips   = objectService _
+            .GetTips() _
+            .Where(Function(t) t.Event IsNot Nothing)
+
+        Using dialog As New frmPrintSpecialFunctionReportV2(tips)
+            dialog.ShowDialog()
+        End Using
     End Sub
 
     ''' <summary>
