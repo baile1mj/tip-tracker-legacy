@@ -74,7 +74,7 @@ Public Class frmPrintRegularTipChits
             .AllowSomePages = False
             .Document = document
             .ShowNetwork = True
-            .UseEXDialog = False
+            .UseEXDialog = True
         End With
 
         Try
