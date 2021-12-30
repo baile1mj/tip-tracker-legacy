@@ -821,236 +821,44 @@ Public Class frmEnterTips
         frmPrintSpecialFunctionReportV2.Dispose()
     End Sub
 
-    Private Sub mnuPayrollBalancingReport_Click(sender As Object, e As EventArgs) Handles mnuPayrollBalancingReport.Click
-        Dim docReport As New PrintDocument
-        Dim dlgPrint As New PrintDialog
+    ''' <summary>
+    ''' Prepares a payroll totals report instance with the data necessary to generate the report.
+    ''' </summary>
+    ''' <param name="report"></param>
+    Private Sub PreparePayrollTotals(report As LocalReport) 
+        Dim objectService As New BusinessObjectService(Data)
+        Dim tips = objectService.GetTips()
+        Dim totalsByType = tips _
+            .GroupBy(Function(t) t.Type) _
+            .Select(Function(g) New TipTypeTotal(g.Key, g.Count(), g.Sum(Function(t) t.Amount))) _
+            .OrderBy(Function(t) t.Type.Classification.SortIndex) _
+            .ThenBy(Function(t) t.Type.Name) _
+            .Select(Function(s) s.ToAnonymous())
 
-        With dlgPrint
-            .AllowCurrentPage = False
-            .AllowPrintToFile = False
-            .AllowSelection = False
-            .AllowSomePages = False
-            .PrintToFile = False
-            .ShowNetwork = True
-            .UseEXDialog = False
-        End With
+        Dim payPeriod = objectService.GetPayPeriod()
 
-        docReport.DocumentName = "Tip Report"
-        With docReport.DefaultPageSettings.Margins
-            .Top = 75
-            .Bottom = 75
-            .Left = 75
-            .Right = 75
-        End With
+        report.DisplayName = "Payroll Totals Report"
+        report.LoadReportDefinition(ReportDefinitions.PayrollTotals)
 
-        AddHandler docReport.PrintPage, AddressOf PrintPayrollBalancingReport
-
-        dlgPrint.Document = docReport
-
-        If dlgPrint.ShowDialog() <> DialogResult.OK Then
-            dlgPrint.Dispose()
-            docReport = Nothing
-            Exit Sub
-        End If
-
-        Try
-            docReport.Print()
-        Catch ex As Exception
-            MessageBox.Show("Could not print the document.  Check that there is a printer installed and that a default printer has been selected.", "Cannot Print Document", MessageBoxButtons.OK)
-        End Try
-
-        dlgPrint.Dispose()
-
-        docReport = Nothing
+        report.SetParameters(New ReportParameter("StartDate", payPeriod.Start.ToString(DATE_FORMAT)))
+        report.SetParameters(New ReportParameter("EndDate", payPeriod.End.ToString(DATE_FORMAT)))
+        report.DataSources.Add(New ReportDataSource("TipTypeTotals", totalsByType))
+        report.DataSources.Add(New ReportDataSource("TipClassifications", TipClassification.Classes))
     End Sub
 
-    Private Sub PrintPayrollBalancingReport(sender As Object, e As PrintPageEventArgs)
-        Dim font As New Font("Calibri", 12)
-        Dim fontBold As New Font("Calibri", 12, FontStyle.Bold)
-
-        Dim fmt As New StringFormat(StringFormatFlags.LineLimit)
-
-        'Initialize local static variables that contain the current line position and
-        'the current page number.
-        Dim intPosition As Single = e.MarginBounds.Top
-        Dim intPageNumber = 1
-
-        Const intLineSpacing = 18
-        Const intExtraLineSpacing = 36
-        Const intIndent = 425
-
-        Dim intStrLen As Integer
-
-        'Initialize local constants that contain the normal line spacing and padded 
-        'line spacing (double spacing).
-        Dim intPrintAreaHeight, intPrintAreaWidth, marginLeft, marginTop As Integer
-
-        With e.MarginBounds
-            ' Initialize local variables that contain the bounds of the printing 
-            ' area rectangle.
-            intPrintAreaHeight = .Height
-            intPrintAreaWidth = .Width
-
-            ' Initialize local variables to hold margin values that will serve
-            ' as the X and Y coordinates for the upper left corner of the printing 
-            ' area rectangle.
-            marginLeft = .Left ' X coordinate
-            marginTop = .Top ' Y coordinate
-        End With
-
-        'Draw the header to the page.  Header will be drawn on every page.
-        e.Graphics.DrawString("Payroll Balancing Report", font, Brushes.Black, marginLeft, intPosition)
-        intPosition += intLineSpacing
-
-        e.Graphics.DrawString(DateTime.Now.ToString(REPORT_DATE_TIME_FORMAT), font, Brushes.Black, marginLeft, intPosition)
-        intPosition += intLineSpacing
-
-        e.Graphics.DrawString("Page " & intPageNumber, font, Brushes.Black, marginLeft, intPosition)
-        intPosition += intExtraLineSpacing
-
-        Dim dvTips As New DataView
-
-        dvTips.Table = Data.FileDataSet.Tips
-        dvTips.Sort = "Description"
-
-        Dim decCCTotal As Decimal = 0
-        Dim decRCTotal As Decimal = 0
-        Dim decSFTotal As Decimal = 0
-        Dim decChargeTips As Decimal = 0
-        Dim decCATotal As Decimal = 0
-
-        Dim intCCs = 0
-        Dim intRCs = 0
-        Dim intSFs = 0
-        Dim intCAs = 0
-
-        For i = 0 To dvTips.Count - 1
-            Dim strDescription As String = dvTips.Item(i)("Description").ToString
-            Dim decAmount = CDec(dvTips.Item(i)("Amount"))
-
-            Select Case strDescription
-                Case "Credit Card"
-                    decCCTotal += decAmount
-                    intCCs += 1
-                Case "Room Charge"
-                    decRCTotal += decAmount
-                    intRCs += 1
-                Case "Special Function"
-                    decSFTotal += decAmount
-                    intSFs += 1
-                Case "Cash"
-                    decCATotal += decAmount
-                    intCAs += 1
-            End Select
-        Next
-
-        decChargeTips = decCCTotal + decRCTotal + decSFTotal
-
-        'Draw Credit Card total.
-        e.Graphics.DrawString("Credit Card", font, Brushes.Black, marginLeft, intPosition)
-
-        intStrLen = CInt(e.Graphics.MeasureString(intCCs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intCCs.ToString), 1).Width)
-
-        e.Graphics.DrawString(intCCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
-
-        Dim strCCTotal As String = decCCTotal.ToString(AMOUNT_FORMAT)
-
-        intStrLen = CInt(e.Graphics.MeasureString(strCCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intCCs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strCCTotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
-
-        intPosition += intLineSpacing
-
-        'Draw Room Charge total.
-        e.Graphics.DrawString("Room Charge", font, Brushes.Black, marginLeft, intPosition)
-
-        intStrLen = CInt(e.Graphics.MeasureString(intRCs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intRCs.ToString), 1).Width)
-
-        e.Graphics.DrawString(intRCs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
-
-        Dim strRCTotal As String = decRCTotal.ToString(AMOUNT_FORMAT)
-
-        intStrLen = CInt(e.Graphics.MeasureString(strRCTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intRCs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strRCTotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
-
-        intPosition += intLineSpacing
-
-        'Draw Special Function total.
-        e.Graphics.DrawString("Special Function", font, Brushes.Black, marginLeft, intPosition)
-
-        intStrLen = CInt(e.Graphics.MeasureString(intSFs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intSFs.ToString), 1).Width)
-
-        e.Graphics.DrawString(intSFs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
-
-        Dim strSFTotal As String = decSFTotal.ToString(AMOUNT_FORMAT)
-
-        intStrLen = CInt(e.Graphics.MeasureString(strSFTotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intSFs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strSFTotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
-
-        intPosition += intExtraLineSpacing
-
-        'Draw total charge tips.
-        e.Graphics.DrawString("Total Charge Tips", fontBold, Brushes.Black, marginLeft, intPosition)
-
-        Dim strCharges = CStr(intCCs + intRCs + intSFs)
-        intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-                    Len(intSFs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strCharges, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
-
-        Dim strChargeTotal As String = decChargeTips.ToString(AMOUNT_FORMAT)
-
-        intStrLen = CInt(e.Graphics.MeasureString(strChargeTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intSFs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strChargeTotal, fontBold, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
-
-        intPosition += intExtraLineSpacing
-
-        'Draw Cash total.
-        e.Graphics.DrawString("Cash", font, Brushes.Black, marginLeft, intPosition)
-
-        intStrLen = CInt(e.Graphics.MeasureString(intCAs.ToString, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intCAs.ToString), 1).Width)
-
-        e.Graphics.DrawString(intCAs.ToString, font, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
-
-        Dim strCATotal As String = decCATotal.ToString(AMOUNT_FORMAT)
-
-        intStrLen = CInt(e.Graphics.MeasureString(strCATotal, font, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intCAs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strCATotal, font, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
-
-        intPosition += intExtraLineSpacing
-
-        'Draw total tips.
-        e.Graphics.DrawString("TOTAL TIPS", fontBold, Brushes.Black, marginLeft, intPosition)
-
-        Dim strTotal = CStr(intCCs + intRCs + intSFs + intCAs)
-        intStrLen = CInt(e.Graphics.MeasureString(strCharges, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-                    Len(intSFs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strTotal, fontBold, Brushes.Black, marginLeft + intIndent - intStrLen, intPosition)
-
-        Dim strGrandTotal As String = (decChargeTips + decCATotal).ToString(AMOUNT_FORMAT)
-
-        intStrLen = CInt(e.Graphics.MeasureString(strGrandTotal, fontBold, New SizeF(intPrintAreaWidth, intPrintAreaHeight), fmt,
-            Len(intSFs.ToString), 1).Width)
-
-        e.Graphics.DrawString(strGrandTotal, fontBold, Brushes.Black, marginLeft + intPrintAreaWidth - intStrLen, intPosition)
-
-        intPosition += intLineSpacing
-
-        e.HasMorePages = False
+    Private Sub mnuPayrollBalancingReport_Click(sender As Object, e As EventArgs) Handles mnuPayrollBalancingReport.Click
+        Cursor.Current = Cursors.WaitCursor
+        
+        Try
+            Using viewer = New frmReportPreview(AddressOf PreparePayrollTotals)
+                viewer.ShowDialog()
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Failed to generate the requested report.  Please verify that a printer is installed and that a " & _
+                "default printer has been selected.", "Report Generation Failed", MessageBoxButtons.OK)
+        End Try
+        
+        Cursor.Current = Cursors.Default
     End Sub
 
     Private Sub mnuAutoAddServers_Click(sender As Object, e As EventArgs) Handles mnuAutoAddServers.Click
