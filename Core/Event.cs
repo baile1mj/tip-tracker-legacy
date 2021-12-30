@@ -16,5 +16,11 @@ namespace TipTracker.Core
         /// Gets the date the event occurred.
         /// </summary>
         public DateTime Date { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"{Name} ({Date:M/d/yyyy})";
+        }
     }
 }
