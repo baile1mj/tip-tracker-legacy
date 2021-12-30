@@ -19,5 +19,11 @@ namespace TipTracker.Core.Reporting
         /// </summary>
         public static Stream PayrollTotals => Assembly.GetAssembly(typeof(ReportDefinitions))
             .GetManifestResourceStream("TipTracker.Core.Reporting.PayrollTotals.rdlc");
+
+        /// <summary>
+        /// Gets the event details report definition.
+        /// </summary>
+        public static Stream EventDetails => Assembly.GetAssembly(typeof(ReportDefinitions))
+            .GetManifestResourceStream("TipTracker.Core.Reporting.EventDetail.rdlc");
     }
 }

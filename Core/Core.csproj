@@ -53,6 +53,7 @@
     <Compile Include="TipType.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reporting\EventDetail.rdlc" />
     <EmbeddedResource Include="Reporting\PayrollTotals.rdlc" />
     <EmbeddedResource Include="Reporting\TipChit.rdlc" />
   </ItemGroup>
