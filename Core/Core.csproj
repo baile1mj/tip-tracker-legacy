@@ -56,6 +56,8 @@
     <EmbeddedResource Include="Reporting\EventDetail.rdlc" />
     <EmbeddedResource Include="Reporting\PayrollTotals.rdlc" />
     <EmbeddedResource Include="Reporting\TipChit.rdlc" />
+    <EmbeddedResource Include="Reporting\TipsByDate.rdlc" />
+    <EmbeddedResource Include="Reporting\TipsByServer.rdlc" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

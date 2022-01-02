@@ -25,5 +25,17 @@ namespace TipTracker.Core.Reporting
         /// </summary>
         public static Stream EventDetails => Assembly.GetAssembly(typeof(ReportDefinitions))
             .GetManifestResourceStream("TipTracker.Core.Reporting.EventDetail.rdlc");
+
+        /// <summary>
+        /// Gets the report definition for tips sorted by server.
+        /// </summary>
+        public static Stream TipsByServer => Assembly.GetAssembly(typeof(ReportDefinitions))
+            .GetManifestResourceStream("TipTracker.Core.Reporting.TipsByServer.rdlc");
+
+        /// <summary>
+        /// Gets the report definition for tips sorted by date.
+        /// </summary>
+        public static Stream TipsByDate => Assembly.GetAssembly(typeof(ReportDefinitions))
+            .GetManifestResourceStream("TipTracker.Core.Reporting.TipsByDate.rdlc");
     }
 }
