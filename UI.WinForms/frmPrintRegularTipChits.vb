@@ -64,7 +64,7 @@ Public Class frmPrintRegularTipChits
 
         Dim report = GetReportBuilder().BuildPreparedReport()
         Dim documentFactory As New PrintDocumentFactory(report)
-        Dim document = documentFactory.BuildPrintDocument("Tip Chits")
+        Dim document = documentFactory.BuildPrintDocument(report.DisplayName)
         Dim dlgPrint As New PrintDialog
 
         With dlgPrint
