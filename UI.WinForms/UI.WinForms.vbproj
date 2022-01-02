@@ -259,6 +259,8 @@
     <Compile Include="Reporting\EventReportBuilder.vb" />
     <Compile Include="Reporting\ReportBuilder.vb" />
     <Compile Include="Reporting\TipChitBuilder.vb" />
+    <Compile Include="Reporting\TipsByDateBuilder.vb" />
+    <Compile Include="Reporting\TipsByServerBuilder.vb" />
     <Compile Include="Utilities\BusinessObjectService.vb" />
     <Compile Include="Utilities\GlobalFileDialogOptions.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

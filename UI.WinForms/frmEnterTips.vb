@@ -810,9 +810,11 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuTipReports_Click(sender As Object, e As EventArgs) Handles mnuTipReports.Click
-        frmPrintTipReportsV2.m_dsParentDataSet = Data.FileDataSet
-        frmPrintTipReportsV2.ShowDialog()
-        frmPrintTipReportsV2.Dispose()
+        Dim objectService As New BusinessObjectService(Data)
+
+        Using options As New frmPrintTipReportsV2(objectService.GetPayPeriod(), objectService.GetTips())
+            options.ShowDialog()
+        End Using
     End Sub
 
     Private Sub mnuSpecialFunctionReports_Click(sender As Object, e As EventArgs) Handles mnuSpecialFunctionReports.Click
