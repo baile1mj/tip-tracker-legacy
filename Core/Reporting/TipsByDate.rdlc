@@ -250,6 +250,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -398,7 +399,7 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Type1">
+                        <Textbox Name="Type3">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -415,7 +416,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Type1</rd:DefaultName>
+                          <rd:DefaultName>Type3</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -432,7 +433,7 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Amount1">
+                        <Textbox Name="Amount2">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -448,7 +449,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Amount1</rd:DefaultName>
+                          <rd:DefaultName>Amount2</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -928,6 +929,11 @@
                           <TablixMembers>
                             <TablixMember>
                               <Group Name="Details" />
+                              <SortExpressions>
+                                <SortExpression>
+                                  <Value>=Fields!EarnedBy.Value</Value>
+                                </SortExpression>
+                              </SortExpressions>
                             </TablixMember>
                             <TablixMember>
                               <KeepWithGroup>Before</KeepWithGroup>
@@ -937,17 +943,17 @@
                             <Hidden>=Parameters!IsSummary.Value</Hidden>
                           </Visibility>
                         </TablixMember>
+                        <TablixMember>
+                          <Group Name="TypeSummary">
+                            <GroupExpressions>
+                              <GroupExpression>=Fields!Type.Value</GroupExpression>
+                            </GroupExpressions>
+                          </Group>
+                          <Visibility>
+                            <Hidden>=Not(Parameters!IsSummary.Value)</Hidden>
+                          </Visibility>
+                        </TablixMember>
                       </TablixMembers>
-                    </TablixMember>
-                    <TablixMember>
-                      <Group Name="ClassificationSummary">
-                        <GroupExpressions>
-                          <GroupExpression>=Lookup(Fields!Type.Value, Fields!Name.Value, Fields!Classification.Value, "TipTypes")</GroupExpression>
-                        </GroupExpressions>
-                      </Group>
-                      <Visibility>
-                        <Hidden>=Not(Parameters!IsSummary.Value)</Hidden>
-                      </Visibility>
                     </TablixMember>
                     <TablixMember />
                   </TablixMembers>
@@ -994,7 +1000,7 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>3.41542in</Height>
+        <Height>3.43625in</Height>
         <Style />
       </Body>
       <Width>6.5in</Width>
