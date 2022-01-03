@@ -77,7 +77,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Payroll Totals Report</Value>
+                    <Value>Payroll Totals</Value>
                     <Style>
                       <FontSize>16pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -107,7 +107,21 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=("Pay Period " &amp; Parameters!StartDate.Value &amp; " through " &amp; Parameters!EndDate.Value)</Value>
+                    <Value>Pay Period </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>Start</Label>
+                    <Value>=Parameters!StartDate.Value</Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Value> through </Value>
+                    <Style />
+                  </TextRun>
+                  <TextRun>
+                    <Label>End</Label>
+                    <Value>=Parameters!EndDate.Value</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -115,7 +129,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.37152in</Top>
+            <Top>0.30208in</Top>
             <Height>0.25in</Height>
             <Width>6.5in</Width>
             <ZIndex>1</ZIndex>
@@ -174,7 +188,16 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>WhiteSmoke</BackgroundColor>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Gainsboro</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -210,12 +233,16 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <LeftBorder>
-                              <Color>White</Color>
+                            <TopBorder>
+                              <Color>Black</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
-                            <BackgroundColor>WhiteSmoke</BackgroundColor>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Gainsboro</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -249,12 +276,16 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <LeftBorder>
-                              <Color>White</Color>
+                            <TopBorder>
+                              <Color>Black</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
-                            <BackgroundColor>WhiteSmoke</BackgroundColor>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Gainsboro</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -277,6 +308,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
+                                  <Label>Classification</Label>
                                   <Value>=UCase(Fields!Classification.Value)</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
@@ -453,11 +485,6 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <LeftBorder>
-                              <Color>White</Color>
-                              <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -489,11 +516,6 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <LeftBorder>
-                              <Color>White</Color>
-                              <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -505,7 +527,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.375in</Height>
+                  <Height>0.25in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -537,10 +559,15 @@
                               <Style>None</Style>
                             </Border>
                             <TopBorder>
-                              <Color>WhiteSmoke</Color>
+                              <Color>Gainsboro</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
+                              <Width>1pt</Width>
                             </TopBorder>
+                            <BottomBorder>
+                              <Color>Gainsboro</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -577,15 +604,15 @@
                               <Style>None</Style>
                             </Border>
                             <TopBorder>
-                              <Color>WhiteSmoke</Color>
+                              <Color>Gainsboro</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
+                              <Width>1pt</Width>
                             </TopBorder>
-                            <LeftBorder>
-                              <Color>White</Color>
+                            <BottomBorder>
+                              <Color>Gainsboro</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -621,15 +648,15 @@
                               <Style>None</Style>
                             </Border>
                             <TopBorder>
-                              <Color>WhiteSmoke</Color>
+                              <Color>Gainsboro</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
+                              <Width>1pt</Width>
                             </TopBorder>
-                            <LeftBorder>
-                              <Color>White</Color>
+                            <BottomBorder>
+                              <Color>Gainsboro</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -667,7 +694,16 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>WhiteSmoke</BackgroundColor>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -703,17 +739,16 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <LeftBorder>
-                              <Color>White</Color>
+                            <TopBorder>
+                              <Color>Black</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Color>White</Color>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
                               <Style>Solid</Style>
-                              <Width>2pt</Width>
-                            </RightBorder>
-                            <BackgroundColor>WhiteSmoke</BackgroundColor>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -748,12 +783,16 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <LeftBorder>
-                              <Color>White</Color>
+                            <TopBorder>
+                              <Color>Black</Color>
                               <Style>Solid</Style>
-                              <Width>2.25pt</Width>
-                            </LeftBorder>
-                            <BackgroundColor>WhiteSmoke</BackgroundColor>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -810,8 +849,8 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>TipTypeTotals</DataSetName>
-            <Top>0.79513in</Top>
-            <Height>1.375in</Height>
+            <Top>0.69497in</Top>
+            <Height>1.25in</Height>
             <Width>6.5in</Width>
             <ZIndex>2</ZIndex>
             <Style>
@@ -825,13 +864,13 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>2.28in</Height>
+        <Height>1.95949in</Height>
         <Style />
       </Body>
       <Width>6.5in</Width>
       <Page>
         <PageFooter>
-          <Height>0.31944in</Height>
+          <Height>0.35in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -842,22 +881,30 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
+                      <Label>PrintedDateTime</Label>
                       <Value>=Format(Globals!ExecutionTime, "M/d/yyyy h:mm:ss tt")</Value>
                       <Style />
                     </TextRun>
                   </TextRuns>
-                  <Style />
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox50</rd:DefaultName>
-              <Top>0.06944in</Top>
+              <Top>0.1in</Top>
+              <Left>4.00267in</Left>
               <Height>0.25in</Height>
-              <Width>3.25in</Width>
+              <Width>2.49733in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
-                <BackgroundColor>WhiteSmoke</BackgroundColor>
+                <TopBorder>
+                  <Color>Black</Color>
+                  <Style>Solid</Style>
+                  <Width>1pt</Width>
+                </TopBorder>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -871,30 +918,74 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Page </Value>
+                      <Label>Page</Label>
+                      <Value>=Globals!PageNumber</Value>
                       <Style />
                     </TextRun>
                     <TextRun>
-                      <Value>=Globals!PageNumber &amp; " of " &amp; Globals!TotalPages</Value>
+                      <Value> of </Value>
+                      <Style />
+                    </TextRun>
+                    <TextRun>
+                      <Label>Pages</Label>
+                      <Value>=Globals!TotalPages</Value>
                       <Style />
                     </TextRun>
                   </TextRuns>
                   <Style>
-                    <TextAlign>Right</TextAlign>
+                    <TextAlign>Center</TextAlign>
                   </Style>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox51</rd:DefaultName>
-              <Top>0.06944in</Top>
-              <Left>3.25in</Left>
+              <Top>0.1in</Top>
+              <Left>2.49546in</Left>
               <Height>0.25in</Height>
-              <Width>3.25in</Width>
+              <Width>1.50721in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
-                <BackgroundColor>WhiteSmoke</BackgroundColor>
+                <TopBorder>
+                  <Color>Black</Color>
+                  <Style>Solid</Style>
+                  <Width>1pt</Width>
+                </TopBorder>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox4">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Payroll Totals</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox4</rd:DefaultName>
+              <Top>0.1in</Top>
+              <Height>0.25in</Height>
+              <Width>2.49546in</Width>
+              <ZIndex>2</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <TopBorder>
+                  <Color>Black</Color>
+                  <Style>Solid</Style>
+                  <Width>1pt</Width>
+                </TopBorder>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -911,7 +1002,7 @@
         <LeftMargin>1in</LeftMargin>
         <RightMargin>1in</RightMargin>
         <TopMargin>1in</TopMargin>
-        <BottomMargin>1in</BottomMargin>
+        <BottomMargin>0.65in</BottomMargin>
         <Style />
       </Page>
     </ReportSection>

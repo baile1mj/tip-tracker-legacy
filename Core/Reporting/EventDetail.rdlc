@@ -371,6 +371,11 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -410,6 +415,11 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -525,13 +535,13 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>1.74653in</Height>
+        <Height>1.75695in</Height>
         <Style />
       </Body>
       <Width>6.5in</Width>
       <Page>
         <PageFooter>
-          <Height>0.31944in</Height>
+          <Height>0.35in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -542,18 +552,21 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Label>DateTime</Label>
+                      <Label>PrintedDateTime</Label>
                       <Value>=Format(Globals!ExecutionTime, "M/d/yyyy H:mm:ss tt")</Value>
                       <Style />
                     </TextRun>
                   </TextRuns>
-                  <Style />
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox52</rd:DefaultName>
-              <Top>0.06944in</Top>
+              <Top>0.1in</Top>
+              <Left>4.01167in</Left>
               <Height>0.25in</Height>
-              <Width>3.24875in</Width>
+              <Width>2.48833in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -591,16 +604,50 @@
                     </TextRun>
                   </TextRuns>
                   <Style>
-                    <TextAlign>Right</TextAlign>
+                    <TextAlign>Center</TextAlign>
                   </Style>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox53</rd:DefaultName>
-              <Top>0.06944in</Top>
-              <Left>3.24875in</Left>
+              <Top>0.1in</Top>
+              <Left>2.5in</Left>
               <Height>0.25in</Height>
-              <Width>3.25125in</Width>
+              <Width>1.51167in</Width>
               <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <TopBorder>
+                  <Color>Black</Color>
+                  <Style>Solid</Style>
+                  <Width>1pt</Width>
+                </TopBorder>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox2">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Special Function Details</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox2</rd:DefaultName>
+              <Top>0.1in</Top>
+              <Height>0.25in</Height>
+              <Width>2.5in</Width>
+              <ZIndex>2</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -626,7 +673,7 @@
         <LeftMargin>1in</LeftMargin>
         <RightMargin>1in</RightMargin>
         <TopMargin>1in</TopMargin>
-        <BottomMargin>1in</BottomMargin>
+        <BottomMargin>0.65in</BottomMargin>
         <Style />
       </Page>
     </ReportSection>
