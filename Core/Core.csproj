@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Properties\DataSources\Event.datasource" />
     <None Include="Properties\DataSources\Server.datasource" />
     <None Include="Properties\DataSources\Tip.datasource" />
     <None Include="Properties\DataSources\TipClassification.datasource" />
