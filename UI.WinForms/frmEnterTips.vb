@@ -14,6 +14,7 @@ Public Class frmEnterTips
 
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
+    Public ReadOnly Property ObjectService As BusinessObjectService
     
     Private ReadOnly _totalLabelLookup As Dictionary(Of TipType, Label)
     
@@ -29,6 +30,7 @@ Public Class frmEnterTips
         Me.File = file
         Me.Data = data
         FileDataSet = data.FileDataSet
+        ObjectService = New BusinessObjectService(Data)
         Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
 
@@ -598,9 +600,7 @@ Public Class frmEnterTips
     'End of tip operations
 
     Private Sub mnuManageSpecialFunctions_Click(sender As Object, e As EventArgs) Handles mnuManageSpecialFunctions.Click
-        Dim service = New BusinessObjectService(Data)
-
-        Using form As New frmManageSpecialFunctions(service.GetEventDataStore())
+        Using form As New frmManageSpecialFunctions(ObjectService.GetEventDataStore())
             form.ShowDialog()
         End Using
 
@@ -774,7 +774,6 @@ Public Class frmEnterTips
     End Function
 
     Private Sub mnuPrintTipChits_Click(sender As Object, e As EventArgs) Handles mnuPrintRegularTipChits.Click
-        Dim objectService  As New BusinessObjectService(Data)
         Dim types = TipTypes.Values
         Dim payPeriod = objectService.GetPayPeriod()
         Dim servers = objectService.GetTips() _
@@ -802,16 +801,13 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuTipReports_Click(sender As Object, e As EventArgs) Handles mnuTipReports.Click
-        Dim objectService As New BusinessObjectService(Data)
-
-        Using options As New frmPrintTipReportsV2(objectService.GetPayPeriod(), objectService.GetTips())
+        Using options As New frmPrintTipReportsV2(ObjectService.GetPayPeriod(), ObjectService.GetTips())
             options.ShowDialog()
         End Using
     End Sub
 
     Private Sub mnuSpecialFunctionReports_Click(sender As Object, e As EventArgs) Handles mnuSpecialFunctionReports.Click
-        Dim objectService = New BusinessObjectService(Data)
-        Dim tips   = objectService _
+        Dim tips   = ObjectService _
             .GetTips() _
             .Where(Function(t) t.Event IsNot Nothing)
 
@@ -825,8 +821,7 @@ Public Class frmEnterTips
     ''' </summary>
     ''' <param name="report"></param>
     Private Sub PreparePayrollTotals(report As LocalReport) 
-        Dim objectService As New BusinessObjectService(Data)
-        Dim tips = objectService.GetTips()
+        Dim tips = ObjectService.GetTips()
         Dim totalsByType = tips _
             .GroupBy(Function(t) t.Type) _
             .Select(Function(g) New TipTypeTotal(g.Key, g.Count(), g.Sum(Function(t) t.Amount))) _
