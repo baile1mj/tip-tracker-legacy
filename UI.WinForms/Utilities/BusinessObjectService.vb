@@ -59,4 +59,12 @@ Public Class BusinessObjectService
     Public Function GetPayPeriod() As PayPeriod
         Return New PayPeriod(_data.PayPeriodStart, _data.PayPeriodEnd, Nothing)
     End Function
+
+    ''' <summary>
+    ''' Gets the data store to use for updating event records.
+    ''' </summary>
+    ''' <returns>The data store for events.</returns>
+    Public Function GetEventDataStore() As IDataStore(Of [Event])
+        Return New EventObjectStore(_data)
+    End Function
 End Class
