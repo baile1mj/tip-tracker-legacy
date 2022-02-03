@@ -778,6 +778,7 @@ Public Class frmEnterTips
         Dim types = TipTypes.Values
         Dim payPeriod = objectService.GetPayPeriod()
         Dim servers = objectService.GetTips() _
+            .Where(Function (t) Not t.EarnedBy.SuppressChit) _
             .Select(Function (t) t.EarnedBy) _
             .Distinct() _
             .Select(Function(s) s.Clone(New TipChitDataBuilder(payPeriod, s, types).GetPreparedTips())) _
