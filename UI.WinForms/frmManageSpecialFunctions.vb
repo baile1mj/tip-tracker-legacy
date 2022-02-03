@@ -1,121 +1,89 @@
-Imports TipTracker.Common.Data.PayPeriod
+Imports System.Linq
+Imports TipTracker.Core
+Imports TipTracker.Utilities
 
 Public Class frmManageSpecialFunctions
-    Friend m_dsParentDataSet As New FileDataSet
+    Private ReadOnly _functions As IList( Of [Event])
+    Private ReadOnly _dataStore as IDataStore(Of [Event])
 
-    Private Sub frmManageSpecialFunctions_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Me.SpecialFunctionsBindingSource.DataSource = m_dsParentDataSet
-        Me.SpecialFunctionsBindingSource.DataMember = m_dsParentDataSet.SpecialFunctions.TableName
-        Me.SpecialFunctionsBindingSource.Sort = "SpecialFunction"
+    Public Function GetChanges() As List(Of [Event])
+        Return New List(Of [Event])(_functions)
+    End Function
+    
+    Public Sub New(dataStore As IDataStore(Of [Event]))
+        _dataStore = dataStore
+        InitializeComponent()
+        _functions = New SortableBindingList(Of [Event])(dataStore.GetAll().ToList())      
     End Sub
 
-    Private Sub btnClose_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClose.Click
-        Me.Close()
+    Private Sub frmManageSpecialFunctions_Load(sender As System.Object, e As EventArgs) Handles MyBase.Load
+        EventBindingSource.DataSource = _functions
+        EventBindingSource.Sort = NameOf([Event].Name)
     End Sub
 
-    Private Sub btnAdd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAdd.Click
-        Dim blnInvalidFunction As Boolean
+    Private Sub btnClose_Click(sender As System.Object, e As EventArgs) Handles btnClose.Click
+        Close()
+    End Sub
 
-        While blnInvalidFunction = False
-            If frmAddSpecialFunction.ShowDialog <> Windows.Forms.DialogResult.OK Then
-                frmAddSpecialFunction.Dispose()
-                Exit Sub
+    Private Sub btnAdd_Click(sender As System.Object, e As EventArgs) Handles btnAdd.Click
+        Dim inputDialog As New frmAddSpecialFunction()
+
+        While inputDialog.ShowDialog() = DialogResult.OK
+            If _functions.Any(Function(evt) evt.Name = inputDialog.EventName) Then
+                Dim message = $"The pay period already contains a function called ""{inputDialog.EventName}"".  Please enter a different name."
+                MessageBox.Show(message, "Invalid Function Name", MessageBoxButtons.OK)
+            Else
+                Dim newEvent = New [Event] With {
+                    .Name = inputDialog.EventName,
+                    .[Date] = inputDialog.EventDate}
+
+                _functions.Add(newEvent)
+                _dataStore.Add(newEvent)
+                EventBindingSource.Position = _functions.IndexOf(newEvent)
+                
+                Exit While
             End If
-
-            If Not IsNothing(m_dsParentDataSet.SpecialFunctions.FindBySpecialFunction(frmAddSpecialFunction.FunctionName)) Then
-                MessageBox.Show("A special function called " & frmAddSpecialFunction.FunctionName &
-                " already exists.  Please enter a different name.", "Duplicate Entry", MessageBoxButtons.OK)
-                frmAddSpecialFunction.Dispose()
-                Continue While
-            End If
-
-            Dim dteFunctionDate, dtePeriodStart, dtePeriodEnd As Date
-
-            dteFunctionDate = CDate(frmAddSpecialFunction.FunctionDate)
-            dtePeriodStart = CDate(Me.m_dsParentDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-            dtePeriodEnd = CDate(Me.m_dsParentDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-
-            If dteFunctionDate < dtePeriodStart Or dteFunctionDate > dtePeriodEnd Then
-                MessageBox.Show("You must select a date within the pay period.", "Invalid Entry", MessageBoxButtons.OK)
-                frmAddSpecialFunction.Dispose()
-                Continue While
-            End If
-
-            blnInvalidFunction = True
         End While
 
-        Dim drNewRow As DataRow = m_dsParentDataSet.SpecialFunctions.NewRow
-
-        drNewRow("SpecialFunction") = frmAddSpecialFunction.FunctionName
-        drNewRow("Date") = frmAddSpecialFunction.FunctionDate
-        m_dsParentDataSet.SpecialFunctions.Rows.Add(drNewRow)
-
-        frmAddSpecialFunction.Dispose()
+        inputDialog.Dispose()
     End Sub
 
-    Private Sub btnDelete_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDelete.Click
-        Dim strFunctionName As String = Me.SpecialFunctionsDataGridView.Item("SpecialFunction", Me.SpecialFunctionsBindingSource.Position).Value.ToString
+    Private Sub btnDelete_Click(sender As System.Object, e As EventArgs) Handles btnDelete.Click
+        Dim selectedFunction = DirectCast(EventBindingSource.Current, [Event])
+        Dim confirmation  = $"You are about to delete the function ""{selectedFunction.Name}"" that occurred on {selectedFunction.Date:M/d/yyyy}.  "
 
-        If MessageBox.Show("You are about to delete " & strFunctionName & ".  If there are any tips associated with this function, they will be deleted as well.  Do you wish to continue?", "Confirm Delete", MessageBoxButtons.YesNo) <> Windows.Forms.DialogResult.Yes Then
-            Exit Sub
+        If selectedFunction.Tips.Count > 0 Then confirmation &= $"This will delete {selectedFunction.Tips.Count} asociated tips as well.  "
+        
+        confirmation &= "Do you wish to continue?"
+        
+        If MessageBox.Show(confirmation, "Confirm Delete", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+            EventBindingSource.RemoveCurrent()
+            _dataStore.Delete(selectedFunction)
         End If
-
-        m_dsParentDataSet.SpecialFunctions.FindBySpecialFunction(strFunctionName).Delete()
     End Sub
 
-    Private Sub btnEdit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnEdit.Click
-        Dim strFunctionName As String = Me.SpecialFunctionsDataGridView.Item("SpecialFunction", Me.SpecialFunctionsBindingSource.Position).Value.ToString
-        Dim dteFunctionDate As Date = CDate(m_dsParentDataSet.SpecialFunctions.FindBySpecialFunction(strFunctionName)("Date"))
+    Private Sub btnEdit_Click(sender As System.Object, e As EventArgs) Handles btnEdit.Click
+        Dim original  = _functions(SpecialFunctionsDataGridView.CurrentRow.Index)
+        Dim updated = original.Clone()
+        Dim editDialog As New frmAddSpecialFunction(updated.Name, updated.Date)
 
-        With frmAddSpecialFunction
-            .FunctionName = strFunctionName
-            .FunctionDate = dteFunctionDate
-            .Text = "Edit Special Function"
-
-            Dim blnValidDate As Boolean
-
-            While blnValidDate = False
-                If .ShowDialog <> Windows.Forms.DialogResult.OK Then
-                    .Dispose()
-                    Exit Sub
-                End If
-
-                If .FunctionName = strFunctionName And .FunctionDate = dteFunctionDate Then
-                    .Dispose()
-                    Exit Sub
-                End If
-
-                Dim dteTemp As Date = .FunctionDate
-                Dim dtePeriodStart As Date = CDate(Me.m_dsParentDataSet.Settings.FindBySetting("PeriodStart")("Value"))
-                Dim dtePeriodEnd As Date = CDate(Me.m_dsParentDataSet.Settings.FindBySetting("PeriodEnd")("Value"))
-
-                If dteTemp < dtePeriodStart Or dteTemp > dtePeriodEnd Then
-                    MessageBox.Show("You must select a date within the pay period.", "Invalid Entry", MessageBoxButtons.OK)
-                    .txtFunctionDate.Clear()
-                    .txtFunctionDate.Select()
-                    Continue While
-                End If
-
-                blnValidDate = True
-            End While
-
-            m_dsParentDataSet.SpecialFunctions.FindBySpecialFunction(strFunctionName)("SpecialFunction") = .FunctionName
-            m_dsParentDataSet.SpecialFunctions.FindBySpecialFunction(.FunctionName)("Date") = .FunctionDate
-
-            Dim dvTips As New DataView
-            dvTips.Table = Me.m_dsParentDataSet.Tips
-            dvTips.RowFilter = "SpecialFunction = '" & .FunctionName & "'"
-
-            If dvTips.Count <> 0 Then
-                Dim i As Integer = 0
-
-                Do Until i = dvTips.Count
-                    dvTips.Item(i)("WorkingDate") = .FunctionDate
-                    i += 1
-                Loop
+        While editDialog.ShowDialog() = DialogResult.OK
+            If _functions.Any(Function(evt) evt.Name = editDialog.EventName) Then
+                Dim message = $"The pay period already contains a function called ""{editDialog.EventName}"".  Please enter a different name."
+                MessageBox.Show(message, "Invalid Function Name", MessageBoxButtons.OK)
+            Else
+                updated.Name = editDialog.EventName
+                updated.Date = editDialog.EventDate
+                
+                _functions.Remove(original)
+                _functions.Add(updated)
+                _dataStore.Update(original, updated)
+                EventBindingSource.Position = _functions.IndexOf(updated)
+                
+                Exit While
             End If
+        End While
 
-            .Dispose()
-        End With
+        editDialog.Dispose()
     End Sub
 End Class

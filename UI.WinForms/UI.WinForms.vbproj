@@ -262,6 +262,7 @@
     <Compile Include="Reporting\TipsByDateBuilder.vb" />
     <Compile Include="Reporting\TipsByServerBuilder.vb" />
     <Compile Include="Utilities\BusinessObjectService.vb" />
+    <Compile Include="Utilities\EventObjectStore.vb" />
     <Compile Include="Utilities\GlobalFileDialogOptions.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

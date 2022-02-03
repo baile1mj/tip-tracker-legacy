@@ -598,13 +598,12 @@ Public Class frmEnterTips
     'End of tip operations
 
     Private Sub mnuManageSpecialFunctions_Click(sender As Object, e As EventArgs) Handles mnuManageSpecialFunctions.Click
-        With frmManageSpecialFunctions
-            .m_dsParentDataSet = Data.FileDataSet
-            .ShowDialog()
-            .Dispose()
-        End With
+        Dim service = New BusinessObjectService(Data)
 
-        SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
+        Using form As New frmManageSpecialFunctions(service.GetEventDataStore())
+            form.ShowDialog()
+        End Using
+
         cboSelectSpecialFunction.SelectedIndex = -1
     End Sub
 
@@ -792,15 +791,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnManageFunctions_Click(sender As Object, e As EventArgs) Handles btnManageFunctions.Click
-        With frmManageSpecialFunctions
-            .m_dsParentDataSet = Data.FileDataSet
-            .ShowDialog()
-            .Dispose()
-        End With
-
-        SpecialFunctionBindingSource.ResetBindings(False)
-        SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
-        cboSelectSpecialFunction.SelectedIndex = -1
+        mnuManageSpecialFunctions_Click(sender, e)
 
         If cboSFServer.SelectedIndex <> -1 Then
             cboSFServer.SelectedIndex = -1

@@ -1,45 +1,36 @@
 Public Class frmAddSpecialFunction
 
-    Friend Property FunctionName() As String
+    Public ReadOnly Property EventName As String
         Get
-            Return txtFunctionName.Text
+            Return txtFunctionName.Text.Replace("'", "")
         End Get
-        Set(ByVal value As String)
-            txtFunctionName.Text = value
-        End Set
     End Property
 
-    Friend Property FunctionDate() As Date
+    Public ReadOnly Property EventDate As DateTime
         Get
-            Return CDate(txtFunctionDate.Text)
+            Return DateTime.Parse(txtFunctionDate.Text)
         End Get
-        Set(ByVal value As Date)
-            txtFunctionDate.Text = Format(value, "MM/dd/yyyy")
-        End Set
     End Property
-
-    Private Function RemoveInvalidChars(ByVal FunctionName As String) As String
-        Dim strName As String = ""
-
-        If InStr(FunctionName, "'") <> 0 Then
-            Dim strNameArray() As String = Strings.Split(FunctionName, "'")
-
-
-            For i As Integer = LBound(strNameArray) To UBound(strNameArray)
-                strName += strNameArray.GetValue(i).ToString
-            Next
-        Else
-            strName = FunctionName
-        End If
-
-        Return strName
-    End Function
-
-    Private Sub btnCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        Me.Close()
+    
+    Public Sub New()
+        Me.New(String.Empty, DateTime.MinValue)
     End Sub
 
-    Private Sub btnOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnOK.Click
+    Public Sub New(eventName As String, eventDate As DateTime)
+        InitializeComponent()
+
+        txtFunctionName.Text = eventName
+        
+        If Not eventDate = DateTime.MinValue
+            txtFunctionDate.Text = eventDate.ToString("MM/dd/yyyy")
+        End If
+    End Sub
+    
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Close()
+    End Sub
+
+    Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         If txtFunctionName.Text = "" Then
             MessageBox.Show("You must enter the name of the function.", "Enter Function Name", MessageBoxButtons.OK)
             txtFunctionName.Select()
@@ -47,27 +38,23 @@ Public Class frmAddSpecialFunction
         End If
 
         If txtFunctionDate.Text = "" Then
-            MessageBox.Show("You msut enter the date of the function.", "Enter Function Date", MessageBoxButtons.OK)
+            MessageBox.Show("You must enter the date of the function.", "Enter Function Date", MessageBoxButtons.OK)
             txtFunctionDate.Select()
             Exit Sub
         End If
 
-        Try
-            Dim dteTempDate As Date = CDate(txtFunctionDate.Text)
-        Catch ex As Exception
+        If Not DateTime.TryParse(txtFunctionDate.Text, DateTime.MinValue)
             MessageBox.Show("The value you entered in the date field is not a valid date entry.", "Invalid Entry", MessageBoxButtons.OK)
             txtFunctionDate.Clear()
             txtFunctionDate.Select()
             Exit Sub
-        End Try
+        End If
 
-        txtFunctionName.Text = RemoveInvalidChars(txtFunctionName.Text)
-
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
+        DialogResult = DialogResult.OK
+        Close()
     End Sub
 
-    Private Sub txtFunctionName_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtFunctionName.KeyPress
+    Private Sub txtFunctionName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtFunctionName.KeyPress
         If e.KeyChar = Chr(13) Then
             e.Handled = True
 
@@ -81,12 +68,11 @@ Public Class frmAddSpecialFunction
         End If
     End Sub
 
-    Private Sub txtFunctionDate_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtFunctionDate.KeyPress
+    Private Sub txtFunctionDate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtFunctionDate.KeyPress
         If e.KeyChar = Chr(13) Then
             e.Handled = True
 
             btnOK.PerformClick()
         End If
     End Sub
-
 End Class
