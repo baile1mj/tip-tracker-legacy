@@ -15,6 +15,12 @@ namespace TipTracker.Core
         IEnumerable<T> GetAll();
 
         /// <summary>
+        /// Returns a value indicating whether the data store contains a particular record.
+        /// </summary>
+        /// <param name="item">The record to check.</param>
+        bool Contains(T item);
+
+        /// <summary>
         /// Adds a new record to the store.
         /// </summary>
         /// <param name="newItem">The item to add.</param>

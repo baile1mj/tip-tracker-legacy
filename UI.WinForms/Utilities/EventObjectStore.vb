@@ -21,6 +21,13 @@ Namespace Utilities
         End sub
 
         ''' <inheritdoc />
+        Public Function Contains(item As [Event]) As Boolean Implements IDataStore(Of [Event]).Contains
+            return _data.FileDataSet.SpecialFunctions _
+                .AsQueryable() _
+                .Any(Function(r) r.SpecialFunction = item.Name)
+        End Function
+
+        ''' <inheritdoc />
         Public Sub Add(newItem As [Event]) Implements IDataStore(Of [Event]).Add
             Dim newRow = _data.FileDataSet.SpecialFunctions.NewSpecialFunctionsRow()
 
