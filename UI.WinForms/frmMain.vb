@@ -10,6 +10,7 @@ Imports TipTracker.Core
 Public Class frmMain
     Private _globalSettingsFile As GlobalSettingsFile
     Private _globalSettings As GlobalSettings
+    Private _templateServers As List(Of Server)
 
     ''' <summary>
     ''' Gets a value indicating whether a server is in the template.
@@ -40,6 +41,8 @@ Public Class frmMain
     Public Function GetTemplateServers() As DataTable
         Return _globalSettings.GlobalDataSet.Servers.Copy()
     End Function
+
+    Public Event TemplateServersChanged As EventHandler(Of IReadOnlyList(Of Server))
 
     Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         'Disable the menu commands that can only be used if a file is open.
@@ -105,6 +108,8 @@ Public Class frmMain
                 'do nothing, just open the application with no file
             End Try
         Next param
+
+        _templateServers = GetServers()
     End Sub
 
     Private Sub EnableMenuCommands(ByVal Enabled As Boolean)
@@ -119,14 +124,7 @@ Public Class frmMain
     End Sub
 
     Private Sub mnuManageTemplateServers_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuManageTemplateServers.Click
-        Dim existingServers As List(Of Server) = _globalSettings.GlobalDataSet.Servers _
-            .AsEnumerable() _
-            .Select(Function(r) New Server() With {
-                .PosId = r("ServerNumber").ToString(),
-                .FirstName = r("FirstName").ToString(),
-                .LastName = r("LastName").ToString(),
-                .SuppressChit = CBool(r("SuppressChit"))}) _
-            .ToList()
+        Dim existingServers As List(Of Server) = _templateServers
 
         Using serverManager As New frmManageServers(existingServers)
             'The dialog only has a close button, so we'll assume there are changes.
@@ -163,6 +161,8 @@ Public Class frmMain
         'If we can't save the settings, the application can still run, but the user should be notified.
         Try
             _globalSettingsFile.WriteGlobalSettings(_globalSettings)
+            _templateServers = GetServers()
+            RaiseEvent TemplateServersChanged(Me, _templateServers)
         Catch ex As Exception
             MessageBox.Show("Failed to save the updated server list.  It is recommended that you save all open data files " &
                 $"and restart the application.  Verify that you have permission to write to {_globalSettingsFile.FilePath}. " &
@@ -170,6 +170,18 @@ Public Class frmMain
                 MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    Private Function GetServers() As List(Of Server)
+        Return _globalSettings.GlobalDataSet.Servers _
+            .AsEnumerable() _
+            .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
+            .Select(Function(r) New Server() With {
+                .PosId = r("ServerNumber").ToString(),
+                .FirstName = r("FirstName").ToString(),
+                .LastName = r("LastName").ToString(),
+                .SuppressChit = CBool(r("SuppressChit"))}) _
+            .ToList()
+    End Function
 
     Private Sub mnuSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSettings.Click
         Dim currentDefaultDirectory As String = _globalSettings.DefaultDataDirectory
@@ -269,7 +281,9 @@ Public Class frmMain
             End Try
 
             'TODO: consolidate this since it's used in multiple methods.
-            Dim copyForm As New frmEnterTips(newFile, copy)
+            Dim copyForm As New frmEnterTips(newFile, copy, _templateServers)
+
+            AddHandler TemplateServersChanged, AddressOf copyForm.OnTemplateServersUpdated
             AddHandler copyForm.FormClosing, AddressOf ChildFormClosing
 
             copyForm.Show()
@@ -317,7 +331,8 @@ Public Class frmMain
         End Try
 
         'TODO: consolidate this since it's used in multiple methods.
-        Dim newFileForm As New frmEnterTips(newFile, newFileData)
+        Dim newFileForm As New frmEnterTips(newFile, newFileData, _templateServers)
+        AddHandler TemplateServersChanged, AddressOf newFileForm.OnTemplateServersUpdated
         AddHandler newFileForm.FormClosing, AddressOf ChildFormClosing
 
         newFileForm.Show()
@@ -386,7 +401,8 @@ Public Class frmMain
 
         'Open the editing form.
         'TODO: consolidate this since it's used in multiple methods.
-        Dim editor As New frmEnterTips(payPeriodFile, fileData)
+        Dim editor As New frmEnterTips(payPeriodFile, fileData, _templateServers)
+        AddHandler TemplateServersChanged, AddressOf editor.OnTemplateServersUpdated
         AddHandler editor.FormClosing, AddressOf ChildFormClosing
         editor.Show()
 

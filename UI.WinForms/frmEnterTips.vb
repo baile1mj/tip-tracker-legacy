@@ -15,28 +15,31 @@ Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
     Public ReadOnly Property ObjectService As BusinessObjectService
-    
+
     Private ReadOnly _totalLabelLookup As Dictionary(Of TipType, Label)
-    
-    Public Sub New(file As PayPeriodFile, data As PayPeriodData)
+    Private ReadOnly _templateServers As New List(Of Server)
+
+    Public Sub New(file As PayPeriodFile, data As PayPeriodData, templateServers As IReadOnlyList(Of Server))
         InitializeComponent()
 
-        _totalLabelLookup = New Dictionary(Of TipType, Label) From { _
-            {TipTypes.CreditCard, lblCCTotal}    , _
-            {TipTypes.RoomCharge, lblRCTotal}, _
-            {TipTypes.Cash, lblCATotal}, _
+        _totalLabelLookup = New Dictionary(Of TipType, Label) From {
+            {TipTypes.CreditCard, lblCCTotal},
+            {TipTypes.RoomCharge, lblRCTotal},
+            {TipTypes.Cash, lblCATotal},
             {TipTypes.SpecialFunction, lblSFTotal}}
+        _templateServers.AddRange(templateServers)
 
         Me.File = file
         Me.Data = data
         FileDataSet = data.FileDataSet
-        ObjectService = New BusinessObjectService(Data)
+        ObjectService = New BusinessObjectService(data)
         Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
 
     Private Function GetServers() As List(Of Server)
         Return Data.FileDataSet.Servers _
             .AsEnumerable() _
+            .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
             .Select(Function(r) New Server() With {
                 .PosId = r("ServerNumber").ToString(),
                 .FirstName = r("FirstName").ToString(),
@@ -52,8 +55,7 @@ Public Class frmEnterTips
         WindowState = FormWindowState.Maximized
 
         'Bind the data sources to the display.
-        ServersBindingSource.DataSource = Data.FileDataSet
-        ServersBindingSource.DataMember = Data.FileDataSet.Servers.TableName
+        ServerBindingSource.DataSource = New SortableBindingList(Of Server)(GetServers())
 
         CreditCardTipsBindingSource.DataSource = Data.FileDataSet
         CreditCardTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
@@ -72,7 +74,7 @@ Public Class frmEnterTips
 
 
         'Set the servers binding source sort mode.
-        ServersBindingSource.Sort = "LastName"
+        ServerBindingSource.Sort = NameOf(Server.LastName)
 
         LoadServerCombos()
 
@@ -630,76 +632,52 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuAddServer_Click(sender As Object, e As EventArgs) Handles mnuAddServer.Click
-        Dim blnErrorState = True
+        Dim dataStore  = ObjectService.GetServerDataStore()
+        Dim newServer As Server
 
-        Using frmAddEditServer As New frmAddEditServer()
-            frmAddEditServer.Text = "Add Server"
+        Using dialog As New frmAddEditServer()
+            dialog.Text = "Add Server"
+            
+            Do
+                If dialog.ShowDialog <> DialogResult.OK Then Exit Sub
+                
+                newServer = dialog.Server
+                If Not dataStore.Contains(newServer) Then Exit Do
 
-            While blnErrorState = True
-                If frmAddEditServer.ShowDialog <> DialogResult.OK Then Exit Sub
-
-                If Not (Data.FileDataSet.Servers.FindByServerNumber(frmAddEditServer.ServerNumber) Is Nothing) Then
-                    MessageBox.Show("The server number you entered already exists in the data file.  Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
-                    frmAddEditServer.ServerNumber = ""
-                Else
-                    blnErrorState = False
-                End If
-            End While
-
-            Dim drNewRow As DataRow = Data.FileDataSet.Servers.NewRow
-
-            drNewRow("ServerNumber") = frmAddEditServer.ServerNumber
-            drNewRow("FirstName") = frmAddEditServer.FirstName
-            drNewRow("LastName") = frmAddEditServer.LastName
-            drNewRow("SuppressChit") = frmAddEditServer.SuppressChit
-
-            Data.FileDataSet.Servers.Rows.Add(drNewRow)
-
-            Dim frmMain = DirectCast(MdiParent, frmMain)
-
-            If frmMain.IsServerInTemplate(frmAddEditServer.ServerNumber) Then Exit Sub
-
-            If MessageBox.Show("This server does not exist in the servers template.  Add the server to the template?",
-                "Add Server", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                frmMain.AddServerToTemplate(frmAddEditServer.ServerNumber, frmAddEditServer.FirstName, frmAddEditServer.LastName, frmAddEditServer.SuppressChit)
-            End If
+                MessageBox.Show("The server number you entered already exists in the data file.  " & 
+                    "Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
+            Loop
         End Using
 
+        dataStore.Add(newServer)
+        ServerBindingSource.Add(newServer)
         LoadServerCombos()
+
+        Dim alreadyInTemplate = _templateServers.Any(Function(s) s.Is(newServer))
+        If alreadyInTemplate Then Exit Sub
+
+        Dim addResponse = MessageBox.Show(newServer.ToString() & " does not exist in the servers template.  " &
+            "Add the server to the template?", "Add Template Server", MessageBoxButtons.YesNo)
+        If addResponse <> DialogResult.Yes Then Exit Sub
+
+        RaiseEvent NewTemplateServerRequested(Me, newServer)
     End Sub
 
     Private Sub mnuEditSelectedServer_Click(sender As Object, e As EventArgs) Handles mnuEditSelectedServer.Click, ServersDataGridView.DoubleClick
-        Dim strServerNumber As String = ServersDataGridView.Item("ServersServerNumber", ServersBindingSource.Position).Value.ToString
-        Dim strFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName").ToString
-        Dim strLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName").ToString
-        Dim blnSuppressChit = CBool(Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit"))
+        Dim selected = DirectCast(ServerBindingSource.Current, Server)
+        Dim updated As Server
 
-        With frmAddEditServer
-            .Text = "Edit Server"
-            .txtServerNumber.ReadOnly = True
-            .txtServerNumber.TabStop = False
-            .ServerNumber = strServerNumber
-            .FirstName = strFirstName
-            .LastName = strLastName
-            .SuppressChit = blnSuppressChit
+        Using dialog As New frmAddEditServer(selected.Clone(), false)
+            If dialog.ShowDialog() <> DialogResult.OK Then Exit Sub
 
-            If .ShowDialog <> DialogResult.OK Then
-                .Dispose()
-                Exit Sub
-            End If
+            updated = dialog.Server
+        End Using
 
-            If .ServerNumber = strServerNumber And .FirstName = strFirstName And .LastName = strLastName And .SuppressChit = blnSuppressChit Then
-                .Dispose()
-                Exit Sub
-            End If
+        If updated.Matches(selected) Then Exit Sub
 
-            Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("FirstName") = .FirstName
-            Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("LastName") = .LastName
-            Data.FileDataSet.Servers.FindByServerNumber(strServerNumber)("SuppressChit") = .SuppressChit
-
-            .Dispose()
-        End With
-
+        ServerBindingSource.RemoveCurrent()
+        ServerBindingSource.Add(updated)
+        ObjectService.GetServerDataStore().Update(selected, updated)
         LoadServerCombos()
     End Sub
 
@@ -716,62 +694,51 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuMergeDuplicate_Click(sender As Object, e As EventArgs) Handles mnuMergeDuplicate.Click
-        Dim mergeTarget As Server
+        Dim selected = DirectCast(ServerBindingSource.Current, Server)
+        Dim recipient As Server
 
         Using selectServer As New frmSelectServer("Select the merge recipient:", GetServers())
             If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
 
-            mergeTarget = selectServer.GetSelectedServer()
+            recipient = selectServer.GetSelectedServer()
         End Using
 
-        Dim strSourceServerNumber As String = ServersDataGridView.Item("ServersServerNumber", ServersBindingSource.Position).Value.ToString
-        Dim strDestServerNumber As String = mergeTarget.PosId
-        Dim strDestFirstName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("FirstName").ToString
-        Dim strDestLastName As String = Data.FileDataSet.Servers.FindByServerNumber(strDestServerNumber)("LastName").ToString
-
-        If strSourceServerNumber = strDestServerNumber Then
-            MessageBox.Show("You may not merge a server with itself.", "Invalid Selection", MessageBoxButtons.OK)
-            Exit Sub
-        End If
-
-
-        Dim dv As New DataView
-        dv.Table = Data.FileDataSet.Tips
-        dv.RowFilter = "ServerNumber = '" & strSourceServerNumber & "'"
-
-        Dim drNewRow As DataRow
-
-        For i = 0 To dv.Count - 1
-            drNewRow = Data.FileDataSet.Tips.NewRow
-
-            drNewRow("Amount") = CDec(dv(i)("Amount"))
-            drNewRow("ServerNumber") = strDestServerNumber
-            drNewRow("FirstName") = strDestFirstName
-            drNewRow("LastName") = strDestLastName
-            drNewRow("Description") = dv(i)("Description").ToString
-            If Not IsDBNull(dv(i)("SpecialFunction")) Then
-                drNewRow("SpecialFunction") = dv(i)("SpecialFunction").ToString
-            End If
-            drNewRow("WorkingDate") = CDate(dv(i)("WorkingDate"))
-
-            Data.FileDataSet.Tips.Rows.Add(drNewRow)
-        Next
-
-        Data.FileDataSet.Servers.FindByServerNumber(strSourceServerNumber).Delete()
-        Data.FileDataSet.Servers.AcceptChanges()
-
-        MessageBox.Show("The merge was completed successfully.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-        LoadServerCombos()
+        ObjectService.ReassignTips(selected, recipient)
+        ObjectService.GetServerDataStore().Delete(selected)
+        ServerBindingSource.Remove(selected)
     End Sub
 
     Private Sub mnuCopyFromTemplate_Click(sender As Object, e As EventArgs) Handles mnuCopyFromTemplate.Click
-        Data.FileDataSet.Servers.Merge(DirectCast(MdiParent, frmMain).GetTemplateServers())
+        Dim fileServers = GetServers().ToDictionary(Function(s) s.PosId)
+        Dim conflicts = New List(Of Server)
+        Dim missingServers = New List(Of Server)
+
+        For Each templateServer In _templateServers
+            If Not fileServers.ContainsKey(templateServer.PosId) Then
+                missingServers.Add(templateServer)
+
+            ElseIf Not fileServers(templateServer.PosId).Matches(templateServer) Then
+                conflicts.Add(templateServer)
+            End If
+        Next
+
+        Dim store = ObjectService.GetServerDataStore()
+
+        For Each newServer In missingServers
+            store.Add(newServer)
+            ServerBindingSource.Add(newServer)
+        Next
+
+        If Not conflicts.Any() Then Exit Sub
+
+        Dim conflictList = String.Join(Environment.NewLine, conflicts.Select(Function(s) "• " & s.ToString()))
+        Dim message = "The following servers were not added because they conflict with servers already in the file:" &
+            Environment.NewLine & conflictList
+
+        MessageBox.Show(message, "Conflicts Found", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+
     End Sub
-
-    Private Function GetServerTips() As IEnumerable(Of Server) 
-
-    End Function
 
     Private Sub mnuPrintTipChits_Click(sender As Object, e As EventArgs) Handles mnuPrintRegularTipChits.Click
         Dim types = TipTypes.Values
@@ -1008,4 +975,11 @@ Public Class frmEnterTips
             Next
         End If
     End Sub
+
+    Public Sub OnTemplateServersUpdated(sender As Object, updatedList As IReadOnlyList(Of Server))
+        _templateServers.Clear()
+        _templateServers.AddRange(updatedList)
+    End Sub
+
+    Public Event NewTemplateServerRequested As EventHandler(Of Server)
 End Class

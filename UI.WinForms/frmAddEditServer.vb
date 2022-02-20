@@ -21,6 +21,16 @@ Public Class frmAddEditServer
         txtLastName.DataBindings.Add(NameOf(txtLastName.Text), Server, NameOf(Server.LastName))
         optSuppressChit.DataBindings.Add(NameOf(optSuppressChit.Checked), Server, NameOf(Server.SuppressChit))
     End Sub
+    
+    Public Shadows Function ShowDialog() As DialogResult
+        If txtServerNumber.ReadOnly Then
+            txtFirstName.Select()
+        Else
+            txtServerNumber.Select()
+        End If
+
+        Return MyBase.ShowDialog()
+    End Function
 
     Friend Property ServerNumber As String
         Get

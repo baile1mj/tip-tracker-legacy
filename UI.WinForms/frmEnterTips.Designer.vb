@@ -23,11 +23,10 @@ Partial Class frmEnterTips
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEnterTips))
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.ServersBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         Me.strStatusStrip = New System.Windows.Forms.StatusStrip()
         Me.lblWorkingDate = New System.Windows.Forms.ToolStripStatusLabel()
@@ -145,9 +144,6 @@ Partial Class frmEnterTips
         Me.txtSFAmount = New System.Windows.Forms.TextBox()
         Me.grpServers = New System.Windows.Forms.GroupBox()
         Me.ServersDataGridView = New System.Windows.Forms.DataGridView()
-        Me.ServersServerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ServersFirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ServersLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.mnuServersContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.mnuAddServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuEditSelectedServer = New System.Windows.Forms.ToolStripMenuItem()
@@ -184,7 +180,10 @@ Partial Class frmEnterTips
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
         Me.ReportViewer1 = New Microsoft.Reporting.WinForms.ReportViewer()
-        CType(Me.ServersBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ServerBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.PosIdDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.FileDataSet,System.ComponentModel.ISupportInitialize).BeginInit
         Me.strStatusStrip.SuspendLayout
         Me.strToolStrip.SuspendLayout
@@ -214,12 +213,8 @@ Partial Class frmEnterTips
         Me.mnuServersContextMenu.SuspendLayout
         CType(Me.DataGridView1,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.DataGridView4,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.ServerBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
-        '
-        'ServersBindingSource
-        '
-        Me.ServersBindingSource.DataMember = "Servers"
-        Me.ServersBindingSource.DataSource = Me.FileDataSet
         '
         'FileDataSet
         '
@@ -503,9 +498,9 @@ Partial Class frmEnterTips
         'CCAmount
         '
         Me.CCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle5.Format = "N2"
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle1
         Me.CCAmount.HeaderText = "Amount"
         Me.CCAmount.Name = "CCAmount"
         Me.CCAmount.ReadOnly = true
@@ -686,8 +681,8 @@ Partial Class frmEnterTips
         'RCAmount
         '
         Me.RCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle6.Format = "N2"
-        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle2.Format = "N2"
+        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle2
         Me.RCAmount.HeaderText = "Amount"
         Me.RCAmount.Name = "RCAmount"
         Me.RCAmount.ReadOnly = true
@@ -909,8 +904,8 @@ Partial Class frmEnterTips
         'CAAmount
         '
         Me.CAAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle7.Format = "N2"
-        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle3.Format = "N2"
+        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle3
         Me.CAAmount.HeaderText = "Amount"
         Me.CAAmount.Name = "CAAmount"
         Me.CAAmount.ReadOnly = true
@@ -1140,8 +1135,8 @@ Partial Class frmEnterTips
         'SFAmount
         '
         Me.SFAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle8.Format = "N2"
-        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle4.Format = "N2"
+        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle4
         Me.SFAmount.HeaderText = "Amount"
         Me.SFAmount.Name = "SFAmount"
         Me.SFAmount.ReadOnly = true
@@ -1268,9 +1263,9 @@ Partial Class frmEnterTips
         Me.ServersDataGridView.AllowUserToResizeRows = false
         Me.ServersDataGridView.AutoGenerateColumns = false
         Me.ServersDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.ServersDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ServersServerNumber, Me.ServersFirstName, Me.ServersLastName})
+        Me.ServersDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PosIdDataGridViewTextBoxColumn, Me.FirstNameDataGridViewTextBoxColumn, Me.LastNameDataGridViewTextBoxColumn})
         Me.ServersDataGridView.ContextMenuStrip = Me.mnuServersContextMenu
-        Me.ServersDataGridView.DataSource = Me.ServersBindingSource
+        Me.ServersDataGridView.DataSource = Me.ServerBindingSource
         Me.ServersDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ServersDataGridView.Location = New System.Drawing.Point(3, 16)
         Me.ServersDataGridView.MultiSelect = false
@@ -1282,31 +1277,6 @@ Partial Class frmEnterTips
         Me.ServersDataGridView.Size = New System.Drawing.Size(187, 489)
         Me.ServersDataGridView.TabIndex = 0
         Me.ServersDataGridView.TabStop = false
-        '
-        'ServersServerNumber
-        '
-        Me.ServersServerNumber.DataPropertyName = "ServerNumber"
-        Me.ServersServerNumber.HeaderText = "No."
-        Me.ServersServerNumber.Name = "ServersServerNumber"
-        Me.ServersServerNumber.ReadOnly = true
-        Me.ServersServerNumber.Width = 40
-        '
-        'ServersFirstName
-        '
-        Me.ServersFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.ServersFirstName.DataPropertyName = "FirstName"
-        Me.ServersFirstName.FillWeight = 90!
-        Me.ServersFirstName.HeaderText = "First Name"
-        Me.ServersFirstName.Name = "ServersFirstName"
-        Me.ServersFirstName.ReadOnly = true
-        '
-        'ServersLastName
-        '
-        Me.ServersLastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.ServersLastName.DataPropertyName = "LastName"
-        Me.ServersLastName.HeaderText = "Last Name"
-        Me.ServersLastName.Name = "ServersLastName"
-        Me.ServersLastName.ReadOnly = true
         '
         'mnuServersContextMenu
         '
@@ -1623,9 +1593,41 @@ Partial Class frmEnterTips
         'ReportViewer1
         '
         Me.ReportViewer1.Location = New System.Drawing.Point(0, 0)
-        Me.ReportViewer1.Name = "ReportViewer"
+        Me.ReportViewer1.Name = "ReportViewer1"
+        Me.ReportViewer1.ServerReport.BearerToken = Nothing
         Me.ReportViewer1.Size = New System.Drawing.Size(396, 246)
         Me.ReportViewer1.TabIndex = 0
+        '
+        'ServerBindingSource
+        '
+        Me.ServerBindingSource.DataSource = GetType(TipTracker.Core.Server)
+        '
+        'PosIdDataGridViewTextBoxColumn
+        '
+        Me.PosIdDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.PosIdDataGridViewTextBoxColumn.DataPropertyName = "PosId"
+        Me.PosIdDataGridViewTextBoxColumn.FillWeight = 25!
+        Me.PosIdDataGridViewTextBoxColumn.HeaderText = "No."
+        Me.PosIdDataGridViewTextBoxColumn.Name = "PosIdDataGridViewTextBoxColumn"
+        Me.PosIdDataGridViewTextBoxColumn.ReadOnly = true
+        '
+        'FirstNameDataGridViewTextBoxColumn
+        '
+        Me.FirstNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.FirstNameDataGridViewTextBoxColumn.DataPropertyName = "FirstName"
+        Me.FirstNameDataGridViewTextBoxColumn.FillWeight = 35!
+        Me.FirstNameDataGridViewTextBoxColumn.HeaderText = "First Name"
+        Me.FirstNameDataGridViewTextBoxColumn.Name = "FirstNameDataGridViewTextBoxColumn"
+        Me.FirstNameDataGridViewTextBoxColumn.ReadOnly = true
+        '
+        'LastNameDataGridViewTextBoxColumn
+        '
+        Me.LastNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.LastNameDataGridViewTextBoxColumn.DataPropertyName = "LastName"
+        Me.LastNameDataGridViewTextBoxColumn.FillWeight = 40!
+        Me.LastNameDataGridViewTextBoxColumn.HeaderText = "Last Name"
+        Me.LastNameDataGridViewTextBoxColumn.Name = "LastNameDataGridViewTextBoxColumn"
+        Me.LastNameDataGridViewTextBoxColumn.ReadOnly = true
         '
         'frmEnterTips
         '
@@ -1640,7 +1642,6 @@ Partial Class frmEnterTips
         Me.MinimumSize = New System.Drawing.Size(800, 600)
         Me.Name = "frmEnterTips"
         Me.Text = "frmEnterTips"
-        CType(Me.ServersBindingSource,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.FileDataSet,System.ComponentModel.ISupportInitialize).EndInit
         Me.strStatusStrip.ResumeLayout(false)
         Me.strStatusStrip.PerformLayout
@@ -1676,6 +1677,7 @@ Partial Class frmEnterTips
         Me.mnuServersContextMenu.ResumeLayout(false)
         CType(Me.DataGridView1,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.DataGridView4,System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ServerBindingSource,System.ComponentModel.ISupportInitialize).EndInit
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1688,7 +1690,6 @@ End Sub
     Friend WithEvents lblPeriodStart As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents lblPeriodEnd As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents lblSystemDate As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents ServersBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents FileDataSet As FileDataSet
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
@@ -1782,9 +1783,6 @@ End Sub
     Friend WithEvents mnuDeleteCATip As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuSFTips As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents mnuDeleteSFTip As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ServersServerNumber As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ServersFirstName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ServersLastName As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents mnuServersContextMenu As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents mnuAddServer As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuEditSelectedServer As System.Windows.Forms.ToolStripMenuItem
@@ -1837,4 +1835,8 @@ End Sub
     Friend WithEvents SFLastName As DataGridViewTextBoxColumn
     Friend WithEvents SFSpecialFunction As DataGridViewTextBoxColumn
     Friend WithEvents ReportViewer1 As Microsoft.Reporting.WinForms.ReportViewer
+    Friend WithEvents PosIdDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
+    Friend WithEvents FirstNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
+    Friend WithEvents LastNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
+    Friend WithEvents ServerBindingSource As BindingSource
 End Class
