@@ -56,6 +56,20 @@ Namespace Utilities
         End Function
 
         ''' <summary>
+        ''' Reassigns the tips from one server to another.
+        ''' </summary>
+        ''' <param name="fromServer">The servers whose tips will be reassigned.</param>
+        ''' <param name="toServer">The server who will receive the tips.</param>
+        Public Sub ReassignTips(fromServer As Server, toServer As Server)
+            Dim tipRows = _data.FileDataSet.Servers.FindByServerNumber(fromServer.PosId).GetTipsRows()
+            Dim recipientRow = _data.FileDataSet.Servers.FindByServerNumber(toServer.PosId)
+
+            For Each tip In tipRows
+                tip.SetParentRow(recipientRow)
+            Next
+        End Sub
+
+        ''' <summary>
         ''' Gets the pay period as a business object.
         ''' </summary>
         ''' <returns>The pay period.</returns>
