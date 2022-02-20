@@ -13,28 +13,6 @@ Public Class frmMain
     Private _templateServers As List(Of Server)
 
     ''' <summary>
-    ''' Gets a value indicating whether a server is in the template.
-    ''' </summary>
-    ''' <param name="serverNumber">The number identifying the server to check.</param>
-    ''' <returns>True if the server is in the template; otherwise, false.</returns>
-    Public Function IsServerInTemplate(ByVal serverNumber As String) As Boolean
-        Return Not IsNothing(_globalSettings.GlobalDataSet.Servers.FindByServerNumber(serverNumber))
-    End Function
-
-    ''' <summary>
-    ''' Adds a new server to the template.
-    ''' </summary>
-    ''' <param name="serverNumber">The new server's number.</param>
-    ''' <param name="firstName">The new server's first name.</param>
-    ''' <param name="lastName">The new server's last name.</param>
-    ''' <param name="suppressChit">True to suppress chit printing for the new server; otherwise false.</param>
-    Public Sub AddServerToTemplate(ByVal serverNumber As String, ByVal firstName As String, ByVal lastName As String, ByVal suppressChit As Boolean)
-        _globalSettings.GlobalDataSet.Servers.AddServersRow(serverNumber, firstName, lastName, suppressChit)
-        _globalSettings.GlobalDataSet.AcceptChanges()
-        _globalSettingsFile.WriteGlobalSettings(_globalSettings)
-    End Sub
-
-    ''' <summary>
     ''' Gets a copy of the template servers.
     ''' </summary>
     ''' <returns>A <see cref="DataTable"/> containing the template servers.</returns>
