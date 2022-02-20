@@ -9,8 +9,6 @@ Imports TipTracker.Utilities
 
 Public Class frmEnterTips
     Private Const DATE_FORMAT = "M/d/yyyy"
-    Private Const AMOUNT_FORMAT as String = "0.00"
-    Private const REPORT_DATE_TIME_FORMAT as String = "MM/dd/yyyy h:mm tt"
 
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
