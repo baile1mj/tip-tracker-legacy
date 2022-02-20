@@ -14,7 +14,7 @@ Public Class frmEnterTips
 
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
-    Public ReadOnly Property ObjectService As BusinessObjectService
+    Public ReadOnly Property ObjectService As PayPeriodObjectService
 
     Private ReadOnly _totalLabelLookup As Dictionary(Of TipType, Label)
     Private ReadOnly _templateServers As New List(Of Server)
@@ -32,7 +32,7 @@ Public Class frmEnterTips
         Me.File = file
         Me.Data = data
         FileDataSet = data.FileDataSet
-        ObjectService = New BusinessObjectService(data)
+        ObjectService = New PayPeriodObjectService(data)
         Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
 

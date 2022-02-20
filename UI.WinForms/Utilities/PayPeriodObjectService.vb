@@ -7,14 +7,14 @@ Namespace Utilities
     ''' Provides an anti-corruption layer to help isolate the <see cref="DataSet"/> layer in preparation for
     ''' the application's conversion to use business objects.
     ''' </summary>
-    Public Class BusinessObjectService
+    Public Class PayPeriodObjectService
         Private ReadOnly _data As PayPeriodData
 
         ''' <summary>
         ''' Creates a new instance of the service class.
         ''' </summary>
         ''' <param name="payPeriodData"></param>
-        Public Sub New (payPeriodData As PayPeriodData)
+        Public Sub New(payPeriodData As PayPeriodData)
             _data = payPeriodData
         End Sub
 
@@ -48,7 +48,7 @@ Namespace Utilities
                     .[Event] = If(Not IsNothing(r.SpecialFunctionsRow), eventsByName(r.SpecialFunction), Nothing)}) _
                 .ToList()
 
-            For Each tip In tips 
+            For Each tip In tips
                 tip.EarnedBy.Tips.Add(tip)
             Next
 
@@ -89,7 +89,7 @@ Namespace Utilities
         ''' Gets the data store to use for updating server records.
         ''' </summary>
         ''' <returns></returns>
-        Public Function GetServerDataStore() As IDataStore(Of Server) 
+        Public Function GetServerDataStore() As IDataStore(Of Server)
             Return New ServerObjectStore(_data)
         End Function
     End Class
