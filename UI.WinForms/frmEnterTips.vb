@@ -36,18 +36,6 @@ Public Class frmEnterTips
         Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
 
-    Private Function GetServers() As List(Of Server)
-        Return Data.FileDataSet.Servers _
-            .AsEnumerable() _
-            .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
-            .Select(Function(r) New Server() With {
-                .PosId = r("ServerNumber").ToString(),
-                .FirstName = r("FirstName").ToString(),
-                .LastName = r("LastName").ToString(),
-                .SuppressChit = CBool(r("SuppressChit"))}) _
-            .ToList()
-    End Function
-
     Private Sub frmEnterTips_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Set the form as an mdi child of frmMain.
         MdiParent = frmMain
@@ -55,7 +43,7 @@ Public Class frmEnterTips
         WindowState = FormWindowState.Maximized
 
         'Bind the data sources to the display.
-        ServerBindingSource.DataSource = New SortableBindingList(Of Server)(GetServers())
+        ServerBindingSource.DataSource = New SortableBindingList(Of Server)(ObjectService.GetServerDataStore().GetAll().ToList())
 
         CreditCardTipsBindingSource.DataSource = Data.FileDataSet
         CreditCardTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
@@ -305,7 +293,7 @@ Public Class frmEnterTips
 
     Private Sub EditTip(bindingSource As BindingSource, sourceType As TipType)
         Dim selectedTip = GetSelectedTip(bindingSource)
-        Dim servers = GetServers()
+        Dim servers = ObjectService.GetServerDataStore().GetAll().ToList()
         Dim server = servers.First(Function(s) s.PosId = selectedTip.ServerNumber)
         Dim periodStart  = Data.PayPeriodStart
         Dim periodEnd  = Data.PayPeriodEnd
@@ -539,7 +527,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnQuickAddCashTips_Click(sender As Object, e As EventArgs) Handles btnQuickAddCashTips.Click
-        Dim servers = GetServers().OrderBy(Function (s) s.LastName).ThenBy(Function(s) s.FirstName).ToList()
+        Dim servers = ObjectService.GetServerDataStore().GetAll().ToList().OrderBy(Function(s) s.LastName).ThenBy(Function(s) s.FirstName).ToList()
 
         If Not servers.Any() Then
             MessageBox.Show("There are no server in the file.", "No Servers", MessageBoxButtons.OK)
@@ -697,7 +685,7 @@ Public Class frmEnterTips
         Dim selected = DirectCast(ServerBindingSource.Current, Server)
         Dim recipient As Server
 
-        Using selectServer As New frmSelectServer("Select the merge recipient:", GetServers())
+        Using selectServer As New frmSelectServer("Select the merge recipient:", ObjectService.GetServerDataStore().GetAll().ToList())
             If selectServer.ShowDialog() <> DialogResult.OK Then Exit Sub
 
             recipient = selectServer.GetSelectedServer()
@@ -709,7 +697,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuCopyFromTemplate_Click(sender As Object, e As EventArgs) Handles mnuCopyFromTemplate.Click
-        Dim fileServers = GetServers().ToDictionary(Function(s) s.PosId)
+        Dim fileServers = ObjectService.GetServerDataStore().GetAll().ToList().ToDictionary(Function(s) s.PosId)
         Dim conflicts = New List(Of Server)
         Dim missingServers = New List(Of Server)
 

@@ -14,7 +14,15 @@ Namespace Utilities
 
         ''' <inheritdoc />
         Public Function GetAll() As IEnumerable(Of Server) Implements IDataStore(Of Server).GetAll
-            Throw New NotImplementedException
+            Return _data.FileDataSet.Servers _
+                .AsEnumerable() _
+                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
+                .Select(Function(r) New Server() With {
+                    .PosId = r("ServerNumber").ToString(),
+                    .FirstName = r("FirstName").ToString(),
+                    .LastName = r("LastName").ToString(),
+                    .SuppressChit = CBool(r("SuppressChit"))}) _
+                .ToList()
         End Function
 
         ''' <inheritdoc />
