@@ -30,6 +30,16 @@ namespace TipTracker.Core
         public bool SuppressChit { get; set; }
 
         /// <summary>
+        /// Gets the server name as it would appear on the guest check (first name plus initial
+        /// of last name).
+        /// </summary>
+        /// <returns>The server's check name.</returns>
+        public string GetCheckName()
+        {
+            return $"{FirstName} {LastName.Substring(0, 1)}.";
+        }
+
+        /// <summary>
         /// Gets the collection of tips earned by the server.
         /// </summary>
         public List<Tip> Tips { get; } = new List<Tip>();

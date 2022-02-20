@@ -12,14 +12,6 @@ Public Class frmMain
     Private _globalSettings As GlobalSettings
     Private _templateServers As List(Of Server)
 
-    ''' <summary>
-    ''' Gets a copy of the template servers.
-    ''' </summary>
-    ''' <returns>A <see cref="DataTable"/> containing the template servers.</returns>
-    Public Function GetTemplateServers() As DataTable
-        Return _globalSettings.GlobalDataSet.Servers.Copy()
-    End Function
-
     Public Event TemplateServersChanged As EventHandler(Of IReadOnlyList(Of Server))
 
     Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -115,19 +107,7 @@ Public Class frmMain
                 MessageBox.Show("Another user changed the global settings file and your changes have been lost.  " &
                     "Please redo your changes.", "Concurrent Changes Detected", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Else
-                _globalSettings.GlobalDataSet.Servers.Rows.Clear()
-
-                For Each server As Server In serverManager.Servers
-                    Dim newRow As GlobalDataSet.ServersRow = _globalSettings.GlobalDataSet.Servers.NewServersRow
-                    newRow.ServerNumber = server.PosId
-                    newRow.FirstName = server.FirstName
-                    newRow.LastName = server.LastName
-                    newRow.SuppressChit = server.SuppressChit
-
-                    _globalSettings.GlobalDataSet.Servers.AddServersRow(newRow)
-                Next
-
-                _globalSettings.GlobalDataSet.AcceptChanges()
+                _globalSettings.UpdateTemplateServers(serverManager.Servers)
             End If
         End Using
 
@@ -150,15 +130,7 @@ Public Class frmMain
     End Sub
 
     Private Function GetServers() As List(Of Server)
-        Return _globalSettings.GlobalDataSet.Servers _
-            .AsEnumerable() _
-            .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
-            .Select(Function(r) New Server() With {
-                .PosId = r("ServerNumber").ToString(),
-                .FirstName = r("FirstName").ToString(),
-                .LastName = r("LastName").ToString(),
-                .SuppressChit = CBool(r("SuppressChit"))}) _
-            .ToList()
+        Return _globalSettings.GetTemplateServers()
     End Function
 
     Private Sub mnuSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuSettings.Click
@@ -297,7 +269,7 @@ Public Class frmMain
         End Using
 
         Dim newFile As New PayPeriodFile(filePath)
-        Dim newFileData As PayPeriodData = PayPeriodData.Create(dtePeriodStart, dtePeriodEnd, GetTemplateServers())
+        Dim newFileData As PayPeriodData = _globalSettings.CreatePayPeriod(dtePeriodStart, dtePeriodEnd)
 
         Try
             newFile.Open()
@@ -472,21 +444,27 @@ Public Class frmMain
             marginTop = .Margins.Top ' Y coordinate
         End With
 
-        Dim dv As New DataView
-        dv.Table = _globalSettings.GlobalDataSet.Servers
-        dv.Sort = "ServerNumber"
+        'It's not ideal to declare this here, but since it's unlikely that we'll ever have more
+        'servers than can fit on one page, it should be fine.  Plus, this will go away at some
+        'point anyway.
+        Dim servers = _globalSettings.GetTemplateServers() _
+            .OrderBy(Function(s) s.PosId) _
+            .ThenBy(Function(s) s.LastName) _
+            .ThenBy(Function(s) s.FirstName) _
+            .ToList()
 
         Static i As Integer = 0
 
-        Do Until i = dv.Count
+        Do Until i = servers.Count
             If position >= marginTop + intPrintAreaHeight Then
                 e.HasMorePages = True
                 position = 50
                 Exit Sub
             End If
 
-            Dim strServerNumber As String = dv(i)("ServerNumber").ToString
-            Dim strName As String = dv(i)("FirstName").ToString & " " & Microsoft.VisualBasic.Left(dv(i)("LastName").ToString, 1) & "."
+            Dim server = servers(i)
+            Dim strServerNumber As String = server.PosId
+            Dim strName As String = server.GetCheckName()
 
             'Draw the first column to the page.
             e.Graphics.DrawString(strServerNumber, font, Brushes.Black, intCol1NumberPos, position)
@@ -503,7 +481,6 @@ Public Class frmMain
         e.HasMorePages = False
         position = 50
         i = 0
-        dv = Nothing
     End Sub
 
     Private Sub mnuAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuAbout.Click
