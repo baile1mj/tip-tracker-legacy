@@ -422,34 +422,6 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub mnuExportServerList_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuExportServerList.Click
-        Dim strFileName As String
-
-        Using dlgSaveFile As New SaveFileDialog()
-            With dlgSaveFile
-                .InitialDirectory = My.Computer.FileSystem.SpecialDirectories.Desktop
-                .RestoreDirectory = True
-                .Title = "Export Server List"
-                .Filter = "XML Files (*.xml)|*.xml"
-                .DefaultExt = "*.xml"
-                .FileName = "Server List"
-
-                If .ShowDialog <> DialogResult.OK Then
-                    Exit Sub
-                End If
-
-                strFileName = .FileName
-            End With
-        End Using
-
-        Try
-            'TODO: move the file writing functionality into a separate class.
-            _globalSettings.GlobalDataSet.Servers.WriteXml(strFileName)
-        Catch ex As Exception
-            MessageBox.Show("An error occurred while trying to save the server list.", "Write Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
     Private Sub mnuPrintServerList_Click(ByVal sender As Object, ByVal e As EventArgs) Handles mnuPrintServerList.Click
         Dim serverList As New PrintDocument()
 

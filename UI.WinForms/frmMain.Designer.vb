@@ -35,7 +35,6 @@ Partial Class frmMain
         Me.mnuManageTemplateServers = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuPrintServerList = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuExportServerList = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuRunMaintenanceUtility = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
@@ -129,7 +128,7 @@ Partial Class frmMain
         '
         'mnuTools
         '
-        Me.mnuTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuManageTemplateServers, Me.ToolStripSeparator6, Me.mnuPrintServerList, Me.mnuExportServerList, Me.ToolStripSeparator5, Me.mnuRunMaintenanceUtility, Me.ToolStripSeparator3, Me.mnuSettings})
+        Me.mnuTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuManageTemplateServers, Me.ToolStripSeparator6, Me.mnuPrintServerList, Me.ToolStripSeparator5, Me.mnuRunMaintenanceUtility, Me.ToolStripSeparator3, Me.mnuSettings})
         Me.mnuTools.Name = "mnuTools"
         Me.mnuTools.Size = New System.Drawing.Size(46, 20)
         Me.mnuTools.Text = "&Tools"
@@ -150,13 +149,6 @@ Partial Class frmMain
         Me.mnuPrintServerList.Name = "mnuPrintServerList"
         Me.mnuPrintServerList.Size = New System.Drawing.Size(217, 22)
         Me.mnuPrintServerList.Text = "Print Server List"
-        '
-        'mnuExportServerList
-        '
-        Me.mnuExportServerList.Name = "mnuExportServerList"
-        Me.mnuExportServerList.Size = New System.Drawing.Size(217, 22)
-        Me.mnuExportServerList.Text = "Export Server List"
-        Me.mnuExportServerList.Visible = False
         '
         'ToolStripSeparator5
         '
@@ -285,7 +277,6 @@ Partial Class frmMain
     Friend WithEvents mnuMaximizeAll As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuCascade As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mnuExportServerList As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuPrintServerList As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
