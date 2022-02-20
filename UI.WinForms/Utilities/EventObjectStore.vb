@@ -22,8 +22,9 @@ Namespace Utilities
 
         ''' <inheritdoc />
         Public Function Contains(item As [Event]) As Boolean Implements IDataStore(Of [Event]).Contains
-            return _data.FileDataSet.SpecialFunctions _
+            Return _data.FileDataSet.SpecialFunctions _
                 .AsQueryable() _
+                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
                 .Any(Function(r) r.SpecialFunction = item.Name)
         End Function
 
@@ -60,13 +61,15 @@ Namespace Utilities
             Dim tipsRelation = _data.FileDataSet.SpecialFunctions.ChildRelations(0)
             Dim events = _data.FileDataSet.SpecialFunctions _
                 .AsEnumerable() _
-                .Select(Function (r) New With {
-                    .Event = New [Event] With { .Name = r.SpecialFunction, .[Date] = r._Date },
+                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
+                .Select(Function(r) New With {
+                    .Event = New [Event] With {.Name = r.SpecialFunction, .[Date] = r._Date},
                     .TipRows = r.GetChildRows(tipsRelation)}) _
                 .ToList()
-        
+
             For Each item In events
                 Dim tips = item.TipRows _
+                    .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
                     .Select(Function(r) DirectCast(r, FileDataSet.TipsRow)) _
                     .Select(Function(r) New Tip With {
                         .Type = TipTypes.SpecialFunction,

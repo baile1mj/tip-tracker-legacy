@@ -24,6 +24,7 @@ Namespace Utilities
         ''' <returns>The collection of tips for the pay period.</returns>
         Public Function GetTips() As IEnumerable(Of Tip)
             Dim serversById = _data.FileDataSet.Servers.AsEnumerable() _
+                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
                 .Select(Function(r) New Server With {
                     .PosId = r.ServerNumber,
                     .LastName = r.LastName,
@@ -31,13 +32,15 @@ Namespace Utilities
                     .SuppressChit = r.SuppressChit}) _
                 .ToDictionary(Function(s) s.PosId)
             Dim eventsByName = _data.FileDataSet.SpecialFunctions.AsEnumerable() _
-                .Select(Function (r) New [Event] With {
+                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
+                .Select(Function(r) New [Event] With {
                     .Name = r.SpecialFunction,
                     .[Date] = r._Date}) _
                 .ToDictionary(Function(e) e.Name)
 
             Dim tips = _data.FileDataSet.Tips.AsEnumerable() _
-                .Select(Function (r) New Tip With {
+                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
+                .Select(Function(r) New Tip With {
                     .Amount = r.Amount,
                     .EarnedOn = r.WorkingDate,
                     .EarnedBy = serversById(r.ServerNumber),
