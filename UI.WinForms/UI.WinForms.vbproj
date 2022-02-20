@@ -286,6 +286,7 @@
       <DependentUpon>ServersLookupDataset.xsd</DependentUpon>
     </Compile>
     <Compile Include="Utilities\PrintDocumentFactory.vb" />
+    <Compile Include="Utilities\ServerObjectStore.vb" />
     <Compile Include="Utilities\SortableBindingList.vb" />
     <Compile Include="Utilities\TipTypes.vb" />
   </ItemGroup>

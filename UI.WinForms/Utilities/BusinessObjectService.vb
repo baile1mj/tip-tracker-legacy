@@ -90,7 +90,7 @@ Namespace Utilities
         ''' </summary>
         ''' <returns></returns>
         Public Function GetServerDataStore() As IDataStore(Of Server) 
-            Throw New NotImplementedException()
+            Return New ServerObjectStore(_data)
         End Function
     End Class
 End Namespace
