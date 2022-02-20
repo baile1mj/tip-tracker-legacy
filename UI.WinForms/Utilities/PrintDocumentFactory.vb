@@ -32,7 +32,7 @@ Public Class PrintDocumentFactory
 <DeviceInfo>
     <OutputFormat>EMF</OutputFormat>
 </DeviceInfo>"
-        Dim warnings As Warning()
+        Dim warnings As Warning() = Nothing
 
         _report.Render("Image", deviceInfo, AddressOf CreateStream, warnings)
 
