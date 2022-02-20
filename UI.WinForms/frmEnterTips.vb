@@ -143,7 +143,7 @@ Public Class frmEnterTips
 
         CashTipsBindingSource.Filter = "Description = 'Cash'"
         CashTipsBindingSource.Sort = "TipID"
-        
+
         If cboSelectSpecialFunction.SelectedIndex <> -1 Then
             SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function' AND SpecialFunction = '" & cboSelectSpecialFunction.SelectedValue.ToString & "'"
             SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
@@ -153,7 +153,7 @@ Public Class frmEnterTips
         End If
 
         SpecialFunctionBindingSource.Sort = "SpecialFunction"
-        
+
         UpdateTotal(TipTypes.CreditCard)
         UpdateTotal(TipTypes.RoomCharge)
         UpdateTotal(TipTypes.Cash)
@@ -161,13 +161,13 @@ Public Class frmEnterTips
 
     Private Sub tabTipsTabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabTipsTabControl.SelectedIndexChanged
         Dim sendingControl = DirectCast(sender, TabControl)
-        Dim selectedTab  = sendingControl.SelectedTab
-        
-        selectedTab.SelectNextControl(selectedTab, true, true, true, true)
+        Dim selectedTab = sendingControl.SelectedTab
+
+        selectedTab.SelectNextControl(selectedTab, True, True, True, True)
 
         Dim entryControls = selectedTab.Controls.Cast(Of Control)() _
-            .Where(Function (c) (TypeOf c Is ComboBox) OrElse (TypeOf c Is TextBoxBase)) _
-            .OrderBy(Function (c) c.TabIndex) _
+            .Where(Function(c) (TypeOf c Is ComboBox) OrElse (TypeOf c Is TextBoxBase)) _
+            .OrderBy(Function(c) c.TabIndex) _
             .ToArray()
 
         ResetEntryForm(entryControls)
@@ -295,29 +295,29 @@ Public Class frmEnterTips
         Dim selectedTip = GetSelectedTip(bindingSource)
         Dim servers = ObjectService.GetServerDataStore().GetAll().ToList()
         Dim server = servers.First(Function(s) s.PosId = selectedTip.ServerNumber)
-        Dim periodStart  = Data.PayPeriodStart
-        Dim periodEnd  = Data.PayPeriodEnd
+        Dim periodStart = Data.PayPeriodStart
+        Dim periodEnd = Data.PayPeriodEnd
         Dim functions = Data.FileDataSet.SpecialFunctions _
             .AsEnumerable() _
             .Select(Function(f) f.SpecialFunction) _
             .ToList()
         Dim specialFunction = selectedTip.SpecialFunctionsRow?.SpecialFunction
-        
-        Using editTip As New frmEditTip(selectedTip.Amount, periodStart, periodEnd, selectedTip.WorkingDate, sourceType, server, _
+
+        Using editTip As New frmEditTip(selectedTip.Amount, periodStart, periodEnd, selectedTip.WorkingDate, sourceType, server,
             servers, functions, specialFunction)
             If editTip.ShowDialog() <> DialogResult.OK Then Return
-            
-            Dim isUnchanged = editTip.Amount = selectedTip.Amount AndAlso editTip.Server Is server AndAlso _
-                editTip.WorkingDate = selectedTip.WorkingDate AndAlso editTip.TipType Is sourceType AndAlso _
+
+            Dim isUnchanged = editTip.Amount = selectedTip.Amount AndAlso editTip.Server Is server AndAlso
+                editTip.WorkingDate = selectedTip.WorkingDate AndAlso editTip.TipType Is sourceType AndAlso
                 editTip.SpecialFunction Is selectedTip.SpecialFunctionsRow?.SpecialFunction
 
             If isUnchanged Then Exit Sub
-            
+
             Dim newType = editTip.TipType
 
             If newType.CanSpecifyDate Then
                 selectedTip.WorkingDate = editTip.WorkingDate
-            ElseIf newType.IsEventOriginated then
+            ElseIf newType.IsEventOriginated Then
                 selectedTip.WorkingDate = Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(editTip.SpecialFunction)._Date
                 selectedTip.SpecialFunction = editTip.SpecialFunction
             Else
@@ -329,7 +329,7 @@ Public Class frmEnterTips
             selectedTip.ServersRowParent = Data.FileDataSet.Servers.FindByServerNumber(editTip.Server.PosId)
             selectedTip.Amount = editTip.Amount
             selectedTip.Description = editTip.TipType.Name
-            
+
             UpdateTotal(sourceType, specialFunction)
 
             If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialFunction)
@@ -436,12 +436,12 @@ Public Class frmEnterTips
     Private Sub txtCCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtCCServerName.GotFocus
         txtCCServerNumber.Select()
     End Sub
-    
+
     Private Sub mnuEditCCTip_Click(sender As Object, e As EventArgs) Handles mnuEditCCTip.Click, CreditCardDataGridView.DoubleClick
         If CreditCardDataGridView.Rows.Count = 0 Then Exit Sub
         EditTip(CreditCardTipsBindingSource, TipTypes.CreditCard)
     End Sub
-    
+
 #End Region
 
     'Room charge operations begin below:
@@ -489,7 +489,7 @@ Public Class frmEnterTips
     Private Sub txtRCServerName_GotFocus(sender As Object, e As EventArgs) Handles txtRCServerName.GotFocus
         txtRCServerNumber.Select()
     End Sub
-    
+
     Private Sub mnuEditRCTip_Click(sender As Object, e As EventArgs) Handles mnuEditRCTip.Click, RoomChargeDataGridView.DoubleClick
         If RoomChargeDataGridView.Rows.Count = 0 Then Exit Sub
         EditTip(RoomChargeTipsBindingSource, TipTypes.RoomCharge)
@@ -520,7 +520,7 @@ Public Class frmEnterTips
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
         PerformTipDeletion(CashTipsBindingSource, TipTypes.Cash)
     End Sub
-    
+
     Private Sub mnuEditCATip_Click(sender As Object, e As EventArgs) Handles mnuEditCATip.Click, CashDataGridView.DoubleClick
         If CashDataGridView.Rows.Count = 0 Then Exit Sub
         EditTip(CashTipsBindingSource, TipTypes.Cash)
@@ -532,14 +532,14 @@ Public Class frmEnterTips
         If Not servers.Any() Then
             MessageBox.Show("There are no server in the file.", "No Servers", MessageBoxButtons.OK)
             Exit Sub
-        End If 
+        End If
 
         Using quickAdd As New frmQuickAdd
             For Each server In servers
                 If quickAdd.ShowDialog(server.ToString()) <> DialogResult.OK Then Exit Sub
 
                 If quickAdd.TipAmount <> 0 Then
-                    Data.FileDataSet.Tips.AddTipsRow(quickAdd.TipAmount, server.PosId, server.FirstName,server.LastName, _
+                    Data.FileDataSet.Tips.AddTipsRow(quickAdd.TipAmount, server.PosId, server.FirstName, server.LastName,
                         TipTypes.Cash.Name, Nothing, Data.PayPeriodEnd)
                     UpdateTotal(TipTypes.Cash)
                 End If
@@ -580,7 +580,7 @@ Public Class frmEnterTips
     Private Sub SpecialFunctionDataGridView_RowStateChanged(sender As Object, e As DataGridViewRowStateChangedEventArgs) Handles SpecialFunctionDataGridView.RowStateChanged
         UpdateTotal(TipTypes.SpecialFunction, cboSelectSpecialFunction.SelectedValue?.ToString())
     End Sub
-    
+
     Private Sub mnuEditSFTip_Click(sender As Object, e As EventArgs) Handles mnuEditSFTip.Click, SpecialFunctionDataGridView.DoubleClick
         If SpecialFunctionDataGridView.Rows.Count = 0 Then Exit Sub
         EditTip(SpecialFunctionTipsBindingSource, TipTypes.SpecialFunction)
@@ -620,19 +620,19 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuAddServer_Click(sender As Object, e As EventArgs) Handles mnuAddServer.Click
-        Dim dataStore  = ObjectService.GetServerDataStore()
+        Dim dataStore = ObjectService.GetServerDataStore()
         Dim newServer As Server
 
         Using dialog As New frmAddEditServer()
             dialog.Text = "Add Server"
-            
+
             Do
                 If dialog.ShowDialog <> DialogResult.OK Then Exit Sub
-                
+
                 newServer = dialog.Server
                 If Not dataStore.Contains(newServer) Then Exit Do
 
-                MessageBox.Show("The server number you entered already exists in the data file.  " & 
+                MessageBox.Show("The server number you entered already exists in the data file.  " &
                     "Please enter a different number.", "Invalid Entry", MessageBoxButtons.OK)
             Loop
         End Using
@@ -655,7 +655,7 @@ Public Class frmEnterTips
         Dim selected = DirectCast(ServerBindingSource.Current, Server)
         Dim updated As Server
 
-        Using dialog As New frmAddEditServer(selected.Clone(), false)
+        Using dialog As New frmAddEditServer(selected.Clone(), False)
             If dialog.ShowDialog() <> DialogResult.OK Then Exit Sub
 
             updated = dialog.Server
