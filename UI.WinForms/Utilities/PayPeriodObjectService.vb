@@ -92,5 +92,13 @@ Namespace Utilities
         Public Function GetServerDataStore() As IDataStore(Of Server)
             Return New ServerObjectStore(_data)
         End Function
+
+        ''' <summary>
+        ''' Gets the data store to use for updating tip records.
+        ''' </summary>
+        ''' <returns>The data store for tips.</returns>
+        Public Function GetTipDataStore() As IDataStore(Of Tip)
+            Return New TipObjectStore(_data)
+        End Function
     End Class
 End Namespace

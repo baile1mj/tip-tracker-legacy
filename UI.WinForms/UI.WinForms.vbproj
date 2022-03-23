@@ -289,6 +289,7 @@
     <Compile Include="Utilities\ServerAutoCompleteCollection.vb" />
     <Compile Include="Utilities\ServerObjectStore.vb" />
     <Compile Include="Utilities\SortableBindingList.vb" />
+    <Compile Include="Utilities\TipObjectStore.vb" />
     <Compile Include="Utilities\TipTypes.vb" />
   </ItemGroup>
   <ItemGroup>
