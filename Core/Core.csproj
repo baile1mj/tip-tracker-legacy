@@ -52,6 +52,7 @@
     <Compile Include="Tip.cs" />
     <Compile Include="TipClassification.cs" />
     <Compile Include="TipType.cs" />
+    <Compile Include="UI\ServerLookupValues.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Reporting\EventDetail.rdlc" />
