@@ -88,7 +88,7 @@ Namespace Utilities
         ''' <summary>
         ''' Gets the data store to use for updating server records.
         ''' </summary>
-        ''' <returns></returns>
+        ''' <returns>The data store for servers.</returns>
         Public Function GetServerDataStore() As IDataStore(Of Server)
             Return New ServerObjectStore(_data)
         End Function
