@@ -43,6 +43,7 @@ Public Class frmEnterTips
 
         'Bind the data sources to the display.
         ServerBindingSource.DataSource = New SortableBindingList(Of Server)(ObjectService.GetServerDataStore().GetAll().ToList())
+        BuildEventBindingSource()
 
         CreditCardTipsBindingSource.DataSource = Data.FileDataSet
         CreditCardTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
@@ -55,10 +56,6 @@ Public Class frmEnterTips
 
         SpecialFunctionTipsBindingSource.DataSource = Data.FileDataSet
         SpecialFunctionTipsBindingSource.DataMember = Data.FileDataSet.Tips.TableName
-
-        SpecialFunctionBindingSource.DataSource = Data.FileDataSet
-        SpecialFunctionBindingSource.DataMember = Data.FileDataSet.SpecialFunctions.TableName
-
 
         'Set the servers binding source sort mode.
         ServerBindingSource.Sort = NameOf(Server.LastName)
@@ -76,6 +73,11 @@ Public Class frmEnterTips
         'the child control needs to be selected manually.
         txtCCServerNumber.Select()
 
+    End Sub
+
+    Private Sub BuildEventBindingSource()
+        EventBindingSource.DataSource = New SortableBindingList(Of [Event])(ObjectService.GetEventDataStore().GetAll().ToList())
+        EventBindingSource.Sort = "Name"
     End Sub
 
     Private Sub ComboBoxKeyPress(sender As Object, e As KeyEventArgs) Handles cboCAServer.KeyDown, cboSFServer.KeyDown
@@ -138,8 +140,6 @@ Public Class frmEnterTips
             SpecialFunctionTipsBindingSource.Filter = "Description = 'Special Function'"
             SpecialFunctionTipsBindingSource.Sort = "SpecialFunction, TipID"
         End If
-
-        SpecialFunctionBindingSource.Sort = "SpecialFunction"
 
         UpdateTotal(TipTypes.CreditCard)
         UpdateTotal(TipTypes.RoomCharge)
@@ -586,6 +586,7 @@ Public Class frmEnterTips
             form.ShowDialog()
         End Using
 
+        BuildEventBindingSource()
         cboSelectSpecialFunction.SelectedIndex = -1
     End Sub
 
@@ -599,8 +600,8 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Dim strSpecialFunction As String = cboSelectSpecialFunction.SelectedValue.ToString
-        SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & strSpecialFunction & "'"
+        Dim selectedFunction = DirectCast(cboSelectSpecialFunction.SelectedItem, [Event])
+        SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & selectedFunction.Name & "'"
         SpecialFunctionTipsBindingSource.Sort = "TipID"
         cboSFServer.Select()
     End Sub

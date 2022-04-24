@@ -5,7 +5,7 @@ Partial Class frmEnterTips
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -19,14 +19,14 @@ Partial Class frmEnterTips
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEnterTips))
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         Me.strStatusStrip = New System.Windows.Forms.StatusStrip()
         Me.lblWorkingDate = New System.Windows.Forms.ToolStripStatusLabel()
@@ -122,7 +122,6 @@ Partial Class frmEnterTips
         Me.btnShowAllTips = New System.Windows.Forms.Button()
         Me.lblSelectSpecialFunction = New System.Windows.Forms.Label()
         Me.cboSelectSpecialFunction = New System.Windows.Forms.ComboBox()
-        Me.SpecialFunctionBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.SpecialFunctionDataGridView = New System.Windows.Forms.DataGridView()
         Me.SFID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -181,6 +180,7 @@ Partial Class frmEnterTips
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
         Me.ReportViewer1 = New Microsoft.Reporting.WinForms.ReportViewer()
+        Me.EventBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.strStatusStrip.SuspendLayout()
         Me.strToolStrip.SuspendLayout()
@@ -198,7 +198,6 @@ Partial Class frmEnterTips
         Me.mnuCATips.SuspendLayout()
         CType(Me.CashTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSpecialFunction.SuspendLayout()
-        CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SpecialFunctionDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuSFTips.SuspendLayout()
         CType(Me.SpecialFunctionTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -208,6 +207,7 @@ Partial Class frmEnterTips
         CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.EventBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'FileDataSet
@@ -492,9 +492,9 @@ Partial Class frmEnterTips
         'CCAmount
         '
         Me.CCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle5.Format = "N2"
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle14.Format = "N2"
+        DataGridViewCellStyle14.NullValue = Nothing
+        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle14
         Me.CCAmount.HeaderText = "Amount"
         Me.CCAmount.Name = "CCAmount"
         Me.CCAmount.ReadOnly = True
@@ -675,8 +675,8 @@ Partial Class frmEnterTips
         'RCAmount
         '
         Me.RCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle6.Format = "N2"
-        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle15.Format = "N2"
+        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle15
         Me.RCAmount.HeaderText = "Amount"
         Me.RCAmount.Name = "RCAmount"
         Me.RCAmount.ReadOnly = True
@@ -885,8 +885,8 @@ Partial Class frmEnterTips
         'CAAmount
         '
         Me.CAAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle7.Format = "N2"
-        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle16.Format = "N2"
+        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle16
         Me.CAAmount.HeaderText = "Amount"
         Me.CAAmount.Name = "CAAmount"
         Me.CAAmount.ReadOnly = True
@@ -1057,20 +1057,14 @@ Partial Class frmEnterTips
         '
         Me.cboSelectSpecialFunction.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cboSelectSpecialFunction.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboSelectSpecialFunction.DataSource = Me.SpecialFunctionBindingSource
-        Me.cboSelectSpecialFunction.DisplayMember = "SpecialFunction"
+        Me.cboSelectSpecialFunction.DataSource = Me.EventBindingSource
+        Me.cboSelectSpecialFunction.DisplayMember = "Name"
         Me.cboSelectSpecialFunction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboSelectSpecialFunction.FormattingEnabled = True
         Me.cboSelectSpecialFunction.Location = New System.Drawing.Point(6, 19)
         Me.cboSelectSpecialFunction.Name = "cboSelectSpecialFunction"
         Me.cboSelectSpecialFunction.Size = New System.Drawing.Size(160, 21)
         Me.cboSelectSpecialFunction.TabIndex = 0
-        Me.cboSelectSpecialFunction.ValueMember = "SpecialFunction"
-        '
-        'SpecialFunctionBindingSource
-        '
-        Me.SpecialFunctionBindingSource.DataMember = "SpecialFunctions"
-        Me.SpecialFunctionBindingSource.DataSource = Me.FileDataSet
         '
         'SpecialFunctionDataGridView
         '
@@ -1108,8 +1102,8 @@ Partial Class frmEnterTips
         'SFAmount
         '
         Me.SFAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle8.Format = "N2"
-        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle13.Format = "N2"
+        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle13
         Me.SFAmount.HeaderText = "Amount"
         Me.SFAmount.Name = "SFAmount"
         Me.SFAmount.ReadOnly = True
@@ -1602,6 +1596,10 @@ Partial Class frmEnterTips
         Me.ReportViewer1.Size = New System.Drawing.Size(396, 246)
         Me.ReportViewer1.TabIndex = 0
         '
+        'EventBindingSource
+        '
+        Me.EventBindingSource.DataSource = GetType(TipTracker.Core.[Event])
+        '
         'frmEnterTips
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1638,7 +1636,6 @@ Partial Class frmEnterTips
         CType(Me.CashTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabSpecialFunction.ResumeLayout(False)
         Me.tabSpecialFunction.PerformLayout()
-        CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SpecialFunctionDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mnuSFTips.ResumeLayout(False)
         CType(Me.SpecialFunctionTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1648,10 +1645,11 @@ Partial Class frmEnterTips
         CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.EventBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
-        Me.PerformLayout
+        Me.PerformLayout()
 
-End Sub
+    End Sub
     Friend WithEvents strStatusStrip As System.Windows.Forms.StatusStrip
     Friend WithEvents strToolStrip As System.Windows.Forms.ToolStrip
     Friend WithEvents btnSelectWorkingDate As System.Windows.Forms.ToolStripButton
@@ -1735,7 +1733,6 @@ End Sub
     Friend WithEvents lblSelectSpecialFunction As System.Windows.Forms.Label
     Friend WithEvents cboSelectSpecialFunction As System.Windows.Forms.ComboBox
     Friend WithEvents lblCurrentTipType As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents SpecialFunctionBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents btnTools As System.Windows.Forms.ToolStripDropDownButton
     Friend WithEvents mnuExportTips As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
@@ -1806,4 +1803,5 @@ End Sub
     Friend WithEvents FirstNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
     Friend WithEvents LastNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
     Friend WithEvents ServerBindingSource As BindingSource
+    Friend WithEvents EventBindingSource As BindingSource
 End Class
