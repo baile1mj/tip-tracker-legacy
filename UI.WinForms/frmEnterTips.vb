@@ -4,6 +4,7 @@ Imports Microsoft.Reporting.WinForms
 Imports TipTracker.Common.Data.PayPeriod
 Imports TipTracker.Core
 Imports TipTracker.Core.Reporting
+Imports TipTracker.Core.UI
 Imports TipTracker.Utilities
 
 Public Class frmEnterTips
@@ -15,6 +16,7 @@ Public Class frmEnterTips
 
     Private ReadOnly _totalLabelLookup As Dictionary(Of TipType, Label)
     Private ReadOnly _templateServers As New List(Of Server)
+    Private _serverLookup As ServerAutoCompleteCollection
 
     Public Sub New(file As PayPeriodFile, data As PayPeriodData, templateServers As IReadOnlyList(Of Server))
         InitializeComponent()
@@ -76,52 +78,40 @@ Public Class frmEnterTips
 
     End Sub
 
-    Private Sub LoadServerCombos()
-        'Clear the server lookup dataset if there are any records already in it.
-        ServersLookupDataset.Clear()
-        ServersLookupDataset.AcceptChanges()
-
-        'Populate the server lookup data table.
-        Dim dvTemp As New DataView
-
-        dvTemp.Table = Data.FileDataSet.Servers
-        dvTemp.Sort = "LastName, FirstName"
-
-        If dvTemp.Count <> 0 Then
-            For i = 0 To dvTemp.Count - 1
-                Dim strServerNumber As String = dvTemp(i)("ServerNumber").ToString
-                Dim strFirstName As String = dvTemp(i)("FirstName").ToString
-                Dim strLastName As String = dvTemp(i)("LastName").ToString
-
-                'Build name string with LastName, FirstName format.
-                Dim drNewRow As DataRow = ServersLookupDataset.Servers.NewRow
-
-                drNewRow("ServerNumber") = strServerNumber
-                drNewRow("NameString") = strLastName & ", " & strFirstName
-
-                ServersLookupDataset.Servers.Rows.Add(drNewRow)
-
-                'Build name string with FirstName LastName format.
-                drNewRow = ServersLookupDataset.Servers.NewRow
-
-                drNewRow("ServerNumber") = strServerNumber
-                drNewRow("NameString") = strFirstName & " " & strLastName
-
-                ServersLookupDataset.Servers.Rows.Add(drNewRow)
-
-                'Build name string with server number included.
-                drNewRow = ServersLookupDataset.Servers.NewRow
-
-                drNewRow("ServerNumber") = strServerNumber
-                drNewRow("NameString") = strServerNumber & " " & strLastName & ", " & strFirstName
-
-                ServersLookupDataset.Servers.Rows.Add(drNewRow)
-            Next
-
-            ServersLookupDataset.AcceptChanges()
-            cboCAServer.SelectedIndex = -1
-            cboSFServer.SelectedIndex = -1
+    Private Sub ComboBoxKeyPress(sender As Object, e As KeyEventArgs) Handles cboCAServer.KeyDown, cboSFServer.KeyDown
+        If e.KeyValue = Keys.Enter Then
+            e.Handled = True
+            SelectNextControl(DirectCast(sender, Control), True, True, True, True)
         End If
+    End Sub
+
+    Private Sub ComboBoxLostFocus(sender As Object, e As EventArgs) Handles cboCAServer.LostFocus, cboSFServer.LostFocus
+        If TypeOf sender IsNot ComboBox Then Exit Sub
+
+        Dim ctrl = DirectCast(sender, ComboBox)
+
+        If _serverLookup.Contains(ctrl.Text) Then
+            ctrl.SelectedItem = _serverLookup.GetServer(ctrl.Text)
+        End If
+    End Sub
+
+    Private Sub LoadServerCombos()
+        Dim servers = ObjectService _
+            .GetServerDataStore() _
+            .GetAll() _
+            .OrderBy(Function(s) s.ToString()) _
+            .ToArray()
+        _serverLookup = New ServerAutoCompleteCollection(servers)
+
+        cboCAServer.Items.Clear()
+        cboCAServer.Items.AddRange(servers)
+        cboCAServer.AutoCompleteSource = AutoCompleteSource.CustomSource
+        cboCAServer.AutoCompleteCustomSource = _serverLookup
+
+        cboSFServer.Items.Clear()
+        cboSFServer.Items.AddRange(servers)
+        cboSFServer.AutoCompleteSource = AutoCompleteSource.CustomSource
+        cboSFServer.AutoCompleteCustomSource = _serverLookup
     End Sub
 
     Private Sub UpdateDateLabels()
@@ -206,32 +196,24 @@ Public Class frmEnterTips
         SetSelectionFilters()
     End Sub
 
-    Private Function GetServerRow(serverTextBox As TextBox) As FileDataSet.ServersRow
+    Private Function GetServer(serverTextBox As TextBox) As Server
         If String.IsNullOrEmpty(serverTextBox.Text) Then
             MessageBox.Show("You must enter a server number.", "Invalid Entry", MessageBoxButtons.OK)
             serverTextBox.Select()
             Return Nothing
         End If
 
-        Return Data.FileDataSet.Servers.FindByServerNumber(serverTextBox.Text)
-    End Function
+        Dim foundServer = ObjectService.GetServerDataStore() _
+            .GetAll() _
+            .FirstOrDefault(Function(s) s.PosId = serverTextBox.Text)
 
-    Private Function GetServerRow(serverComboBox As ComboBox) As FileDataSet.ServersRow
-        If serverComboBox.SelectedIndex = -1 Then
-            If serverComboBox.Text = "" Then
-                MessageBox.Show("You must select the server this tip belongs to.", "Select Server", MessageBoxButtons.OK)
-                serverComboBox.Select()
-                Return Nothing
-            Else
-                MessageBox.Show("The server name you entered was not found in the data file.  You must add the server before you can add the tip.", "Server Not Found", MessageBoxButtons.OK)
-                serverComboBox.Text = ""
-                serverComboBox.Select()
-                Return Nothing
-            End If
+        If foundServer Is Nothing Then
+            MessageBox.Show("The selected server was not found.  Please enter a valid server number.",
+                "Invalid Server", MessageBoxButtons.OK)
+            serverTextBox.Select()
         End If
 
-        Dim serverNumber = serverComboBox.SelectedValue.ToString()
-        Return Data.FileDataSet.Servers.FindByServerNumber(serverNumber)
+        Return foundServer
     End Function
 
     Private Function GetTipAmount(amountTextBox As TextBox) As Decimal?
@@ -264,28 +246,8 @@ Public Class frmEnterTips
         Return FileDataSet.SpecialFunctions.FindBySpecialFunction(selectedFunction)
     End Function
 
-    Private Sub AddTip(server As FileDataSet.ServersRow, tipAmount As Decimal, tipType As TipType,
-        Optional specialFunction As FileDataSet.SpecialFunctionsRow = Nothing)
-        Dim newTipRow = Data.FileDataSet.Tips.NewTipsRow()
-
-        With newTipRow
-            .Amount = tipAmount
-            .ServerNumber = server.ServerNumber
-            .FirstName = server.FirstName
-            .LastName = server.LastName
-            .Description = tipType.Name
-
-            If specialFunction IsNot Nothing Then
-                .SpecialFunction = specialFunction.SpecialFunction
-                .WorkingDate = specialFunction._Date
-            ElseIf tipType Is TipTypes.Cash Then
-                .WorkingDate = Data.PayPeriodEnd
-            Else
-                .WorkingDate = Data.WorkingDate
-            End If
-        End With
-
-        Data.FileDataSet.Tips.AddTipsRow(newTipRow)
+    Private Sub AddTip(tip As Tip)
+        ObjectService.GetTipDataStore().Add(tip)
     End Sub
 
     Private Sub EditTip(bindingSource As BindingSource, sourceType As TipType)
@@ -409,14 +371,19 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnAddCC_Click(sender As Object, e As EventArgs) Handles btnAddCC.Click
-
-        Dim server = GetServerRow(txtCCServerNumber)
+        Dim server = GetServer(txtCCServerNumber)
         If server Is Nothing Then Exit Sub
 
         Dim amount = GetTipAmount(txtCCAmount)
         If amount Is Nothing Then Exit Sub
 
-        AddTip(server, amount.Value, TipTypes.CreditCard)
+        Dim newTip = New Tip With {
+            .EarnedBy = server,
+            .Amount = amount.Value,
+            .EarnedOn = Data.WorkingDate,
+            .Type = TipTypes.CreditCard}
+
+        AddTip(newTip)
         UpdateTotal(TipTypes.CreditCard)
         ResetEntryForm(txtCCServerNumber, txtCCAmount, txtCCServerName)
     End Sub
@@ -462,14 +429,19 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnAddRC_Click(sender As Object, e As EventArgs) Handles btnAddRC.Click
-
-        Dim server = GetServerRow(txtRCServerNumber)
+        Dim server = GetServer(txtRCServerNumber)
         If server Is Nothing Then Exit Sub
 
         Dim amount = GetTipAmount(txtRCAmount)
         If amount Is Nothing Then Exit Sub
 
-        AddTip(server, amount.Value, TipTypes.RoomCharge)
+        Dim newTip = New Tip With {
+            .EarnedBy = server,
+            .Amount = amount.Value,
+            .EarnedOn = Data.WorkingDate,
+            .Type = TipTypes.RoomCharge}
+
+        AddTip(newTip)
         UpdateTotal(TipTypes.RoomCharge)
         ResetEntryForm(txtRCServerNumber, txtRCAmount, txtRCServerName)
     End Sub
@@ -497,14 +469,21 @@ Public Class frmEnterTips
 #Region "CashOperations"
 
     Private Sub btnAddCA_Click(sender As Object, e As EventArgs) Handles btnAddCA.Click
+        If sender IsNot btnAddCA Then Exit Sub
 
-        Dim server = GetServerRow(cboCAServer)
+        Dim server = DirectCast(cboCAServer.SelectedItem, Server)
         If server Is Nothing Then Exit Sub
 
         Dim amount = GetTipAmount(txtCAAmount)
         If amount Is Nothing Then Exit Sub
 
-        AddTip(server, amount.Value, TipTypes.Cash)
+        Dim newTip As New Tip() With {
+            .EarnedBy = server,
+            .Amount = amount.Value,
+            .EarnedOn = Data.PayPeriodEnd,
+            .Type = TipTypes.Cash}
+
+        AddTip(newTip)
         UpdateTotal(TipTypes.Cash)
         ResetEntryForm(cboCAServer, txtCAAmount)
     End Sub
@@ -548,18 +527,34 @@ Public Class frmEnterTips
     'Special function operations begin below:
 #Region "SpecialFunctionOperations"
     Private Sub btnAddSF_Click(sender As Object, e As EventArgs) Handles btnAddSF.Click
+        Dim functionName = GetSelectedFunction(cboSelectSpecialFunction)
+        If functionName Is Nothing Then Exit Sub
 
-        Dim specialFunction = GetSelectedFunction(cboSelectSpecialFunction)
-        If specialFunction Is Nothing Then Exit Sub
+        Dim specialFunction = ObjectService.GetEventDataStore() _
+            .GetAll() _
+            .FirstOrDefault(Function(f) f.Name = functionName.SpecialFunction)
 
-        Dim server = GetServerRow(cboSFServer)
+        If cboSFServer.SelectedItem Is Nothing Then
+            MessageBox.Show("You must select the server this tip belongs to.", "Select Server", MessageBoxButtons.OK)
+            cboSFServer.Select()
+            Exit Sub
+        End If
+
+        Dim server = DirectCast(cboSFServer.SelectedItem, Server)
         If server Is Nothing Then Exit Sub
 
         Dim amount = GetTipAmount(txtSFAmount)
         If amount Is Nothing Then Exit Sub
 
-        AddTip(server, amount.Value, TipTypes.SpecialFunction, specialFunction)
-        UpdateTotal(TipTypes.SpecialFunction, specialFunction.SpecialFunction)
+        Dim newTip As New Tip With {
+            .EarnedBy = server,
+            .Amount = amount.Value,
+            .EarnedOn = specialFunction.Date,
+            .[Event] = specialFunction,
+            .Type = TipTypes.SpecialFunction}
+
+        AddTip(newTip)
+        UpdateTotal(TipTypes.SpecialFunction, functionName.SpecialFunction)
         ResetEntryForm(cboSFServer, txtSFAmount)
     End Sub
 

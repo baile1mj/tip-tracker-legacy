@@ -23,10 +23,10 @@ Partial Class frmEnterTips
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEnterTips))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         Me.strStatusStrip = New System.Windows.Forms.StatusStrip()
         Me.lblWorkingDate = New System.Windows.Forms.ToolStripStatusLabel()
@@ -99,8 +99,6 @@ Partial Class frmEnterTips
         Me.tabCash = New System.Windows.Forms.TabPage()
         Me.btnQuickAddCashTips = New System.Windows.Forms.Button()
         Me.cboCAServer = New System.Windows.Forms.ComboBox()
-        Me.CAServersLookupBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.ServersLookupDataset = New TipTracker.ServersLookupDataset()
         Me.lblCAServerName = New System.Windows.Forms.Label()
         Me.CashDataGridView = New System.Windows.Forms.DataGridView()
         Me.CAID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -119,7 +117,6 @@ Partial Class frmEnterTips
         Me.txtCAAmount = New System.Windows.Forms.TextBox()
         Me.tabSpecialFunction = New System.Windows.Forms.TabPage()
         Me.cboSFServer = New System.Windows.Forms.ComboBox()
-        Me.SFServersLookupBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.lblSFServerName = New System.Windows.Forms.Label()
         Me.btnManageFunctions = New System.Windows.Forms.Button()
         Me.btnShowAllTips = New System.Windows.Forms.Button()
@@ -144,6 +141,9 @@ Partial Class frmEnterTips
         Me.txtSFAmount = New System.Windows.Forms.TextBox()
         Me.grpServers = New System.Windows.Forms.GroupBox()
         Me.ServersDataGridView = New System.Windows.Forms.DataGridView()
+        Me.PosIdDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.mnuServersContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.mnuAddServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuEditSelectedServer = New System.Windows.Forms.ToolStripMenuItem()
@@ -151,6 +151,7 @@ Partial Class frmEnterTips
         Me.mnuMergeDuplicate = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuCopyFromTemplate = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ServerBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -180,45 +181,38 @@ Partial Class frmEnterTips
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
         Me.ReportViewer1 = New Microsoft.Reporting.WinForms.ReportViewer()
-        Me.ServerBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.PosIdDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        CType(Me.FileDataSet,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.strStatusStrip.SuspendLayout
-        Me.strToolStrip.SuspendLayout
-        Me.tabTipsTabControl.SuspendLayout
-        Me.tabCreditCard.SuspendLayout
-        CType(Me.CreditCardDataGridView,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.mnuCCTips.SuspendLayout
-        CType(Me.CreditCardTipsBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.tabRoomCharge.SuspendLayout
-        CType(Me.RoomChargeDataGridView,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.mnuRCTips.SuspendLayout
-        CType(Me.RoomChargeTipsBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.tabCash.SuspendLayout
-        CType(Me.CAServersLookupBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.ServersLookupDataset,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.CashDataGridView,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.mnuCATips.SuspendLayout
-        CType(Me.CashTipsBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.tabSpecialFunction.SuspendLayout
-        CType(Me.SFServersLookupBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.SpecialFunctionBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.SpecialFunctionDataGridView,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.mnuSFTips.SuspendLayout
-        CType(Me.SpecialFunctionTipsBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.grpServers.SuspendLayout
-        CType(Me.ServersDataGridView,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.mnuServersContextMenu.SuspendLayout
-        CType(Me.DataGridView1,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.DataGridView4,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.ServerBindingSource,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.SuspendLayout
+        CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.strStatusStrip.SuspendLayout()
+        Me.strToolStrip.SuspendLayout()
+        Me.tabTipsTabControl.SuspendLayout()
+        Me.tabCreditCard.SuspendLayout()
+        CType(Me.CreditCardDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuCCTips.SuspendLayout()
+        CType(Me.CreditCardTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabRoomCharge.SuspendLayout()
+        CType(Me.RoomChargeDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuRCTips.SuspendLayout()
+        CType(Me.RoomChargeTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabCash.SuspendLayout()
+        CType(Me.CashDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuCATips.SuspendLayout()
+        CType(Me.CashTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabSpecialFunction.SuspendLayout()
+        CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.SpecialFunctionDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuSFTips.SuspendLayout()
+        CType(Me.SpecialFunctionTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.grpServers.SuspendLayout()
+        CType(Me.ServersDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuServersContextMenu.SuspendLayout()
+        CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SuspendLayout()
         '
         'FileDataSet
         '
-        Me.FileDataSet.CaseSensitive = true
+        Me.FileDataSet.CaseSensitive = True
         Me.FileDataSet.DataSetName = "FileDataSet"
         Me.FileDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
         '
@@ -233,9 +227,9 @@ Partial Class frmEnterTips
         '
         'lblWorkingDate
         '
-        Me.lblWorkingDate.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom),System.Windows.Forms.ToolStripStatusLabelBorderSides)
+        Me.lblWorkingDate.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom), System.Windows.Forms.ToolStripStatusLabelBorderSides)
         Me.lblWorkingDate.BorderStyle = System.Windows.Forms.Border3DStyle.Etched
         Me.lblWorkingDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold)
         Me.lblWorkingDate.Name = "lblWorkingDate"
@@ -244,9 +238,9 @@ Partial Class frmEnterTips
         '
         'lblPeriodStart
         '
-        Me.lblPeriodStart.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom),System.Windows.Forms.ToolStripStatusLabelBorderSides)
+        Me.lblPeriodStart.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom), System.Windows.Forms.ToolStripStatusLabelBorderSides)
         Me.lblPeriodStart.BorderStyle = System.Windows.Forms.Border3DStyle.Etched
         Me.lblPeriodStart.Name = "lblPeriodStart"
         Me.lblPeriodStart.Size = New System.Drawing.Size(75, 19)
@@ -254,9 +248,9 @@ Partial Class frmEnterTips
         '
         'lblPeriodEnd
         '
-        Me.lblPeriodEnd.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom),System.Windows.Forms.ToolStripStatusLabelBorderSides)
+        Me.lblPeriodEnd.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom), System.Windows.Forms.ToolStripStatusLabelBorderSides)
         Me.lblPeriodEnd.BorderStyle = System.Windows.Forms.Border3DStyle.Etched
         Me.lblPeriodEnd.Name = "lblPeriodEnd"
         Me.lblPeriodEnd.Size = New System.Drawing.Size(71, 19)
@@ -264,9 +258,9 @@ Partial Class frmEnterTips
         '
         'lblSystemDate
         '
-        Me.lblSystemDate.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)  _
-            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom),System.Windows.Forms.ToolStripStatusLabelBorderSides)
+        Me.lblSystemDate.BorderSides = CType((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) _
+            Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom), System.Windows.Forms.ToolStripStatusLabelBorderSides)
         Me.lblSystemDate.BorderStyle = System.Windows.Forms.Border3DStyle.Etched
         Me.lblSystemDate.Name = "lblSystemDate"
         Me.lblSystemDate.Size = New System.Drawing.Size(79, 19)
@@ -277,7 +271,7 @@ Partial Class frmEnterTips
         Me.lblInfo.Name = "lblInfo"
         Me.lblInfo.Size = New System.Drawing.Size(31, 19)
         Me.lblInfo.Text = "Info:"
-        Me.lblInfo.Visible = false
+        Me.lblInfo.Visible = False
         '
         'strToolStrip
         '
@@ -294,7 +288,7 @@ Partial Class frmEnterTips
         'btnFinalize
         '
         Me.btnFinalize.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.btnFinalize.Image = CType(resources.GetObject("btnFinalize.Image"),System.Drawing.Image)
+        Me.btnFinalize.Image = CType(resources.GetObject("btnFinalize.Image"), System.Drawing.Image)
         Me.btnFinalize.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnFinalize.Name = "btnFinalize"
         Me.btnFinalize.Size = New System.Drawing.Size(23, 22)
@@ -308,7 +302,7 @@ Partial Class frmEnterTips
         'btnSelectWorkingDate
         '
         Me.btnSelectWorkingDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.btnSelectWorkingDate.Image = CType(resources.GetObject("btnSelectWorkingDate.Image"),System.Drawing.Image)
+        Me.btnSelectWorkingDate.Image = CType(resources.GetObject("btnSelectWorkingDate.Image"), System.Drawing.Image)
         Me.btnSelectWorkingDate.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSelectWorkingDate.Name = "btnSelectWorkingDate"
         Me.btnSelectWorkingDate.Size = New System.Drawing.Size(23, 22)
@@ -323,7 +317,7 @@ Partial Class frmEnterTips
         '
         Me.btnReports.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
         Me.btnReports.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuPrintRegularTipChits, Me.ToolStripSeparator6, Me.mnuTipReports, Me.mnuSpecialFunctionReports, Me.ToolStripSeparator9, Me.mnuPayrollBalancingReport})
-        Me.btnReports.Image = CType(resources.GetObject("btnReports.Image"),System.Drawing.Image)
+        Me.btnReports.Image = CType(resources.GetObject("btnReports.Image"), System.Drawing.Image)
         Me.btnReports.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnReports.Name = "btnReports"
         Me.btnReports.Size = New System.Drawing.Size(60, 22)
@@ -430,9 +424,9 @@ Partial Class frmEnterTips
         '
         'tabTipsTabControl
         '
-        Me.tabTipsTabControl.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.tabTipsTabControl.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabTipsTabControl.Controls.Add(Me.tabCreditCard)
         Me.tabTipsTabControl.Controls.Add(Me.tabRoomCharge)
         Me.tabTipsTabControl.Controls.Add(Me.tabCash)
@@ -460,50 +454,50 @@ Partial Class frmEnterTips
         Me.tabCreditCard.Size = New System.Drawing.Size(556, 482)
         Me.tabCreditCard.TabIndex = 0
         Me.tabCreditCard.Text = "Credit Card"
-        Me.tabCreditCard.UseVisualStyleBackColor = true
+        Me.tabCreditCard.UseVisualStyleBackColor = True
         '
         'CreditCardDataGridView
         '
-        Me.CreditCardDataGridView.AllowUserToAddRows = false
-        Me.CreditCardDataGridView.AllowUserToDeleteRows = false
-        Me.CreditCardDataGridView.AllowUserToResizeColumns = false
-        Me.CreditCardDataGridView.AllowUserToResizeRows = false
-        Me.CreditCardDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.CreditCardDataGridView.AutoGenerateColumns = false
+        Me.CreditCardDataGridView.AllowUserToAddRows = False
+        Me.CreditCardDataGridView.AllowUserToDeleteRows = False
+        Me.CreditCardDataGridView.AllowUserToResizeColumns = False
+        Me.CreditCardDataGridView.AllowUserToResizeRows = False
+        Me.CreditCardDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CreditCardDataGridView.AutoGenerateColumns = False
         Me.CreditCardDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.CreditCardDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CCID, Me.CCAmount, Me.CCServerNumber, Me.CCFirstName, Me.CCLastName})
         Me.CreditCardDataGridView.ContextMenuStrip = Me.mnuCCTips
         Me.CreditCardDataGridView.DataSource = Me.CreditCardTipsBindingSource
         Me.CreditCardDataGridView.Location = New System.Drawing.Point(172, 6)
-        Me.CreditCardDataGridView.MultiSelect = false
+        Me.CreditCardDataGridView.MultiSelect = False
         Me.CreditCardDataGridView.Name = "CreditCardDataGridView"
-        Me.CreditCardDataGridView.ReadOnly = true
-        Me.CreditCardDataGridView.RowHeadersVisible = false
+        Me.CreditCardDataGridView.ReadOnly = True
+        Me.CreditCardDataGridView.RowHeadersVisible = False
         Me.CreditCardDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.CreditCardDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.CreditCardDataGridView.Size = New System.Drawing.Size(378, 473)
         Me.CreditCardDataGridView.TabIndex = 8
-        Me.CreditCardDataGridView.TabStop = false
+        Me.CreditCardDataGridView.TabStop = False
         '
         'CCID
         '
         Me.CCID.DataPropertyName = "TipID"
         Me.CCID.HeaderText = "Tip No."
         Me.CCID.Name = "CCID"
-        Me.CCID.ReadOnly = true
+        Me.CCID.ReadOnly = True
         Me.CCID.Width = 75
         '
         'CCAmount
         '
         Me.CCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle1.Format = "N2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle5.Format = "N2"
+        DataGridViewCellStyle5.NullValue = Nothing
+        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle5
         Me.CCAmount.HeaderText = "Amount"
         Me.CCAmount.Name = "CCAmount"
-        Me.CCAmount.ReadOnly = true
+        Me.CCAmount.ReadOnly = True
         Me.CCAmount.Width = 75
         '
         'CCServerNumber
@@ -511,16 +505,16 @@ Partial Class frmEnterTips
         Me.CCServerNumber.DataPropertyName = "ServerNumber"
         Me.CCServerNumber.HeaderText = "Server No."
         Me.CCServerNumber.Name = "CCServerNumber"
-        Me.CCServerNumber.ReadOnly = true
+        Me.CCServerNumber.ReadOnly = True
         '
         'CCFirstName
         '
         Me.CCFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.CCFirstName.DataPropertyName = "FirstName"
-        Me.CCFirstName.FillWeight = 90!
+        Me.CCFirstName.FillWeight = 90.0!
         Me.CCFirstName.HeaderText = "First Name"
         Me.CCFirstName.Name = "CCFirstName"
-        Me.CCFirstName.ReadOnly = true
+        Me.CCFirstName.ReadOnly = True
         '
         'CCLastName
         '
@@ -528,7 +522,7 @@ Partial Class frmEnterTips
         Me.CCLastName.DataPropertyName = "LastName"
         Me.CCLastName.HeaderText = "Last Name"
         Me.CCLastName.Name = "CCLastName"
-        Me.CCLastName.ReadOnly = true
+        Me.CCLastName.ReadOnly = True
         '
         'mnuCCTips
         '
@@ -560,7 +554,7 @@ Partial Class frmEnterTips
         Me.btnClearCC.Size = New System.Drawing.Size(61, 23)
         Me.btnClearCC.TabIndex = 3
         Me.btnClearCC.Text = "Clear"
-        Me.btnClearCC.UseVisualStyleBackColor = true
+        Me.btnClearCC.UseVisualStyleBackColor = True
         '
         'btnAddCC
         '
@@ -569,13 +563,13 @@ Partial Class frmEnterTips
         Me.btnAddCC.Size = New System.Drawing.Size(61, 23)
         Me.btnAddCC.TabIndex = 2
         Me.btnAddCC.Text = "Add"
-        Me.btnAddCC.UseVisualStyleBackColor = true
+        Me.btnAddCC.UseVisualStyleBackColor = True
         '
         'lblCCTotal
         '
-        Me.lblCCTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.lblCCTotal.AutoSize = true
-        Me.lblCCTotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblCCTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblCCTotal.AutoSize = True
+        Me.lblCCTotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCCTotal.Location = New System.Drawing.Point(3, 462)
         Me.lblCCTotal.Name = "lblCCTotal"
         Me.lblCCTotal.Size = New System.Drawing.Size(96, 17)
@@ -584,7 +578,7 @@ Partial Class frmEnterTips
         '
         'lblCCAmount
         '
-        Me.lblCCAmount.AutoSize = true
+        Me.lblCCAmount.AutoSize = True
         Me.lblCCAmount.Location = New System.Drawing.Point(6, 35)
         Me.lblCCAmount.Name = "lblCCAmount"
         Me.lblCCAmount.Size = New System.Drawing.Size(64, 13)
@@ -593,7 +587,7 @@ Partial Class frmEnterTips
         '
         'lblCCServerNumber
         '
-        Me.lblCCServerNumber.AutoSize = true
+        Me.lblCCServerNumber.AutoSize = True
         Me.lblCCServerNumber.Location = New System.Drawing.Point(6, 9)
         Me.lblCCServerNumber.Name = "lblCCServerNumber"
         Me.lblCCServerNumber.Size = New System.Drawing.Size(81, 13)
@@ -621,10 +615,10 @@ Partial Class frmEnterTips
         Me.txtCCServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtCCServerName.Location = New System.Drawing.Point(6, 58)
         Me.txtCCServerName.Name = "txtCCServerName"
-        Me.txtCCServerName.ReadOnly = true
+        Me.txtCCServerName.ReadOnly = True
         Me.txtCCServerName.Size = New System.Drawing.Size(160, 20)
         Me.txtCCServerName.TabIndex = 7
-        Me.txtCCServerName.TabStop = false
+        Me.txtCCServerName.TabStop = False
         '
         'tabRoomCharge
         '
@@ -643,49 +637,49 @@ Partial Class frmEnterTips
         Me.tabRoomCharge.Size = New System.Drawing.Size(556, 482)
         Me.tabRoomCharge.TabIndex = 4
         Me.tabRoomCharge.Text = "Room Charge"
-        Me.tabRoomCharge.UseVisualStyleBackColor = true
+        Me.tabRoomCharge.UseVisualStyleBackColor = True
         '
         'RoomChargeDataGridView
         '
-        Me.RoomChargeDataGridView.AllowUserToAddRows = false
-        Me.RoomChargeDataGridView.AllowUserToDeleteRows = false
-        Me.RoomChargeDataGridView.AllowUserToResizeColumns = false
-        Me.RoomChargeDataGridView.AllowUserToResizeRows = false
-        Me.RoomChargeDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.RoomChargeDataGridView.AutoGenerateColumns = false
+        Me.RoomChargeDataGridView.AllowUserToAddRows = False
+        Me.RoomChargeDataGridView.AllowUserToDeleteRows = False
+        Me.RoomChargeDataGridView.AllowUserToResizeColumns = False
+        Me.RoomChargeDataGridView.AllowUserToResizeRows = False
+        Me.RoomChargeDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.RoomChargeDataGridView.AutoGenerateColumns = False
         Me.RoomChargeDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.RoomChargeDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RCID, Me.RCAmount, Me.RCServerNumber, Me.RCFirstName, Me.RCLastName})
         Me.RoomChargeDataGridView.ContextMenuStrip = Me.mnuRCTips
         Me.RoomChargeDataGridView.DataSource = Me.RoomChargeTipsBindingSource
         Me.RoomChargeDataGridView.Location = New System.Drawing.Point(172, 6)
-        Me.RoomChargeDataGridView.MultiSelect = false
+        Me.RoomChargeDataGridView.MultiSelect = False
         Me.RoomChargeDataGridView.Name = "RoomChargeDataGridView"
-        Me.RoomChargeDataGridView.ReadOnly = true
-        Me.RoomChargeDataGridView.RowHeadersVisible = false
+        Me.RoomChargeDataGridView.ReadOnly = True
+        Me.RoomChargeDataGridView.RowHeadersVisible = False
         Me.RoomChargeDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.RoomChargeDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.RoomChargeDataGridView.Size = New System.Drawing.Size(378, 473)
         Me.RoomChargeDataGridView.TabIndex = 8
-        Me.RoomChargeDataGridView.TabStop = false
+        Me.RoomChargeDataGridView.TabStop = False
         '
         'RCID
         '
         Me.RCID.DataPropertyName = "TipID"
         Me.RCID.HeaderText = "Tip No."
         Me.RCID.Name = "RCID"
-        Me.RCID.ReadOnly = true
+        Me.RCID.ReadOnly = True
         Me.RCID.Width = 75
         '
         'RCAmount
         '
         Me.RCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle2.Format = "N2"
-        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle6.Format = "N2"
+        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle6
         Me.RCAmount.HeaderText = "Amount"
         Me.RCAmount.Name = "RCAmount"
-        Me.RCAmount.ReadOnly = true
+        Me.RCAmount.ReadOnly = True
         Me.RCAmount.Width = 75
         '
         'RCServerNumber
@@ -693,16 +687,16 @@ Partial Class frmEnterTips
         Me.RCServerNumber.DataPropertyName = "ServerNumber"
         Me.RCServerNumber.HeaderText = "Server No."
         Me.RCServerNumber.Name = "RCServerNumber"
-        Me.RCServerNumber.ReadOnly = true
+        Me.RCServerNumber.ReadOnly = True
         '
         'RCFirstName
         '
         Me.RCFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.RCFirstName.DataPropertyName = "FirstName"
-        Me.RCFirstName.FillWeight = 90!
+        Me.RCFirstName.FillWeight = 90.0!
         Me.RCFirstName.HeaderText = "First Name"
         Me.RCFirstName.Name = "RCFirstName"
-        Me.RCFirstName.ReadOnly = true
+        Me.RCFirstName.ReadOnly = True
         '
         'RCLastName
         '
@@ -710,7 +704,7 @@ Partial Class frmEnterTips
         Me.RCLastName.DataPropertyName = "LastName"
         Me.RCLastName.HeaderText = "Last Name"
         Me.RCLastName.Name = "RCLastName"
-        Me.RCLastName.ReadOnly = true
+        Me.RCLastName.ReadOnly = True
         '
         'mnuRCTips
         '
@@ -742,7 +736,7 @@ Partial Class frmEnterTips
         Me.btnClearRC.Size = New System.Drawing.Size(61, 23)
         Me.btnClearRC.TabIndex = 3
         Me.btnClearRC.Text = "Clear"
-        Me.btnClearRC.UseVisualStyleBackColor = true
+        Me.btnClearRC.UseVisualStyleBackColor = True
         '
         'btnAddRC
         '
@@ -751,13 +745,13 @@ Partial Class frmEnterTips
         Me.btnAddRC.Size = New System.Drawing.Size(61, 23)
         Me.btnAddRC.TabIndex = 2
         Me.btnAddRC.Text = "Add"
-        Me.btnAddRC.UseVisualStyleBackColor = true
+        Me.btnAddRC.UseVisualStyleBackColor = True
         '
         'lblRCTotal
         '
-        Me.lblRCTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.lblRCTotal.AutoSize = true
-        Me.lblRCTotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblRCTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblRCTotal.AutoSize = True
+        Me.lblRCTotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblRCTotal.Location = New System.Drawing.Point(3, 462)
         Me.lblRCTotal.Name = "lblRCTotal"
         Me.lblRCTotal.Size = New System.Drawing.Size(96, 17)
@@ -766,7 +760,7 @@ Partial Class frmEnterTips
         '
         'lblRCAmount
         '
-        Me.lblRCAmount.AutoSize = true
+        Me.lblRCAmount.AutoSize = True
         Me.lblRCAmount.Location = New System.Drawing.Point(6, 35)
         Me.lblRCAmount.Name = "lblRCAmount"
         Me.lblRCAmount.Size = New System.Drawing.Size(64, 13)
@@ -775,7 +769,7 @@ Partial Class frmEnterTips
         '
         'lblRCServerNumber
         '
-        Me.lblRCServerNumber.AutoSize = true
+        Me.lblRCServerNumber.AutoSize = True
         Me.lblRCServerNumber.Location = New System.Drawing.Point(6, 9)
         Me.lblRCServerNumber.Name = "lblRCServerNumber"
         Me.lblRCServerNumber.Size = New System.Drawing.Size(81, 13)
@@ -803,10 +797,10 @@ Partial Class frmEnterTips
         Me.txtRCServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRCServerName.Location = New System.Drawing.Point(6, 58)
         Me.txtRCServerName.Name = "txtRCServerName"
-        Me.txtRCServerName.ReadOnly = true
+        Me.txtRCServerName.ReadOnly = True
         Me.txtRCServerName.Size = New System.Drawing.Size(160, 20)
         Me.txtRCServerName.TabIndex = 7
-        Me.txtRCServerName.TabStop = false
+        Me.txtRCServerName.TabStop = False
         '
         'tabCash
         '
@@ -825,7 +819,7 @@ Partial Class frmEnterTips
         Me.tabCash.Size = New System.Drawing.Size(556, 482)
         Me.tabCash.TabIndex = 5
         Me.tabCash.Text = "Cash"
-        Me.tabCash.UseVisualStyleBackColor = true
+        Me.tabCash.UseVisualStyleBackColor = True
         '
         'btnQuickAddCashTips
         '
@@ -834,34 +828,21 @@ Partial Class frmEnterTips
         Me.btnQuickAddCashTips.Size = New System.Drawing.Size(128, 23)
         Me.btnQuickAddCashTips.TabIndex = 8
         Me.btnQuickAddCashTips.Text = "Quick Add..."
-        Me.btnQuickAddCashTips.UseVisualStyleBackColor = true
+        Me.btnQuickAddCashTips.UseVisualStyleBackColor = True
         '
         'cboCAServer
         '
         Me.cboCAServer.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cboCAServer.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboCAServer.DataSource = Me.CAServersLookupBindingSource
-        Me.cboCAServer.DisplayMember = "NameString"
-        Me.cboCAServer.FormattingEnabled = true
+        Me.cboCAServer.FormattingEnabled = True
         Me.cboCAServer.Location = New System.Drawing.Point(6, 22)
         Me.cboCAServer.Name = "cboCAServer"
         Me.cboCAServer.Size = New System.Drawing.Size(160, 21)
         Me.cboCAServer.TabIndex = 1
-        Me.cboCAServer.ValueMember = "ServerNumber"
-        '
-        'CAServersLookupBindingSource
-        '
-        Me.CAServersLookupBindingSource.DataMember = "Servers"
-        Me.CAServersLookupBindingSource.DataSource = Me.ServersLookupDataset
-        '
-        'ServersLookupDataset
-        '
-        Me.ServersLookupDataset.DataSetName = "ServersLookupDataset"
-        Me.ServersLookupDataset.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
         '
         'lblCAServerName
         '
-        Me.lblCAServerName.AutoSize = true
+        Me.lblCAServerName.AutoSize = True
         Me.lblCAServerName.Location = New System.Drawing.Point(3, 6)
         Me.lblCAServerName.Name = "lblCAServerName"
         Me.lblCAServerName.Size = New System.Drawing.Size(126, 13)
@@ -870,45 +851,45 @@ Partial Class frmEnterTips
         '
         'CashDataGridView
         '
-        Me.CashDataGridView.AllowUserToAddRows = false
-        Me.CashDataGridView.AllowUserToDeleteRows = false
-        Me.CashDataGridView.AllowUserToResizeColumns = false
-        Me.CashDataGridView.AllowUserToResizeRows = false
-        Me.CashDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.CashDataGridView.AutoGenerateColumns = false
+        Me.CashDataGridView.AllowUserToAddRows = False
+        Me.CashDataGridView.AllowUserToDeleteRows = False
+        Me.CashDataGridView.AllowUserToResizeColumns = False
+        Me.CashDataGridView.AllowUserToResizeRows = False
+        Me.CashDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CashDataGridView.AutoGenerateColumns = False
         Me.CashDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.CashDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CAID, Me.CAAmount, Me.CAServerNumber, Me.CAFirstName, Me.CALastName})
         Me.CashDataGridView.ContextMenuStrip = Me.mnuCATips
         Me.CashDataGridView.DataSource = Me.CashTipsBindingSource
         Me.CashDataGridView.Location = New System.Drawing.Point(172, 6)
-        Me.CashDataGridView.MultiSelect = false
+        Me.CashDataGridView.MultiSelect = False
         Me.CashDataGridView.Name = "CashDataGridView"
-        Me.CashDataGridView.ReadOnly = true
-        Me.CashDataGridView.RowHeadersVisible = false
+        Me.CashDataGridView.ReadOnly = True
+        Me.CashDataGridView.RowHeadersVisible = False
         Me.CashDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.CashDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.CashDataGridView.Size = New System.Drawing.Size(378, 473)
         Me.CashDataGridView.TabIndex = 5
-        Me.CashDataGridView.TabStop = false
+        Me.CashDataGridView.TabStop = False
         '
         'CAID
         '
         Me.CAID.DataPropertyName = "TipID"
         Me.CAID.HeaderText = "Tip No."
         Me.CAID.Name = "CAID"
-        Me.CAID.ReadOnly = true
+        Me.CAID.ReadOnly = True
         Me.CAID.Width = 75
         '
         'CAAmount
         '
         Me.CAAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle3.Format = "N2"
-        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle7.Format = "N2"
+        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle7
         Me.CAAmount.HeaderText = "Amount"
         Me.CAAmount.Name = "CAAmount"
-        Me.CAAmount.ReadOnly = true
+        Me.CAAmount.ReadOnly = True
         Me.CAAmount.Width = 75
         '
         'CAServerNumber
@@ -916,16 +897,16 @@ Partial Class frmEnterTips
         Me.CAServerNumber.DataPropertyName = "ServerNumber"
         Me.CAServerNumber.HeaderText = "Server No."
         Me.CAServerNumber.Name = "CAServerNumber"
-        Me.CAServerNumber.ReadOnly = true
+        Me.CAServerNumber.ReadOnly = True
         '
         'CAFirstName
         '
         Me.CAFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.CAFirstName.DataPropertyName = "FirstName"
-        Me.CAFirstName.FillWeight = 90!
+        Me.CAFirstName.FillWeight = 90.0!
         Me.CAFirstName.HeaderText = "First Name"
         Me.CAFirstName.Name = "CAFirstName"
-        Me.CAFirstName.ReadOnly = true
+        Me.CAFirstName.ReadOnly = True
         '
         'CALastName
         '
@@ -933,7 +914,7 @@ Partial Class frmEnterTips
         Me.CALastName.DataPropertyName = "LastName"
         Me.CALastName.HeaderText = "Last Name"
         Me.CALastName.Name = "CALastName"
-        Me.CALastName.ReadOnly = true
+        Me.CALastName.ReadOnly = True
         '
         'mnuCATips
         '
@@ -965,7 +946,7 @@ Partial Class frmEnterTips
         Me.btnClearCA.Size = New System.Drawing.Size(61, 23)
         Me.btnClearCA.TabIndex = 4
         Me.btnClearCA.Text = "Clear"
-        Me.btnClearCA.UseVisualStyleBackColor = true
+        Me.btnClearCA.UseVisualStyleBackColor = True
         '
         'btnAddCA
         '
@@ -974,13 +955,13 @@ Partial Class frmEnterTips
         Me.btnAddCA.Size = New System.Drawing.Size(61, 23)
         Me.btnAddCA.TabIndex = 3
         Me.btnAddCA.Text = "Add"
-        Me.btnAddCA.UseVisualStyleBackColor = true
+        Me.btnAddCA.UseVisualStyleBackColor = True
         '
         'lblCATotal
         '
-        Me.lblCATotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.lblCATotal.AutoSize = true
-        Me.lblCATotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblCATotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblCATotal.AutoSize = True
+        Me.lblCATotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCATotal.Location = New System.Drawing.Point(3, 462)
         Me.lblCATotal.Name = "lblCATotal"
         Me.lblCATotal.Size = New System.Drawing.Size(96, 17)
@@ -989,7 +970,7 @@ Partial Class frmEnterTips
         '
         'lblCAAmount
         '
-        Me.lblCAAmount.AutoSize = true
+        Me.lblCAAmount.AutoSize = True
         Me.lblCAAmount.Location = New System.Drawing.Point(6, 52)
         Me.lblCAAmount.Name = "lblCAAmount"
         Me.lblCAAmount.Size = New System.Drawing.Size(64, 13)
@@ -1024,29 +1005,21 @@ Partial Class frmEnterTips
         Me.tabSpecialFunction.Size = New System.Drawing.Size(556, 482)
         Me.tabSpecialFunction.TabIndex = 6
         Me.tabSpecialFunction.Text = "Special Function"
-        Me.tabSpecialFunction.UseVisualStyleBackColor = true
+        Me.tabSpecialFunction.UseVisualStyleBackColor = True
         '
         'cboSFServer
         '
         Me.cboSFServer.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cboSFServer.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboSFServer.DataSource = Me.SFServersLookupBindingSource
-        Me.cboSFServer.DisplayMember = "NameString"
-        Me.cboSFServer.FormattingEnabled = true
+        Me.cboSFServer.FormattingEnabled = True
         Me.cboSFServer.Location = New System.Drawing.Point(6, 59)
         Me.cboSFServer.Name = "cboSFServer"
         Me.cboSFServer.Size = New System.Drawing.Size(160, 21)
         Me.cboSFServer.TabIndex = 1
-        Me.cboSFServer.ValueMember = "ServerNumber"
-        '
-        'SFServersLookupBindingSource
-        '
-        Me.SFServersLookupBindingSource.DataMember = "Servers"
-        Me.SFServersLookupBindingSource.DataSource = Me.ServersLookupDataset
         '
         'lblSFServerName
         '
-        Me.lblSFServerName.AutoSize = true
+        Me.lblSFServerName.AutoSize = True
         Me.lblSFServerName.Location = New System.Drawing.Point(3, 43)
         Me.lblSFServerName.Name = "lblSFServerName"
         Me.lblSFServerName.Size = New System.Drawing.Size(72, 13)
@@ -1060,7 +1033,7 @@ Partial Class frmEnterTips
         Me.btnManageFunctions.Size = New System.Drawing.Size(128, 23)
         Me.btnManageFunctions.TabIndex = 6
         Me.btnManageFunctions.Text = "Manage Functions"
-        Me.btnManageFunctions.UseVisualStyleBackColor = true
+        Me.btnManageFunctions.UseVisualStyleBackColor = True
         '
         'btnShowAllTips
         '
@@ -1069,11 +1042,11 @@ Partial Class frmEnterTips
         Me.btnShowAllTips.Size = New System.Drawing.Size(128, 23)
         Me.btnShowAllTips.TabIndex = 5
         Me.btnShowAllTips.Text = "Show All Tips"
-        Me.btnShowAllTips.UseVisualStyleBackColor = true
+        Me.btnShowAllTips.UseVisualStyleBackColor = True
         '
         'lblSelectSpecialFunction
         '
-        Me.lblSelectSpecialFunction.AutoSize = true
+        Me.lblSelectSpecialFunction.AutoSize = True
         Me.lblSelectSpecialFunction.Location = New System.Drawing.Point(3, 3)
         Me.lblSelectSpecialFunction.Name = "lblSelectSpecialFunction"
         Me.lblSelectSpecialFunction.Size = New System.Drawing.Size(122, 13)
@@ -1087,7 +1060,7 @@ Partial Class frmEnterTips
         Me.cboSelectSpecialFunction.DataSource = Me.SpecialFunctionBindingSource
         Me.cboSelectSpecialFunction.DisplayMember = "SpecialFunction"
         Me.cboSelectSpecialFunction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboSelectSpecialFunction.FormattingEnabled = true
+        Me.cboSelectSpecialFunction.FormattingEnabled = True
         Me.cboSelectSpecialFunction.Location = New System.Drawing.Point(6, 19)
         Me.cboSelectSpecialFunction.Name = "cboSelectSpecialFunction"
         Me.cboSelectSpecialFunction.Size = New System.Drawing.Size(160, 21)
@@ -1101,45 +1074,45 @@ Partial Class frmEnterTips
         '
         'SpecialFunctionDataGridView
         '
-        Me.SpecialFunctionDataGridView.AllowUserToAddRows = false
-        Me.SpecialFunctionDataGridView.AllowUserToDeleteRows = false
-        Me.SpecialFunctionDataGridView.AllowUserToResizeColumns = false
-        Me.SpecialFunctionDataGridView.AllowUserToResizeRows = false
-        Me.SpecialFunctionDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.SpecialFunctionDataGridView.AutoGenerateColumns = false
+        Me.SpecialFunctionDataGridView.AllowUserToAddRows = False
+        Me.SpecialFunctionDataGridView.AllowUserToDeleteRows = False
+        Me.SpecialFunctionDataGridView.AllowUserToResizeColumns = False
+        Me.SpecialFunctionDataGridView.AllowUserToResizeRows = False
+        Me.SpecialFunctionDataGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SpecialFunctionDataGridView.AutoGenerateColumns = False
         Me.SpecialFunctionDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.SpecialFunctionDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SFID, Me.SFAmount, Me.SFServerNumber, Me.SFFirstName, Me.SFLastName, Me.SFSpecialFunction})
         Me.SpecialFunctionDataGridView.ContextMenuStrip = Me.mnuSFTips
         Me.SpecialFunctionDataGridView.DataSource = Me.SpecialFunctionTipsBindingSource
         Me.SpecialFunctionDataGridView.Location = New System.Drawing.Point(172, 6)
-        Me.SpecialFunctionDataGridView.MultiSelect = false
+        Me.SpecialFunctionDataGridView.MultiSelect = False
         Me.SpecialFunctionDataGridView.Name = "SpecialFunctionDataGridView"
-        Me.SpecialFunctionDataGridView.ReadOnly = true
-        Me.SpecialFunctionDataGridView.RowHeadersVisible = false
+        Me.SpecialFunctionDataGridView.ReadOnly = True
+        Me.SpecialFunctionDataGridView.RowHeadersVisible = False
         Me.SpecialFunctionDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.SpecialFunctionDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.SpecialFunctionDataGridView.Size = New System.Drawing.Size(378, 473)
         Me.SpecialFunctionDataGridView.TabIndex = 11
-        Me.SpecialFunctionDataGridView.TabStop = false
+        Me.SpecialFunctionDataGridView.TabStop = False
         '
         'SFID
         '
         Me.SFID.DataPropertyName = "TipID"
         Me.SFID.HeaderText = "Tip No."
         Me.SFID.Name = "SFID"
-        Me.SFID.ReadOnly = true
+        Me.SFID.ReadOnly = True
         Me.SFID.Width = 75
         '
         'SFAmount
         '
         Me.SFAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle4.Format = "N2"
-        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle8.Format = "N2"
+        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle8
         Me.SFAmount.HeaderText = "Amount"
         Me.SFAmount.Name = "SFAmount"
-        Me.SFAmount.ReadOnly = true
+        Me.SFAmount.ReadOnly = True
         Me.SFAmount.Width = 75
         '
         'SFServerNumber
@@ -1147,16 +1120,16 @@ Partial Class frmEnterTips
         Me.SFServerNumber.DataPropertyName = "ServerNumber"
         Me.SFServerNumber.HeaderText = "Server No."
         Me.SFServerNumber.Name = "SFServerNumber"
-        Me.SFServerNumber.ReadOnly = true
+        Me.SFServerNumber.ReadOnly = True
         '
         'SFFirstName
         '
         Me.SFFirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.SFFirstName.DataPropertyName = "FirstName"
-        Me.SFFirstName.FillWeight = 90!
+        Me.SFFirstName.FillWeight = 90.0!
         Me.SFFirstName.HeaderText = "First Name"
         Me.SFFirstName.Name = "SFFirstName"
-        Me.SFFirstName.ReadOnly = true
+        Me.SFFirstName.ReadOnly = True
         '
         'SFLastName
         '
@@ -1164,7 +1137,7 @@ Partial Class frmEnterTips
         Me.SFLastName.DataPropertyName = "LastName"
         Me.SFLastName.HeaderText = "Last Name"
         Me.SFLastName.Name = "SFLastName"
-        Me.SFLastName.ReadOnly = true
+        Me.SFLastName.ReadOnly = True
         '
         'SFSpecialFunction
         '
@@ -1172,7 +1145,7 @@ Partial Class frmEnterTips
         Me.SFSpecialFunction.DataPropertyName = "SpecialFunction"
         Me.SFSpecialFunction.HeaderText = "Special Function"
         Me.SFSpecialFunction.Name = "SFSpecialFunction"
-        Me.SFSpecialFunction.ReadOnly = true
+        Me.SFSpecialFunction.ReadOnly = True
         '
         'mnuSFTips
         '
@@ -1204,7 +1177,7 @@ Partial Class frmEnterTips
         Me.btnClearSF.Size = New System.Drawing.Size(61, 23)
         Me.btnClearSF.TabIndex = 4
         Me.btnClearSF.Text = "Clear"
-        Me.btnClearSF.UseVisualStyleBackColor = true
+        Me.btnClearSF.UseVisualStyleBackColor = True
         '
         'btnAddSF
         '
@@ -1213,13 +1186,13 @@ Partial Class frmEnterTips
         Me.btnAddSF.Size = New System.Drawing.Size(61, 23)
         Me.btnAddSF.TabIndex = 3
         Me.btnAddSF.Text = "Add"
-        Me.btnAddSF.UseVisualStyleBackColor = true
+        Me.btnAddSF.UseVisualStyleBackColor = True
         '
         'lblSFTotal
         '
-        Me.lblSFTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.lblSFTotal.AutoSize = true
-        Me.lblSFTotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblSFTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblSFTotal.AutoSize = True
+        Me.lblSFTotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSFTotal.Location = New System.Drawing.Point(3, 462)
         Me.lblSFTotal.Name = "lblSFTotal"
         Me.lblSFTotal.Size = New System.Drawing.Size(96, 17)
@@ -1228,7 +1201,7 @@ Partial Class frmEnterTips
         '
         'lblSFAmount
         '
-        Me.lblSFAmount.AutoSize = true
+        Me.lblSFAmount.AutoSize = True
         Me.lblSFAmount.Location = New System.Drawing.Point(6, 89)
         Me.lblSFAmount.Name = "lblSFAmount"
         Me.lblSFAmount.Size = New System.Drawing.Size(64, 13)
@@ -1245,38 +1218,65 @@ Partial Class frmEnterTips
         '
         'grpServers
         '
-        Me.grpServers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.grpServers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpServers.Controls.Add(Me.ServersDataGridView)
         Me.grpServers.Location = New System.Drawing.Point(579, 28)
         Me.grpServers.Name = "grpServers"
         Me.grpServers.Size = New System.Drawing.Size(193, 508)
         Me.grpServers.TabIndex = 1
-        Me.grpServers.TabStop = false
+        Me.grpServers.TabStop = False
         Me.grpServers.Text = "Servers"
         '
         'ServersDataGridView
         '
-        Me.ServersDataGridView.AllowUserToAddRows = false
-        Me.ServersDataGridView.AllowUserToDeleteRows = false
-        Me.ServersDataGridView.AllowUserToResizeColumns = false
-        Me.ServersDataGridView.AllowUserToResizeRows = false
-        Me.ServersDataGridView.AutoGenerateColumns = false
+        Me.ServersDataGridView.AllowUserToAddRows = False
+        Me.ServersDataGridView.AllowUserToDeleteRows = False
+        Me.ServersDataGridView.AllowUserToResizeColumns = False
+        Me.ServersDataGridView.AllowUserToResizeRows = False
+        Me.ServersDataGridView.AutoGenerateColumns = False
         Me.ServersDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.ServersDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PosIdDataGridViewTextBoxColumn, Me.FirstNameDataGridViewTextBoxColumn, Me.LastNameDataGridViewTextBoxColumn})
         Me.ServersDataGridView.ContextMenuStrip = Me.mnuServersContextMenu
         Me.ServersDataGridView.DataSource = Me.ServerBindingSource
         Me.ServersDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ServersDataGridView.Location = New System.Drawing.Point(3, 16)
-        Me.ServersDataGridView.MultiSelect = false
+        Me.ServersDataGridView.MultiSelect = False
         Me.ServersDataGridView.Name = "ServersDataGridView"
-        Me.ServersDataGridView.ReadOnly = true
-        Me.ServersDataGridView.RowHeadersVisible = false
+        Me.ServersDataGridView.ReadOnly = True
+        Me.ServersDataGridView.RowHeadersVisible = False
         Me.ServersDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.ServersDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.ServersDataGridView.Size = New System.Drawing.Size(187, 489)
         Me.ServersDataGridView.TabIndex = 0
-        Me.ServersDataGridView.TabStop = false
+        Me.ServersDataGridView.TabStop = False
+        '
+        'PosIdDataGridViewTextBoxColumn
+        '
+        Me.PosIdDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.PosIdDataGridViewTextBoxColumn.DataPropertyName = "PosId"
+        Me.PosIdDataGridViewTextBoxColumn.FillWeight = 25.0!
+        Me.PosIdDataGridViewTextBoxColumn.HeaderText = "No."
+        Me.PosIdDataGridViewTextBoxColumn.Name = "PosIdDataGridViewTextBoxColumn"
+        Me.PosIdDataGridViewTextBoxColumn.ReadOnly = True
+        '
+        'FirstNameDataGridViewTextBoxColumn
+        '
+        Me.FirstNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.FirstNameDataGridViewTextBoxColumn.DataPropertyName = "FirstName"
+        Me.FirstNameDataGridViewTextBoxColumn.FillWeight = 35.0!
+        Me.FirstNameDataGridViewTextBoxColumn.HeaderText = "First Name"
+        Me.FirstNameDataGridViewTextBoxColumn.Name = "FirstNameDataGridViewTextBoxColumn"
+        Me.FirstNameDataGridViewTextBoxColumn.ReadOnly = True
+        '
+        'LastNameDataGridViewTextBoxColumn
+        '
+        Me.LastNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.LastNameDataGridViewTextBoxColumn.DataPropertyName = "LastName"
+        Me.LastNameDataGridViewTextBoxColumn.FillWeight = 40.0!
+        Me.LastNameDataGridViewTextBoxColumn.HeaderText = "Last Name"
+        Me.LastNameDataGridViewTextBoxColumn.Name = "LastNameDataGridViewTextBoxColumn"
+        Me.LastNameDataGridViewTextBoxColumn.ReadOnly = True
         '
         'mnuServersContextMenu
         '
@@ -1318,35 +1318,39 @@ Partial Class frmEnterTips
         Me.mnuCopyFromTemplate.Size = New System.Drawing.Size(184, 22)
         Me.mnuCopyFromTemplate.Text = "Copy From Template"
         '
+        'ServerBindingSource
+        '
+        Me.ServerBindingSource.DataSource = GetType(TipTracker.Core.Server)
+        '
         'DataGridView1
         '
-        Me.DataGridView1.AllowUserToAddRows = false
-        Me.DataGridView1.AllowUserToDeleteRows = false
-        Me.DataGridView1.AllowUserToResizeColumns = false
-        Me.DataGridView1.AllowUserToResizeRows = false
-        Me.DataGridView1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.DataGridView1.AutoGenerateColumns = false
+        Me.DataGridView1.AllowUserToAddRows = False
+        Me.DataGridView1.AllowUserToDeleteRows = False
+        Me.DataGridView1.AllowUserToResizeColumns = False
+        Me.DataGridView1.AllowUserToResizeRows = False
+        Me.DataGridView1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DataGridView1.AutoGenerateColumns = False
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5})
         Me.DataGridView1.DataSource = Me.CreditCardTipsBindingSource
         Me.DataGridView1.Location = New System.Drawing.Point(172, 6)
         Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.ReadOnly = true
-        Me.DataGridView1.RowHeadersVisible = false
+        Me.DataGridView1.ReadOnly = True
+        Me.DataGridView1.RowHeadersVisible = False
         Me.DataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.DataGridView1.Size = New System.Drawing.Size(211, 350)
         Me.DataGridView1.TabIndex = 8
-        Me.DataGridView1.TabStop = false
+        Me.DataGridView1.TabStop = False
         '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "TipID"
         Me.DataGridViewTextBoxColumn1.HeaderText = "ID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = true
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 40
         '
         'DataGridViewTextBoxColumn2
@@ -1354,7 +1358,7 @@ Partial Class frmEnterTips
         Me.DataGridViewTextBoxColumn2.DataPropertyName = "Amount"
         Me.DataGridViewTextBoxColumn2.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = true
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
         Me.DataGridViewTextBoxColumn2.Width = 75
         '
         'DataGridViewTextBoxColumn3
@@ -1362,17 +1366,17 @@ Partial Class frmEnterTips
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "ServerNumber"
         Me.DataGridViewTextBoxColumn3.HeaderText = "No."
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = true
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.Width = 50
         '
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "FirstName"
-        Me.DataGridViewTextBoxColumn4.FillWeight = 90!
+        Me.DataGridViewTextBoxColumn4.FillWeight = 90.0!
         Me.DataGridViewTextBoxColumn4.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = true
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
         '
         'DataGridViewTextBoxColumn5
         '
@@ -1380,7 +1384,7 @@ Partial Class frmEnterTips
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "LastName"
         Me.DataGridViewTextBoxColumn5.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = true
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
         '
         'Button1
         '
@@ -1389,7 +1393,7 @@ Partial Class frmEnterTips
         Me.Button1.Size = New System.Drawing.Size(61, 23)
         Me.Button1.TabIndex = 3
         Me.Button1.Text = "Clear"
-        Me.Button1.UseVisualStyleBackColor = true
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'Button2
         '
@@ -1398,13 +1402,13 @@ Partial Class frmEnterTips
         Me.Button2.Size = New System.Drawing.Size(61, 23)
         Me.Button2.TabIndex = 2
         Me.Button2.Text = "Add"
-        Me.Button2.UseVisualStyleBackColor = true
+        Me.Button2.UseVisualStyleBackColor = True
         '
         'Label1
         '
-        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.Label1.AutoSize = true
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(3, 339)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(96, 17)
@@ -1413,7 +1417,7 @@ Partial Class frmEnterTips
         '
         'Label2
         '
-        Me.Label2.AutoSize = true
+        Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(6, 35)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(64, 13)
@@ -1422,7 +1426,7 @@ Partial Class frmEnterTips
         '
         'Label3
         '
-        Me.Label3.AutoSize = true
+        Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(6, 9)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(81, 13)
@@ -1446,43 +1450,43 @@ Partial Class frmEnterTips
         'TextBox3
         '
         Me.TextBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox3.Enabled = false
+        Me.TextBox3.Enabled = False
         Me.TextBox3.Location = New System.Drawing.Point(6, 58)
         Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.ReadOnly = true
+        Me.TextBox3.ReadOnly = True
         Me.TextBox3.Size = New System.Drawing.Size(160, 20)
         Me.TextBox3.TabIndex = 7
-        Me.TextBox3.TabStop = false
+        Me.TextBox3.TabStop = False
         '
         'DataGridView4
         '
-        Me.DataGridView4.AllowUserToAddRows = false
-        Me.DataGridView4.AllowUserToDeleteRows = false
-        Me.DataGridView4.AllowUserToResizeColumns = false
-        Me.DataGridView4.AllowUserToResizeRows = false
-        Me.DataGridView4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.DataGridView4.AutoGenerateColumns = false
+        Me.DataGridView4.AllowUserToAddRows = False
+        Me.DataGridView4.AllowUserToDeleteRows = False
+        Me.DataGridView4.AllowUserToResizeColumns = False
+        Me.DataGridView4.AllowUserToResizeRows = False
+        Me.DataGridView4.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DataGridView4.AutoGenerateColumns = False
         Me.DataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DataGridView4.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn16, Me.DataGridViewTextBoxColumn17, Me.DataGridViewTextBoxColumn18, Me.DataGridViewTextBoxColumn19, Me.DataGridViewTextBoxColumn20})
         Me.DataGridView4.DataSource = Me.CreditCardTipsBindingSource
         Me.DataGridView4.Location = New System.Drawing.Point(172, 6)
         Me.DataGridView4.Name = "DataGridView4"
-        Me.DataGridView4.ReadOnly = true
-        Me.DataGridView4.RowHeadersVisible = false
+        Me.DataGridView4.ReadOnly = True
+        Me.DataGridView4.RowHeadersVisible = False
         Me.DataGridView4.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.DataGridView4.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.DataGridView4.Size = New System.Drawing.Size(211, 350)
         Me.DataGridView4.TabIndex = 8
-        Me.DataGridView4.TabStop = false
+        Me.DataGridView4.TabStop = False
         '
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "TipID"
         Me.DataGridViewTextBoxColumn16.HeaderText = "ID"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
-        Me.DataGridViewTextBoxColumn16.ReadOnly = true
+        Me.DataGridViewTextBoxColumn16.ReadOnly = True
         Me.DataGridViewTextBoxColumn16.Width = 40
         '
         'DataGridViewTextBoxColumn17
@@ -1490,7 +1494,7 @@ Partial Class frmEnterTips
         Me.DataGridViewTextBoxColumn17.DataPropertyName = "Amount"
         Me.DataGridViewTextBoxColumn17.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
-        Me.DataGridViewTextBoxColumn17.ReadOnly = true
+        Me.DataGridViewTextBoxColumn17.ReadOnly = True
         Me.DataGridViewTextBoxColumn17.Width = 75
         '
         'DataGridViewTextBoxColumn18
@@ -1498,17 +1502,17 @@ Partial Class frmEnterTips
         Me.DataGridViewTextBoxColumn18.DataPropertyName = "ServerNumber"
         Me.DataGridViewTextBoxColumn18.HeaderText = "No."
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
-        Me.DataGridViewTextBoxColumn18.ReadOnly = true
+        Me.DataGridViewTextBoxColumn18.ReadOnly = True
         Me.DataGridViewTextBoxColumn18.Width = 50
         '
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.DataGridViewTextBoxColumn19.DataPropertyName = "FirstName"
-        Me.DataGridViewTextBoxColumn19.FillWeight = 90!
+        Me.DataGridViewTextBoxColumn19.FillWeight = 90.0!
         Me.DataGridViewTextBoxColumn19.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
-        Me.DataGridViewTextBoxColumn19.ReadOnly = true
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
         '
         'DataGridViewTextBoxColumn20
         '
@@ -1516,7 +1520,7 @@ Partial Class frmEnterTips
         Me.DataGridViewTextBoxColumn20.DataPropertyName = "LastName"
         Me.DataGridViewTextBoxColumn20.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
-        Me.DataGridViewTextBoxColumn20.ReadOnly = true
+        Me.DataGridViewTextBoxColumn20.ReadOnly = True
         '
         'Button7
         '
@@ -1525,7 +1529,7 @@ Partial Class frmEnterTips
         Me.Button7.Size = New System.Drawing.Size(61, 23)
         Me.Button7.TabIndex = 3
         Me.Button7.Text = "Clear"
-        Me.Button7.UseVisualStyleBackColor = true
+        Me.Button7.UseVisualStyleBackColor = True
         '
         'Button8
         '
@@ -1534,13 +1538,13 @@ Partial Class frmEnterTips
         Me.Button8.Size = New System.Drawing.Size(61, 23)
         Me.Button8.TabIndex = 2
         Me.Button8.Text = "Add"
-        Me.Button8.UseVisualStyleBackColor = true
+        Me.Button8.UseVisualStyleBackColor = True
         '
         'Label10
         '
-        Me.Label10.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-        Me.Label10.AutoSize = true
-        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 10!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label10.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.Location = New System.Drawing.Point(3, 339)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(96, 17)
@@ -1549,7 +1553,7 @@ Partial Class frmEnterTips
         '
         'Label11
         '
-        Me.Label11.AutoSize = true
+        Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(6, 35)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(64, 13)
@@ -1558,7 +1562,7 @@ Partial Class frmEnterTips
         '
         'Label12
         '
-        Me.Label12.AutoSize = true
+        Me.Label12.AutoSize = True
         Me.Label12.Location = New System.Drawing.Point(6, 9)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(81, 13)
@@ -1582,13 +1586,13 @@ Partial Class frmEnterTips
         'TextBox12
         '
         Me.TextBox12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox12.Enabled = false
+        Me.TextBox12.Enabled = False
         Me.TextBox12.Location = New System.Drawing.Point(6, 58)
         Me.TextBox12.Name = "TextBox12"
-        Me.TextBox12.ReadOnly = true
+        Me.TextBox12.ReadOnly = True
         Me.TextBox12.Size = New System.Drawing.Size(160, 20)
         Me.TextBox12.TabIndex = 7
-        Me.TextBox12.TabStop = false
+        Me.TextBox12.TabStop = False
         '
         'ReportViewer1
         '
@@ -1598,87 +1602,53 @@ Partial Class frmEnterTips
         Me.ReportViewer1.Size = New System.Drawing.Size(396, 246)
         Me.ReportViewer1.TabIndex = 0
         '
-        'ServerBindingSource
-        '
-        Me.ServerBindingSource.DataSource = GetType(TipTracker.Core.Server)
-        '
-        'PosIdDataGridViewTextBoxColumn
-        '
-        Me.PosIdDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.PosIdDataGridViewTextBoxColumn.DataPropertyName = "PosId"
-        Me.PosIdDataGridViewTextBoxColumn.FillWeight = 25!
-        Me.PosIdDataGridViewTextBoxColumn.HeaderText = "No."
-        Me.PosIdDataGridViewTextBoxColumn.Name = "PosIdDataGridViewTextBoxColumn"
-        Me.PosIdDataGridViewTextBoxColumn.ReadOnly = true
-        '
-        'FirstNameDataGridViewTextBoxColumn
-        '
-        Me.FirstNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.FirstNameDataGridViewTextBoxColumn.DataPropertyName = "FirstName"
-        Me.FirstNameDataGridViewTextBoxColumn.FillWeight = 35!
-        Me.FirstNameDataGridViewTextBoxColumn.HeaderText = "First Name"
-        Me.FirstNameDataGridViewTextBoxColumn.Name = "FirstNameDataGridViewTextBoxColumn"
-        Me.FirstNameDataGridViewTextBoxColumn.ReadOnly = true
-        '
-        'LastNameDataGridViewTextBoxColumn
-        '
-        Me.LastNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.LastNameDataGridViewTextBoxColumn.DataPropertyName = "LastName"
-        Me.LastNameDataGridViewTextBoxColumn.FillWeight = 40!
-        Me.LastNameDataGridViewTextBoxColumn.HeaderText = "Last Name"
-        Me.LastNameDataGridViewTextBoxColumn.Name = "LastNameDataGridViewTextBoxColumn"
-        Me.LastNameDataGridViewTextBoxColumn.ReadOnly = true
-        '
         'frmEnterTips
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(784, 561)
         Me.Controls.Add(Me.grpServers)
         Me.Controls.Add(Me.tabTipsTabControl)
         Me.Controls.Add(Me.strToolStrip)
         Me.Controls.Add(Me.strStatusStrip)
-        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(800, 600)
         Me.Name = "frmEnterTips"
         Me.Text = "frmEnterTips"
-        CType(Me.FileDataSet,System.ComponentModel.ISupportInitialize).EndInit
-        Me.strStatusStrip.ResumeLayout(false)
-        Me.strStatusStrip.PerformLayout
-        Me.strToolStrip.ResumeLayout(false)
-        Me.strToolStrip.PerformLayout
-        Me.tabTipsTabControl.ResumeLayout(false)
-        Me.tabCreditCard.ResumeLayout(false)
-        Me.tabCreditCard.PerformLayout
-        CType(Me.CreditCardDataGridView,System.ComponentModel.ISupportInitialize).EndInit
-        Me.mnuCCTips.ResumeLayout(false)
-        CType(Me.CreditCardTipsBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tabRoomCharge.ResumeLayout(false)
-        Me.tabRoomCharge.PerformLayout
-        CType(Me.RoomChargeDataGridView,System.ComponentModel.ISupportInitialize).EndInit
-        Me.mnuRCTips.ResumeLayout(false)
-        CType(Me.RoomChargeTipsBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tabCash.ResumeLayout(false)
-        Me.tabCash.PerformLayout
-        CType(Me.CAServersLookupBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ServersLookupDataset,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CashDataGridView,System.ComponentModel.ISupportInitialize).EndInit
-        Me.mnuCATips.ResumeLayout(false)
-        CType(Me.CashTipsBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        Me.tabSpecialFunction.ResumeLayout(false)
-        Me.tabSpecialFunction.PerformLayout
-        CType(Me.SFServersLookupBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.SpecialFunctionBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.SpecialFunctionDataGridView,System.ComponentModel.ISupportInitialize).EndInit
-        Me.mnuSFTips.ResumeLayout(false)
-        CType(Me.SpecialFunctionTipsBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        Me.grpServers.ResumeLayout(false)
-        CType(Me.ServersDataGridView,System.ComponentModel.ISupportInitialize).EndInit
-        Me.mnuServersContextMenu.ResumeLayout(false)
-        CType(Me.DataGridView1,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.DataGridView4,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ServerBindingSource,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ResumeLayout(false)
+        CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.strStatusStrip.ResumeLayout(False)
+        Me.strStatusStrip.PerformLayout()
+        Me.strToolStrip.ResumeLayout(False)
+        Me.strToolStrip.PerformLayout()
+        Me.tabTipsTabControl.ResumeLayout(False)
+        Me.tabCreditCard.ResumeLayout(False)
+        Me.tabCreditCard.PerformLayout()
+        CType(Me.CreditCardDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuCCTips.ResumeLayout(False)
+        CType(Me.CreditCardTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabRoomCharge.ResumeLayout(False)
+        Me.tabRoomCharge.PerformLayout()
+        CType(Me.RoomChargeDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuRCTips.ResumeLayout(False)
+        CType(Me.RoomChargeTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabCash.ResumeLayout(False)
+        Me.tabCash.PerformLayout()
+        CType(Me.CashDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuCATips.ResumeLayout(False)
+        CType(Me.CashTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabSpecialFunction.ResumeLayout(False)
+        Me.tabSpecialFunction.PerformLayout()
+        CType(Me.SpecialFunctionBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.SpecialFunctionDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuSFTips.ResumeLayout(False)
+        CType(Me.SpecialFunctionTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.grpServers.ResumeLayout(False)
+        CType(Me.ServersDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuServersContextMenu.ResumeLayout(False)
+        CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ResumeLayout(False)
         Me.PerformLayout
 
 End Sub
@@ -1792,14 +1762,11 @@ End Sub
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuCopyFromTemplate As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents btnManageFunctions As System.Windows.Forms.Button
-    Friend WithEvents ServersLookupDataset As TipTracker.ServersLookupDataset
     Friend WithEvents lblCAServerName As System.Windows.Forms.Label
-    Friend WithEvents CAServersLookupBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents cboCAServer As System.Windows.Forms.ComboBox
     Friend WithEvents btnQuickAddCashTips As System.Windows.Forms.Button
     Friend WithEvents cboSFServer As System.Windows.Forms.ComboBox
     Friend WithEvents lblSFServerName As System.Windows.Forms.Label
-    Friend WithEvents SFServersLookupBindingSource As System.Windows.Forms.BindingSource
     Friend WithEvents mnuTipReports As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuSpecialFunctionReports As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
