@@ -4,7 +4,6 @@ Imports Microsoft.Reporting.WinForms
 Imports TipTracker.Common.Data.PayPeriod
 Imports TipTracker.Core
 Imports TipTracker.Core.Reporting
-Imports TipTracker.Core.UI
 Imports TipTracker.Utilities
 
 Public Class frmEnterTips
@@ -13,6 +12,7 @@ Public Class frmEnterTips
     Public ReadOnly Property File As PayPeriodFile
     Public ReadOnly Property Data As PayPeriodData
     Public ReadOnly Property ObjectService As PayPeriodObjectService
+    Private ReadOnly Property PayPeriod As PayPeriod
 
     Private ReadOnly _totalLabelLookup As Dictionary(Of TipType, Label)
     Private ReadOnly _templateServers As New List(Of Server)
@@ -32,6 +32,7 @@ Public Class frmEnterTips
         Me.Data = data
         FileDataSet = data.FileDataSet
         ObjectService = New PayPeriodObjectService(data)
+        PayPeriod = ObjectService.GetPayPeriod()
         Text = Path.GetFileNameWithoutExtension(file.FilePath)
     End Sub
 
@@ -117,13 +118,13 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub UpdateDateLabels()
-        lblPeriodStart.Text = "Period Start: " & Data.PayPeriodStart.ToString(DATE_FORMAT)
-        lblPeriodEnd.Text = "Period End: " & Data.PayPeriodEnd.ToString(DATE_FORMAT)
-        lblWorkingDate.Text = "Working Date: " & Data.WorkingDate.ToString(DATE_FORMAT)
+        lblPeriodStart.Text = "Period Start: " & PayPeriod.Start.ToString(DATE_FORMAT)
+        lblPeriodEnd.Text = "Period End: " & PayPeriod.End.ToString(DATE_FORMAT)
+        lblWorkingDate.Text = "Working Date: " & PayPeriod.BusinessDate.ToString(DATE_FORMAT)
     End Sub
 
     Private Sub SetSelectionFilters()
-        Dim strWorkingDate As String = Data.WorkingDate.ToString(DATE_FORMAT)
+        Dim strWorkingDate As String = PayPeriod.BusinessDate.ToString(DATE_FORMAT)
         CreditCardTipsBindingSource.Filter = "Description = 'Credit Card' AND WorkingDate = '" & strWorkingDate & "'"
         CreditCardTipsBindingSource.Sort = "TipID"
 
@@ -162,8 +163,8 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub btnFinalize_Click(sender As Object, e As EventArgs) Handles btnFinalize.Click
-        Dim dteWorkingDate = Data.WorkingDate
-        Dim dtePeriodEnd = Data.PayPeriodEnd
+        Dim dteWorkingDate = PayPeriod.BusinessDate
+        Dim dtePeriodEnd = PayPeriod.End
         Dim newWorkingDate = dteWorkingDate.AddDays(1)
 
         If dteWorkingDate = dtePeriodEnd Then
@@ -179,17 +180,17 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Data.WorkingDate = newWorkingDate
+        PayPeriod.BusinessDate = newWorkingDate
         UpdateDateLabels()
         SetSelectionFilters()
     End Sub
 
     Private Sub btnSelectWorkingDate_Click(sender As Object, e As EventArgs) Handles btnSelectWorkingDate.Click
-        Using dateForm As New frmSelectDate(Data.PayPeriodStart, Data.PayPeriodEnd, Data.WorkingDate)
+        Using dateForm As New frmSelectDate(PayPeriod.Start, PayPeriod.End, PayPeriod.BusinessDate)
             If dateForm.ShowDialog() <> DialogResult.OK Then Exit Sub
-            If dateForm.SelectedDate = Data.WorkingDate Then Exit Sub
+            If dateForm.SelectedDate = PayPeriod.BusinessDate Then Exit Sub
 
-            Data.WorkingDate = dateForm.SelectedDate
+            PayPeriod.BusinessDate = dateForm.SelectedDate
         End Using
 
         UpdateDateLabels()
@@ -254,8 +255,8 @@ Public Class frmEnterTips
         Dim selectedTip = GetSelectedTip(bindingSource)
         Dim servers = ObjectService.GetServerDataStore().GetAll().ToList()
         Dim server = servers.First(Function(s) s.PosId = selectedTip.ServerNumber)
-        Dim periodStart = Data.PayPeriodStart
-        Dim periodEnd = Data.PayPeriodEnd
+        Dim periodStart = PayPeriod.Start
+        Dim periodEnd = PayPeriod.End
         Dim functions = Data.FileDataSet.SpecialFunctions _
             .AsEnumerable() _
             .Select(Function(f) f.SpecialFunction) _
@@ -305,7 +306,7 @@ Public Class frmEnterTips
 
         If tipType Is TipTypes.CreditCard OrElse tipType Is TipTypes.RoomCharge Then
             'Credit card and room charge tips are filtered date
-            Dim workingDate = Data.WorkingDate
+            Dim workingDate = PayPeriod.BusinessDate
             affectsTotal = Function(r) r.WorkingDate = workingDate
         ElseIf tipType Is TipTypes.SpecialFunction AndAlso specialFunction IsNot Nothing Then
             'When a function is selected, only the tips for that function should be totaled.
@@ -380,7 +381,7 @@ Public Class frmEnterTips
         Dim newTip = New Tip With {
             .EarnedBy = server,
             .Amount = amount.Value,
-            .EarnedOn = Data.WorkingDate,
+            .EarnedOn = PayPeriod.BusinessDate,
             .Type = TipTypes.CreditCard}
 
         AddTip(newTip)
@@ -438,7 +439,7 @@ Public Class frmEnterTips
         Dim newTip = New Tip With {
             .EarnedBy = server,
             .Amount = amount.Value,
-            .EarnedOn = Data.WorkingDate,
+            .EarnedOn = PayPeriod.BusinessDate,
             .Type = TipTypes.RoomCharge}
 
         AddTip(newTip)
@@ -480,7 +481,7 @@ Public Class frmEnterTips
         Dim newTip As New Tip() With {
             .EarnedBy = server,
             .Amount = amount.Value,
-            .EarnedOn = Data.PayPeriodEnd,
+            .EarnedOn = PayPeriod.End,
             .Type = TipTypes.Cash}
 
         AddTip(newTip)
@@ -516,7 +517,7 @@ Public Class frmEnterTips
 
                 If quickAdd.TipAmount <> 0 Then
                     Data.FileDataSet.Tips.AddTipsRow(quickAdd.TipAmount, server.PosId, server.FirstName, server.LastName,
-                        TipTypes.Cash.Name, Nothing, Data.PayPeriodEnd)
+                        TipTypes.Cash.Name, Nothing, PayPeriod.End)
                     UpdateTotal(TipTypes.Cash)
                 End If
             Next
@@ -723,16 +724,15 @@ Public Class frmEnterTips
 
     Private Sub mnuPrintTipChits_Click(sender As Object, e As EventArgs) Handles mnuPrintRegularTipChits.Click
         Dim types = TipTypes.Values
-        Dim payPeriod = objectService.GetPayPeriod()
-        Dim servers = objectService.GetTips() _
-            .Where(Function (t) Not t.EarnedBy.SuppressChit) _
-            .Select(Function (t) t.EarnedBy) _
+        Dim servers = ObjectService.GetTips() _
+            .Where(Function(t) Not t.EarnedBy.SuppressChit) _
+            .Select(Function(t) t.EarnedBy) _
             .Distinct() _
-            .Select(Function(s) s.Clone(New TipChitDataBuilder(payPeriod, s, types).GetPreparedTips())) _
+            .Select(Function(s) s.Clone(New TipChitDataBuilder(PayPeriod, s, types).GetPreparedTips())) _
             .OrderBy(Function(s) s.LastName) _
             .ThenBy(Function(s) s.FirstName) _
             .ThenBy(Function(s) s.PosId)
-        
+
         Using printer As New frmPrintRegularTipChits(servers)
             printer.ShowDialog()
         End Using
@@ -749,13 +749,13 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub mnuTipReports_Click(sender As Object, e As EventArgs) Handles mnuTipReports.Click
-        Using options As New frmPrintTipReportsV2(ObjectService.GetPayPeriod(), ObjectService.GetTips())
+        Using options As New frmPrintTipReportsV2(PayPeriod, ObjectService.GetTips())
             options.ShowDialog()
         End Using
     End Sub
 
     Private Sub mnuSpecialFunctionReports_Click(sender As Object, e As EventArgs) Handles mnuSpecialFunctionReports.Click
-        Dim tips   = ObjectService _
+        Dim tips = ObjectService _
             .GetTips() _
             .Where(Function(t) t.Event IsNot Nothing)
 
@@ -768,7 +768,7 @@ Public Class frmEnterTips
     ''' Prepares a payroll totals report instance with the data necessary to generate the report.
     ''' </summary>
     ''' <param name="report"></param>
-    Private Sub PreparePayrollTotals(report As LocalReport) 
+    Private Sub PreparePayrollTotals(report As LocalReport)
         Dim tips = ObjectService.GetTips()
         Dim totalsByType = tips _
             .GroupBy(Function(t) t.Type) _
@@ -777,29 +777,27 @@ Public Class frmEnterTips
             .ThenBy(Function(t) t.Type.Name) _
             .Select(Function(s) s.ToAnonymous())
 
-        Dim payPeriod = objectService.GetPayPeriod()
-
         report.DisplayName = "Payroll Totals Report"
         report.LoadReportDefinition(ReportDefinitions.PayrollTotals)
 
-        report.SetParameters(New ReportParameter("StartDate", payPeriod.Start.ToString(DATE_FORMAT)))
-        report.SetParameters(New ReportParameter("EndDate", payPeriod.End.ToString(DATE_FORMAT)))
+        report.SetParameters(New ReportParameter("StartDate", PayPeriod.Start.ToString(DATE_FORMAT)))
+        report.SetParameters(New ReportParameter("EndDate", PayPeriod.End.ToString(DATE_FORMAT)))
         report.DataSources.Add(New ReportDataSource("TipTypeTotals", totalsByType))
         report.DataSources.Add(New ReportDataSource("TipClassifications", TipClassification.Classes))
     End Sub
 
     Private Sub mnuPayrollBalancingReport_Click(sender As Object, e As EventArgs) Handles mnuPayrollBalancingReport.Click
         Cursor.Current = Cursors.WaitCursor
-        
+
         Try
             Using viewer = New frmReportPreview(AddressOf PreparePayrollTotals)
                 viewer.ShowDialog()
             End Using
         Catch ex As Exception
-            MessageBox.Show("Failed to generate the requested report.  Please verify that a printer is installed and that a " & _
+            MessageBox.Show("Failed to generate the requested report.  Please verify that a printer is installed and that a " &
                 "default printer has been selected.", "Report Generation Failed", MessageBoxButtons.OK)
         End Try
-        
+
         Cursor.Current = Cursors.Default
     End Sub
 
@@ -807,7 +805,7 @@ Public Class frmEnterTips
         Dim blnError = True
         Dim intSeed As Integer
         Dim blnSuppressChits As Boolean
-        
+
         While blnError = True
             If frmAutoAddInput.ShowDialog <> DialogResult.OK Then
                 frmAutoAddInput.Dispose()
@@ -876,17 +874,17 @@ Public Class frmEnterTips
 
         Cursor.Current = Cursors.WaitCursor
 
-        Dim rowNotDeleted = Function (r As DataRow) Not(r.RowState = DataRowState.Deleted OrElse r.RowState = DataRowState.Detached)
+        Dim rowNotDeleted = Function(r As DataRow) Not (r.RowState = DataRowState.Deleted OrElse r.RowState = DataRowState.Detached)
         Dim allServers = Data.FileDataSet.Servers.AsEnumerable().Where(rowNotDeleted).Select(Function(s) s.ServerNumber)
-        Dim serversWithTips = Data.FileDataSet.Tips.AsEnumerable().Where(rowNotDeleted).Select(Function (r) r.ServerNumber).Distinct()
+        Dim serversWithTips = Data.FileDataSet.Tips.AsEnumerable().Where(rowNotDeleted).Select(Function(r) r.ServerNumber).Distinct()
         Dim serversToRemove = allServers.Except(serversWithTips)
 
-        serversToRemove.ToList().ForEach(Sub (s) Data.FileDataSet.Servers.FindByServerNumber(s).Delete())
-        
-        Using dvTips = Data.FileDataSet.Tips.AsDataView()
-            Dim dteDate = Data.PayPeriodStart
+        serversToRemove.ToList().ForEach(Sub(s) Data.FileDataSet.Servers.FindByServerNumber(s).Delete())
 
-            Do Until dteDate > Data.PayPeriodEnd
+        Using dvTips = Data.FileDataSet.Tips.AsDataView()
+            Dim dteDate = PayPeriod.Start
+
+            Do Until dteDate > PayPeriod.End
                 dvTips.RowFilter = "WorkingDate = '" & dteDate.ToString("MM/dd/yyyy") & "' AND Description <> 'Special Function'"
                 dvTips.Sort = "ServerNumber, Description"
 
