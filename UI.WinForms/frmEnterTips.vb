@@ -711,6 +711,8 @@ Public Class frmEnterTips
             ServerBindingSource.Add(newServer)
         Next
 
+        LoadServerCombos()
+
         If Not conflicts.Any() Then Exit Sub
 
         Dim conflictList = String.Join(Environment.NewLine, conflicts.Select(Function(s) "• " & s.ToString()))
