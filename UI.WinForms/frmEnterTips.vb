@@ -257,11 +257,13 @@ Public Class frmEnterTips
         Dim server = servers.First(Function(s) s.PosId = selectedTip.ServerNumber)
         Dim periodStart = PayPeriod.Start
         Dim periodEnd = PayPeriod.End
-        Dim functions = Data.FileDataSet.SpecialFunctions _
-            .AsEnumerable() _
-            .Select(Function(f) f.SpecialFunction) _
+        Dim functions = ObjectService _
+            .GetEventDataStore() _
+            .GetAll() _
+            .OrderBy(Function(f) f.Name) _
+            .ThenBy(Function(f) f.Date) _
             .ToList()
-        Dim specialFunction = selectedTip.SpecialFunctionsRow?.SpecialFunction
+        Dim specialFunction = functions.FirstOrDefault(Function(f) f.Name = selectedTip.SpecialFunction)
 
         Using editTip As New frmEditTip(selectedTip.Amount, periodStart, periodEnd, selectedTip.WorkingDate, sourceType, server,
             servers, functions, specialFunction)
@@ -278,8 +280,8 @@ Public Class frmEnterTips
             If newType.CanSpecifyDate Then
                 selectedTip.WorkingDate = editTip.WorkingDate
             ElseIf newType.IsEventOriginated Then
-                selectedTip.WorkingDate = Data.FileDataSet.SpecialFunctions.FindBySpecialFunction(editTip.SpecialFunction)._Date
-                selectedTip.SpecialFunction = editTip.SpecialFunction
+                selectedTip.WorkingDate = editTip.SpecialFunction.Date
+                selectedTip.SpecialFunction = editTip.SpecialFunction.Name
             Else
                 selectedTip.WorkingDate = periodEnd
             End If
@@ -290,9 +292,9 @@ Public Class frmEnterTips
             selectedTip.Amount = editTip.Amount
             selectedTip.Description = editTip.TipType.Name
 
-            UpdateTotal(sourceType, specialFunction)
+            UpdateTotal(sourceType, specialFunction.Name)
 
-            If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialFunction)
+            If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialFunction.Name)
         End Using
     End Sub
 

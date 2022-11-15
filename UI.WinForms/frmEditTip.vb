@@ -51,18 +51,18 @@ Public Class frmEditTip
         End Set
     End Property
 
-    Public Property SpecialFunction As String
+    Public Property SpecialFunction As [Event]
         Get
-            Return cboSpecialFunction.SelectedItem?.ToString()
+            Return If(cboSpecialFunction.SelectedItem IsNot Nothing, DirectCast(cboSpecialFunction.SelectedItem, [Event]), Nothing)
         End Get
-        Set(value As String)
+        Set(value As [Event])
             cboSpecialFunction.SelectedItem = value
         End Set
     End Property
 
     Public Sub New(amount As Decimal, periodStart As DateTime, periodEnd As DateTime, workingDate As DateTime,
-        currentType As TipType, currentServer As Server, allServers As List(Of Server), functions As IEnumerable(Of String), _
-        Optional currentFunction As String = "")
+        currentType As TipType, currentServer As Server, allServers As List(Of Server), functions As IEnumerable(Of [Event]),
+        Optional currentFunction As [Event] = Nothing)
         InitializeComponent()
 
         _workingDateTextBoxInitialValue = txtWorkingDate.Text
@@ -151,10 +151,6 @@ Public Class frmEditTip
 
     Private Sub cboSpecialFunction_EnabledChanged(sender As Object, e As EventArgs) Handles cboSpecialFunction.EnabledChanged
         If Not cboSpecialFunction.Enabled Then cboSpecialFunction.SelectedItem = Nothing
-    End Sub
-
-    Private Sub cboSpecialFunction_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboSpecialFunction.SelectedIndexChanged
-        SpecialFunction = cboSpecialFunction.SelectedItem?.ToString()
     End Sub
 
     Private Function ValidateForm() As Boolean
