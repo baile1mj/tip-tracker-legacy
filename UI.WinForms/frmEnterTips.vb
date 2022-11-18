@@ -271,7 +271,7 @@ Public Class frmEnterTips
 
             Dim isUnchanged = editTip.Amount = selectedTip.Amount AndAlso editTip.Server Is server AndAlso
                 editTip.WorkingDate = selectedTip.WorkingDate AndAlso editTip.TipType Is sourceType AndAlso
-                editTip.SpecialFunction Is selectedTip.SpecialFunctionsRow?.SpecialFunction
+                editTip.SpecialFunction.Name Is selectedTip.SpecialFunctionsRow?.SpecialFunction
 
             If isUnchanged Then Exit Sub
 
