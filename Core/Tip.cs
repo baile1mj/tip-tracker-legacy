@@ -8,6 +8,11 @@ namespace TipTracker.Core
     public class Tip
     {
         /// <summary>
+        /// Gets or sets the ordinal identifier for the tip.
+        /// </summary>
+        public int OrdinalId { get; set; }
+
+        /// <summary>
         /// Gets or sets the server who earned the tip.
         /// </summary>
         public Server EarnedBy { get; set; }
