@@ -20,7 +20,10 @@ Namespace Utilities
 
         ''' <inheritdoc />
         Public Function GetAll() As IEnumerable(Of Tip) Implements IDataStore(Of Tip).GetAll
-            Throw New NotImplementedException
+            _data.FileDataSet.Tips _
+                .AsEnumerable() _
+                .Where(Function(r) r.NotDeletedOrDetached()) _
+                .Select(Function(row) row.ToTip())
         End Function
 
         ''' <inheritdoc />
