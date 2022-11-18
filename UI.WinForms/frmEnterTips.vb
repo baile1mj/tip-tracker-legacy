@@ -243,7 +243,7 @@ Public Class frmEnterTips
             Return Nothing
         End If
 
-        Dim selectedFunction = specialFunctionComboBox.SelectedValue.ToString()
+        Dim selectedFunction = DirectCast(specialFunctionComboBox.SelectedValue, [Event]).Name
         Return FileDataSet.SpecialFunctions.FindBySpecialFunction(selectedFunction)
     End Function
 
