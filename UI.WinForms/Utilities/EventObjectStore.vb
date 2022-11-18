@@ -58,32 +58,11 @@ Namespace Utilities
 
         ''' <inheritdoc />
         Public Function GetAll() As IEnumerable(Of [Event]) Implements IDataStore(Of [Event]).GetAll
-            Dim tipsRelation = _data.FileDataSet.SpecialFunctions.ChildRelations(0)
-            Dim events = _data.FileDataSet.SpecialFunctions _
+            'TODO: Populating tips in events should be the responsibility of the tip store.
+            Return _data.FileDataSet.SpecialFunctions _
                 .AsEnumerable() _
-                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
-                .Select(Function(r) New With {
-                    .Event = New [Event] With {.Name = r.SpecialFunction, .[Date] = r._Date},
-                    .TipRows = r.GetChildRows(tipsRelation)}) _
-                .ToList()
-
-            For Each item In events
-                Dim tips = item.TipRows _
-                    .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
-                    .Select(Function(r) DirectCast(r, FileDataSet.TipsRow)) _
-                    .Select(Function(r) New Tip With {
-                        .Type = TipTypes.SpecialFunction,
-                        .Amount = r.Amount,
-                        .EarnedBy = Nothing,
-                        .EarnedOn = r.WorkingDate,
-                        .[Event] = item.Event
-                        }) _
-                    .ToList()
-                item.Event.Tips = tips
-            Next
-        
-            Return events _
-                .Select(Function(anon) anon.Event)
+                .Where(Function(r) r.NotDeletedOrDetached()) _
+                .Select(Function(r) r.ToEvent(True))
         End Function
     End Class
 End NameSpace

@@ -16,12 +16,8 @@ Namespace Utilities
         Public Function GetAll() As IEnumerable(Of Server) Implements IDataStore(Of Server).GetAll
             Return _data.FileDataSet.Servers _
                 .AsEnumerable() _
-                .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
-                .Select(Function(r) New Server() With {
-                    .PosId = r("ServerNumber").ToString(),
-                    .FirstName = r("FirstName").ToString(),
-                    .LastName = r("LastName").ToString(),
-                    .SuppressChit = CBool(r("SuppressChit"))}) _
+                .Where(Function(r) r.NotDeletedOrDetached()) _
+                .Select(Function(r) r.ToServer()) _
                 .ToList()
         End Function
 
