@@ -263,7 +263,7 @@ Public Class frmEnterTips
             .OrderBy(Function(f) f.Name) _
             .ThenBy(Function(f) f.Date) _
             .ToList()
-        Dim specialFunction = functions.FirstOrDefault(Function(f) f.Name = selectedTip.SpecialFunction)
+        Dim specialFunction = functions.FirstOrDefault(Function(f) f.Name = selectedTip.SpecialFunctionsRow?.SpecialFunction)
 
         Using editTip As New frmEditTip(selectedTip.Amount, periodStart, periodEnd, selectedTip.WorkingDate, sourceType, server,
             servers, functions, specialFunction)
@@ -271,7 +271,7 @@ Public Class frmEnterTips
 
             Dim isUnchanged = editTip.Amount = selectedTip.Amount AndAlso editTip.Server Is server AndAlso
                 editTip.WorkingDate = selectedTip.WorkingDate AndAlso editTip.TipType Is sourceType AndAlso
-                editTip.SpecialFunction.Name Is selectedTip.SpecialFunctionsRow?.SpecialFunction
+                [Event].AreEquivalent(editTip.SpecialFunction, selectedTip.SpecialFunctionsRow?.ToEvent())
 
             If isUnchanged Then Exit Sub
 
@@ -292,9 +292,9 @@ Public Class frmEnterTips
             selectedTip.Amount = editTip.Amount
             selectedTip.Description = editTip.TipType.Name
 
-            UpdateTotal(sourceType, specialFunction.Name)
+            UpdateTotal(sourceType, specialFunction?.Name)
 
-            If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialFunction.Name)
+            If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialFunction?.Name)
         End Using
     End Sub
 
@@ -965,4 +965,5 @@ Public Class frmEnterTips
     End Sub
 
     Public Event NewTemplateServerRequested As EventHandler(Of Server)
+
 End Class

@@ -23,10 +23,10 @@ Partial Class frmEnterTips
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEnterTips))
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FileDataSet = New TipTracker.Common.Data.PayPeriod.FileDataSet()
         Me.strStatusStrip = New System.Windows.Forms.StatusStrip()
         Me.lblWorkingDate = New System.Windows.Forms.ToolStripStatusLabel()
@@ -122,6 +122,7 @@ Partial Class frmEnterTips
         Me.btnShowAllTips = New System.Windows.Forms.Button()
         Me.lblSelectSpecialFunction = New System.Windows.Forms.Label()
         Me.cboSelectSpecialFunction = New System.Windows.Forms.ComboBox()
+        Me.EventBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.SpecialFunctionDataGridView = New System.Windows.Forms.DataGridView()
         Me.SFID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -180,7 +181,6 @@ Partial Class frmEnterTips
         Me.TextBox11 = New System.Windows.Forms.TextBox()
         Me.TextBox12 = New System.Windows.Forms.TextBox()
         Me.ReportViewer1 = New Microsoft.Reporting.WinForms.ReportViewer()
-        Me.EventBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         CType(Me.FileDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.strStatusStrip.SuspendLayout()
         Me.strToolStrip.SuspendLayout()
@@ -198,6 +198,7 @@ Partial Class frmEnterTips
         Me.mnuCATips.SuspendLayout()
         CType(Me.CashTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSpecialFunction.SuspendLayout()
+        CType(Me.EventBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SpecialFunctionDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuSFTips.SuspendLayout()
         CType(Me.SpecialFunctionTipsBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -207,7 +208,6 @@ Partial Class frmEnterTips
         CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.EventBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'FileDataSet
@@ -492,9 +492,9 @@ Partial Class frmEnterTips
         'CCAmount
         '
         Me.CCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle14.Format = "N2"
-        DataGridViewCellStyle14.NullValue = Nothing
-        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.CCAmount.DefaultCellStyle = DataGridViewCellStyle1
         Me.CCAmount.HeaderText = "Amount"
         Me.CCAmount.Name = "CCAmount"
         Me.CCAmount.ReadOnly = True
@@ -675,8 +675,8 @@ Partial Class frmEnterTips
         'RCAmount
         '
         Me.RCAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle15.Format = "N2"
-        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle2.Format = "N2"
+        Me.RCAmount.DefaultCellStyle = DataGridViewCellStyle2
         Me.RCAmount.HeaderText = "Amount"
         Me.RCAmount.Name = "RCAmount"
         Me.RCAmount.ReadOnly = True
@@ -885,8 +885,8 @@ Partial Class frmEnterTips
         'CAAmount
         '
         Me.CAAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle16.Format = "N2"
-        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle3.Format = "N2"
+        Me.CAAmount.DefaultCellStyle = DataGridViewCellStyle3
         Me.CAAmount.HeaderText = "Amount"
         Me.CAAmount.Name = "CAAmount"
         Me.CAAmount.ReadOnly = True
@@ -1066,6 +1066,10 @@ Partial Class frmEnterTips
         Me.cboSelectSpecialFunction.Size = New System.Drawing.Size(160, 21)
         Me.cboSelectSpecialFunction.TabIndex = 0
         '
+        'EventBindingSource
+        '
+        Me.EventBindingSource.DataSource = GetType(TipTracker.Core.[Event])
+        '
         'SpecialFunctionDataGridView
         '
         Me.SpecialFunctionDataGridView.AllowUserToAddRows = False
@@ -1102,8 +1106,8 @@ Partial Class frmEnterTips
         'SFAmount
         '
         Me.SFAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle13.Format = "N2"
-        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle4.Format = "N2"
+        Me.SFAmount.DefaultCellStyle = DataGridViewCellStyle4
         Me.SFAmount.HeaderText = "Amount"
         Me.SFAmount.Name = "SFAmount"
         Me.SFAmount.ReadOnly = True
@@ -1596,10 +1600,6 @@ Partial Class frmEnterTips
         Me.ReportViewer1.Size = New System.Drawing.Size(396, 246)
         Me.ReportViewer1.TabIndex = 0
         '
-        'EventBindingSource
-        '
-        Me.EventBindingSource.DataSource = GetType(TipTracker.Core.[Event])
-        '
         'frmEnterTips
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1636,6 +1636,7 @@ Partial Class frmEnterTips
         CType(Me.CashTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabSpecialFunction.ResumeLayout(False)
         Me.tabSpecialFunction.PerformLayout()
+        CType(Me.EventBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SpecialFunctionDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mnuSFTips.ResumeLayout(False)
         CType(Me.SpecialFunctionTipsBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1645,7 +1646,6 @@ Partial Class frmEnterTips
         CType(Me.ServerBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.EventBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

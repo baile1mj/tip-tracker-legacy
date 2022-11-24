@@ -261,6 +261,7 @@
     <Compile Include="Reporting\TipChitBuilder.vb" />
     <Compile Include="Reporting\TipsByDateBuilder.vb" />
     <Compile Include="Reporting\TipsByServerBuilder.vb" />
+    <Compile Include="Utilities\ExtensionMethods.vb" />
     <Compile Include="Utilities\PayPeriodObjectService.vb" />
     <Compile Include="Utilities\EventObjectStore.vb" />
     <Compile Include="Utilities\GlobalFileDialogOptions.vb" />

@@ -179,7 +179,7 @@ Public Class frmEditTip
             Return False
         End If
 
-        If TipType.IsEventOriginated AndAlso string.IsNullOrEmpty(cboSpecialFunction.SelectedItem.ToString()) Then
+        If TipType.IsEventOriginated AndAlso cboSpecialFunction.SelectedItem Is Nothing Then
             TriggerInvalidMessage("You must select a special function", cboSpecialFunction)
             Return False
         End If
