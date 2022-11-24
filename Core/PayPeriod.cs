@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TipTracker.Core
 {
@@ -38,7 +35,7 @@ namespace TipTracker.Core
                     throw new InvalidOperationException("The current date cannot be outside the pay period dates.");
                 }
 
-                _businessDate = value;
+                _businessDate = value.Date;
             }
         }
 
