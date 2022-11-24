@@ -42,5 +42,17 @@ namespace TipTracker.Core
                 Tips = new List<Tip>(Tips)
             };
         }
+
+        /// <summary>
+        /// Gets a value indicating whether two <see cref="Event"/> instances represent
+        /// the same event.
+        /// </summary>
+        /// <param name="first">The first instance to check.</param>
+        /// <param name="second">The second instance to check.</param>
+        /// <returns>True if the two events are equivalent; otherwise, false.</returns>
+        public static bool AreEquivalent(Event first, Event second)
+        {
+            return first?.Name == second?.Name;
+        }
     }
 }
