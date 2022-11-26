@@ -73,11 +73,6 @@ namespace TipTracker.Core
                 throw new InvalidOperationException("The pay period cannot end before it begins.");
             }
 
-            if (businessDate < startDate || businessDate > endDate)
-            {
-                throw new InvalidOperationException("The business date must be within the pay period.");
-            }
-
             if (servers != null)
             {
                 _servers.AddRange(servers);
