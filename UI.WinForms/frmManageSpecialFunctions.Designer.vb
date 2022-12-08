@@ -93,7 +93,7 @@ Partial Class frmManageSpecialFunctions
         '
         'EventBindingSource
         '
-        Me.EventBindingSource.DataSource = GetType(TipTracker.Core.[Event])
+        Me.EventBindingSource.DataSource = GetType(TipTracker.Core.SpecialEvent)
         '
         'NameDataGridViewTextBoxColumn
         '

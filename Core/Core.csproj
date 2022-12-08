@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Event.cs" />
+    <Compile Include="SpecialEvent.cs" />
     <Compile Include="IDataStore.cs" />
     <Compile Include="PayPeriod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

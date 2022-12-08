@@ -44,8 +44,8 @@ Namespace Utilities
                 .LastName = newItem.EarnedBy.LastName
             End With
 
-            If newItem.Event IsNot Nothing Then
-                row.SpecialFunction = newItem.Event.Name
+            If newItem.SpecialEvent IsNot Nothing Then
+                row.SpecialFunction = newItem.SpecialEvent.Name
             End If
 
             _data.FileDataSet.Tips.AddTipsRow(row)

@@ -36,7 +36,7 @@ Namespace Reporting
                     .EarnedBy = t.EarnedBy.PosId,
                     .EarnedOn = t.EarnedOn,
                     .Type = t.Type.Name,
-                    .[Event] = If (IsNothing(t.Event), String.Empty, t.Event.Name)}))
+                    .[Event] = If (IsNothing(t.SpecialEvent), String.Empty, t.SpecialEvent.Name)}))
             Dim tipTypesDataSource = New ReportDataSource("TipTypes", TipTypes.Values)
 
             report.DisplayName = "Tip Chits"

@@ -35,6 +35,6 @@ namespace TipTracker.Core
         /// <summary>
         /// Gets or sets the event for which the tip was earned.
         /// </summary>
-        public Event Event { get; set; }
+        public SpecialEvent SpecialEvent { get; set; }
     }
 }

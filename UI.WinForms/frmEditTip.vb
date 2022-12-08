@@ -51,18 +51,18 @@ Public Class frmEditTip
         End Set
     End Property
 
-    Public Property SpecialFunction As [Event]
+    Public Property SpecialEvent As SpecialEvent
         Get
-            Return If(cboSpecialFunction.SelectedItem IsNot Nothing, DirectCast(cboSpecialFunction.SelectedItem, [Event]), Nothing)
+            Return If(cboSpecialFunction.SelectedItem IsNot Nothing, DirectCast(cboSpecialFunction.SelectedItem, SpecialEvent), Nothing)
         End Get
-        Set(value As [Event])
+        Set(value As SpecialEvent)
             cboSpecialFunction.SelectedItem = value
         End Set
     End Property
 
     Public Sub New(amount As Decimal, periodStart As DateTime, periodEnd As DateTime, workingDate As DateTime,
-        currentType As TipType, currentServer As Server, allServers As List(Of Server), functions As IEnumerable(Of [Event]),
-        Optional currentFunction As [Event] = Nothing)
+        currentType As TipType, currentServer As Server, allServers As List(Of Server), functions As IEnumerable(Of SpecialEvent),
+        Optional currentFunction As SpecialEvent = Nothing)
         InitializeComponent()
 
         _workingDateTextBoxInitialValue = txtWorkingDate.Text

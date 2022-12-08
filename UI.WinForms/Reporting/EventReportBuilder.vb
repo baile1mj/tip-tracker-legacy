@@ -30,7 +30,7 @@ Namespace Reporting
                     .Amount = t.Amount,
                     .EarnedBy = t.EarnedBy.ToString(),
                     .EarnedOn = t.EarnedOn,
-                    .Event = t.Event.Name,
+                    .Event = t.SpecialEvent.Name,
                     .Type = t.Type.Name})
             Dim servers = _tips _
                 .Select(Function (t) t.EarnedBy) _

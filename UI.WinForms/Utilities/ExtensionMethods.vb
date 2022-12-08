@@ -46,7 +46,7 @@ Namespace Utilities
                 .OrdinalId = row.TipID,
                 .Type = TipTypes.Parse(row.Description),
                 .EarnedBy = row.ServersRowParent.ToServer(),
-                .[Event] = If(row.IsSpecialFunctionNull, Nothing, row.SpecialFunctionsRow?.ToEvent())}
+                .SpecialEvent = If(row.IsSpecialFunctionNull, Nothing, row.SpecialFunctionsRow?.ToEvent())}
         End Function
 
         ''' <summary>
@@ -55,8 +55,8 @@ Namespace Utilities
         ''' <param name="row">The row to convert.</param>
         ''' <returns>The result of the conversion.</returns>
         <Extension>
-        Public Function ToEvent(row As FileDataSet.SpecialFunctionsRow, Optional includeTips As Boolean = False) As [Event]
-            Dim specialFunction = New [Event] With {
+        Public Function ToEvent(row As FileDataSet.SpecialFunctionsRow, Optional includeTips As Boolean = False) As SpecialEvent
+            Dim specialFunction = New SpecialEvent With {
                 .[Date] = row._Date,
                 .Name = row.SpecialFunction}
 

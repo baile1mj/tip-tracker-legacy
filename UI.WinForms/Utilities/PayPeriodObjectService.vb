@@ -33,7 +33,7 @@ Namespace Utilities
                 .ToDictionary(Function(s) s.PosId)
             Dim eventsByName = _data.FileDataSet.SpecialFunctions.AsEnumerable() _
                 .Where(Function(r) r.RowState <> DataRowState.Deleted AndAlso r.RowState <> DataRowState.Detached) _
-                .Select(Function(r) New [Event] With {
+                .Select(Function(r) New SpecialEvent With {
                     .Name = r.SpecialFunction,
                     .[Date] = r._Date}) _
                 .ToDictionary(Function(e) e.Name)
@@ -45,7 +45,7 @@ Namespace Utilities
                     .EarnedOn = r.WorkingDate,
                     .EarnedBy = serversById(r.ServerNumber),
                     .Type = TipTypes.Parse(r.Description),
-                    .[Event] = If(Not IsNothing(r.SpecialFunctionsRow), eventsByName(r.SpecialFunction), Nothing)}) _
+                    .SpecialEvent = If(Not IsNothing(r.SpecialFunctionsRow), eventsByName(r.SpecialFunction), Nothing)}) _
                 .ToList()
 
             For Each tip In tips
@@ -81,7 +81,7 @@ Namespace Utilities
         ''' Gets the data store to use for updating event records.
         ''' </summary>
         ''' <returns>The data store for events.</returns>
-        Public Function GetEventDataStore() As IDataStore(Of [Event])
+        Public Function GetEventDataStore() As IDataStore(Of SpecialEvent)
             Return New EventObjectStore(_data)
         End Function
 

@@ -9,11 +9,11 @@ Public Class frmPrintSpecialFunctionReportV2
         InitializeComponent()
 
         _tips = tips _
-            .OrderBy(Function(t) t.Event.Name) _
+            .OrderBy(Function(t) t.SpecialEvent.Name) _
             .ThenBy(Function(t) t.ToString())
         
         Dim functions = _tips _
-            .Select(Function(t) t.Event) _
+            .Select(Function(t) t.SpecialEvent) _
             .Distinct() _
             .Where(Function (e) e IsNot Nothing) _
             .OrderBy(Function(e) e.Name) _
@@ -25,7 +25,7 @@ Public Class frmPrintSpecialFunctionReportV2
 
     Private Function GetReportBuilder() As ReportBuilder
         Dim eventTips = If(cboFunctions.SelectedItem IsNot Nothing, _
-            _tips.Where(Function(t) t.Event.Name = CType(cboFunctions.SelectedItem, [Event]).Name).ToList(), _
+            _tips.Where(Function(t) t.SpecialEvent.Name = CType(cboFunctions.SelectedItem, SpecialEvent).Name).ToList(), _
             _tips)
 
         Return New EventReportBuilder(eventTips, optFunctionDate.Checked)

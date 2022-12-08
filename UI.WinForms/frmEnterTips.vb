@@ -77,7 +77,7 @@ Public Class frmEnterTips
     End Sub
 
     Private Sub BuildEventBindingSource()
-        EventBindingSource.DataSource = New SortableBindingList(Of [Event])(ObjectService.GetEventDataStore().GetAll().ToList())
+        EventBindingSource.DataSource = New SortableBindingList(Of SpecialEvent)(ObjectService.GetEventDataStore().GetAll().ToList())
         EventBindingSource.Sort = "Name"
     End Sub
 
@@ -243,7 +243,7 @@ Public Class frmEnterTips
             Return Nothing
         End If
 
-        Dim selectedFunction = DirectCast(specialFunctionComboBox.SelectedValue, [Event]).Name
+        Dim selectedFunction = DirectCast(specialFunctionComboBox.SelectedValue, SpecialEvent).Name
         Return FileDataSet.SpecialFunctions.FindBySpecialFunction(selectedFunction)
     End Function
 
@@ -271,7 +271,7 @@ Public Class frmEnterTips
 
             Dim isUnchanged = editTip.Amount = selectedTip.Amount AndAlso editTip.Server Is server AndAlso
                 editTip.WorkingDate = selectedTip.WorkingDate AndAlso editTip.TipType Is sourceType AndAlso
-                [Event].AreEquivalent(editTip.SpecialFunction, selectedTip.SpecialFunctionsRow?.ToEvent())
+                Core.SpecialEvent.AreEquivalent(editTip.SpecialEvent, selectedTip.SpecialFunctionsRow?.ToEvent())
 
             If isUnchanged Then Exit Sub
 
@@ -280,8 +280,8 @@ Public Class frmEnterTips
             If newType.CanSpecifyDate Then
                 selectedTip.WorkingDate = editTip.WorkingDate
             ElseIf newType.IsEventOriginated Then
-                selectedTip.WorkingDate = editTip.SpecialFunction.Date
-                selectedTip.SpecialFunction = editTip.SpecialFunction.Name
+                selectedTip.WorkingDate = editTip.SpecialEvent.Date
+                selectedTip.SpecialFunction = editTip.SpecialEvent.Name
             Else
                 selectedTip.WorkingDate = periodEnd
             End If
@@ -294,7 +294,7 @@ Public Class frmEnterTips
 
             UpdateTotal(sourceType, specialFunction?.Name)
 
-            If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialFunction?.Name)
+            If sourceType IsNot editTip.TipType Then UpdateTotal(editTip.TipType, editTip.SpecialEvent?.Name)
         End Using
     End Sub
 
@@ -553,7 +553,7 @@ Public Class frmEnterTips
             .EarnedBy = server,
             .Amount = amount.Value,
             .EarnedOn = specialFunction.Date,
-            .[Event] = specialFunction,
+            .SpecialEvent = specialFunction,
             .Type = TipTypes.SpecialFunction}
 
         AddTip(newTip)
@@ -603,7 +603,7 @@ Public Class frmEnterTips
             Exit Sub
         End If
 
-        Dim selectedFunction = DirectCast(cboSelectSpecialFunction.SelectedItem, [Event])
+        Dim selectedFunction = DirectCast(cboSelectSpecialFunction.SelectedItem, SpecialEvent)
         SpecialFunctionTipsBindingSource.Filter = "SpecialFunction = '" & selectedFunction.Name & "'"
         SpecialFunctionTipsBindingSource.Sort = "TipID"
         cboSFServer.Select()
@@ -761,7 +761,7 @@ Public Class frmEnterTips
     Private Sub mnuSpecialFunctionReports_Click(sender As Object, e As EventArgs) Handles mnuSpecialFunctionReports.Click
         Dim tips = ObjectService _
             .GetTips() _
-            .Where(Function(t) t.Event IsNot Nothing)
+            .Where(Function(t) t.SpecialEvent IsNot Nothing)
 
         Using dialog As New frmPrintSpecialFunctionReportV2(tips)
             dialog.ShowDialog()

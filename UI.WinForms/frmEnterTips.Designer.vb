@@ -1068,7 +1068,7 @@ Partial Class frmEnterTips
         '
         'EventBindingSource
         '
-        Me.EventBindingSource.DataSource = GetType(TipTracker.Core.[Event])
+        Me.EventBindingSource.DataSource = GetType(TipTracker.Core.SpecialEvent)
         '
         'SpecialFunctionDataGridView
         '

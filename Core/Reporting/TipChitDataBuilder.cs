@@ -144,13 +144,13 @@ namespace TipTracker.Core.Reporting
         private void PrepareEventTips()
         {
             EventTips = EventTips
-                .GroupBy(t => t.Event)
+                .GroupBy(t => t.SpecialEvent)
                 .Select(g => new Tip
                 {
                     Amount = g.Sum(t => t.Amount),
                     EarnedBy = g.First().EarnedBy,
                     EarnedOn = g.Key.Date,
-                    Event = g.Key,
+                    SpecialEvent = g.Key,
                     Type = g.First().Type
                 })
                 .OrderBy(t => t.EarnedOn)

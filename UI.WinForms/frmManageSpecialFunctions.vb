@@ -3,22 +3,22 @@ Imports TipTracker.Core
 Imports TipTracker.Utilities
 
 Public Class frmManageSpecialFunctions
-    Private ReadOnly _functions As IList( Of [Event])
-    Private ReadOnly _dataStore as IDataStore(Of [Event])
+    Private ReadOnly _functions As IList(Of SpecialEvent)
+    Private ReadOnly _dataStore As IDataStore(Of SpecialEvent)
 
-    Public Function GetChanges() As List(Of [Event])
-        Return New List(Of [Event])(_functions)
+    Public Function GetChanges() As List(Of SpecialEvent)
+        Return New List(Of SpecialEvent)(_functions)
     End Function
-    
-    Public Sub New(dataStore As IDataStore(Of [Event]))
+
+    Public Sub New(dataStore As IDataStore(Of SpecialEvent))
         _dataStore = dataStore
         InitializeComponent()
-        _functions = New SortableBindingList(Of [Event])(dataStore.GetAll().ToList())      
+        _functions = New SortableBindingList(Of SpecialEvent)(dataStore.GetAll().ToList())
     End Sub
 
     Private Sub frmManageSpecialFunctions_Load(sender As System.Object, e As EventArgs) Handles MyBase.Load
         EventBindingSource.DataSource = _functions
-        EventBindingSource.Sort = NameOf([Event].Name)
+        EventBindingSource.Sort = NameOf(SpecialEvent.Name)
     End Sub
 
     Private Sub btnClose_Click(sender As System.Object, e As EventArgs) Handles btnClose.Click
@@ -33,14 +33,14 @@ Public Class frmManageSpecialFunctions
                 Dim message = $"The pay period already contains a function called ""{inputDialog.EventName}"".  Please enter a different name."
                 MessageBox.Show(message, "Invalid Function Name", MessageBoxButtons.OK)
             Else
-                Dim newEvent = New [Event] With {
+                Dim newEvent = New SpecialEvent With {
                     .Name = inputDialog.EventName,
                     .[Date] = inputDialog.EventDate}
 
                 _functions.Add(newEvent)
                 _dataStore.Add(newEvent)
                 EventBindingSource.Position = _functions.IndexOf(newEvent)
-                
+
                 Exit While
             End If
         End While
@@ -49,7 +49,7 @@ Public Class frmManageSpecialFunctions
     End Sub
 
     Private Sub btnDelete_Click(sender As System.Object, e As EventArgs) Handles btnDelete.Click
-        Dim selectedFunction = DirectCast(EventBindingSource.Current, [Event])
+        Dim selectedFunction = DirectCast(EventBindingSource.Current, SpecialEvent)
         Dim confirmation  = $"You are about to delete the function ""{selectedFunction.Name}"" that occurred on {selectedFunction.Date:M/d/yyyy}.  "
 
         If selectedFunction.Tips.Count > 0 Then confirmation &= $"This will delete {selectedFunction.Tips.Count} asociated tips as well.  "

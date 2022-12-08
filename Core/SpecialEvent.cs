@@ -6,7 +6,7 @@ namespace TipTracker.Core
     /// <summary>
     /// Represents an event for which a server may earn tips.
     /// </summary>
-    public class Event
+    public class SpecialEvent
     {
         /// <summary>
         /// Gets the name of the event.
@@ -32,10 +32,10 @@ namespace TipTracker.Core
         /// <summary>
         /// Creates a shallow copy of this instance.
         /// </summary>
-        /// <returns>A new <see cref="Event"/> that is a copy of this instance.</returns>
-        public Event Clone()
+        /// <returns>A new <see cref="SpecialEvent"/> that is a copy of this instance.</returns>
+        public SpecialEvent Clone()
         {
-            return new Event
+            return new SpecialEvent
             {
                 Name = Name,
                 Date = Date,
@@ -44,13 +44,13 @@ namespace TipTracker.Core
         }
 
         /// <summary>
-        /// Gets a value indicating whether two <see cref="Event"/> instances represent
+        /// Gets a value indicating whether two <see cref="SpecialEvent"/> instances represent
         /// the same event.
         /// </summary>
         /// <param name="first">The first instance to check.</param>
         /// <param name="second">The second instance to check.</param>
         /// <returns>True if the two events are equivalent; otherwise, false.</returns>
-        public static bool AreEquivalent(Event first, Event second)
+        public static bool AreEquivalent(SpecialEvent first, SpecialEvent second)
         {
             return first?.Name == second?.Name;
         }

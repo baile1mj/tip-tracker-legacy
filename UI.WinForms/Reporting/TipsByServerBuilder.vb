@@ -34,7 +34,7 @@ Namespace Reporting
                     .EarnedBy = t.EarnedBy.ToString(),
                     .EarnedOn = t.EarnedOn,
                     .Type = t.Type.Name,
-                    .[Event] = If (IsNothing(t.Event), String.Empty, t.Event.Name)}))
+                    .[Event] = If (IsNothing(t.SpecialEvent), String.Empty, t.SpecialEvent.Name)}))
             Dim sortedTypes = TipTypes.Values _
                 .OrderBy(Function(t) t.Classification.SortIndex) _
                 .Select(Function (t) New With {
