@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>TipTracker</AssemblyName>
+    <RootNamespace>TipTracker</RootNamespace>
   </PropertyGroup>
 
 </Project>
