@@ -1,0 +1,247 @@
+﻿<Window x:Class="TipTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tipTracker="clr-namespace:TipTracker"
+        xmlns:fa5="http://schemas.fontawesome.com/icons/"
+        mc:Ignorable="d"
+        Title="Tip Tracker" Height="600" Width="800" MinHeight="600" MinWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" />
+                <MenuItem Header="_Open" />
+                <Separator />
+                <MenuItem Header="Close" />
+                <Separator />
+                <MenuItem Header="_Save" />
+                <MenuItem Header="Save As..." />
+                <Separator />
+                <MenuItem Header="E_xit" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="Undo" />
+                <MenuItem Header="Redo" />
+                <Separator />
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Manage Servers..." />
+                <MenuItem Header="Manage Functions..." />
+                <MenuItem Header="Export Tips..." />
+                <MenuItem Header="Auto Add Servers" />
+                <MenuItem Header="Optimize File" />
+                <MenuItem Header="Settings..." />
+            </MenuItem>
+            <MenuItem Header="Reports">
+                <MenuItem Header="Tip Chits" />
+                <MenuItem Header="Tip Reports" />
+                <MenuItem Header="Special Function Detail" />
+                <MenuItem Header="Payroll Balancing Report" />
+                <MenuItem Header="Server List" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="Contents" />
+                <MenuItem Header="Index" />
+                <MenuItem Header="About Tip Tracker" />
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" MinWidth="300" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="200" />
+            </Grid.ColumnDefinitions>
+            <TabControl Grid.Column="0">
+                <TabItem Header="Charge Tips" Name="ChargeTipsTab">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <ToolBarPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                            <ToolBar ToolBarTray.IsLocked="True" ToolBar.OverflowMode="Never">
+                                <Menu ToolBar.OverflowMode="Never"></Menu>
+                                <Label>Select Tip Type</Label>
+                                <ComboBox Width="200">
+                                    <ComboBoxItem>(No Tip Types)</ComboBoxItem>
+                                </ComboBox>
+                            </ToolBar>
+                        </ToolBarPanel>
+
+                        <Grid Grid.Column="0" Grid.Row="1" Margin="5,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Grid.Row="0" Margin="0,5,0,0" VerticalContentAlignment="Center">Server Number</Label>
+                            <TextBox Grid.Column="1" Grid.Row="0" Margin="2.5,5,0,0" />
+
+                            <Label Grid.Column="0" Grid.Row="2" Margin="0,5,0,0" VerticalContentAlignment="Center">Tip Amount</Label>
+                            <TextBox Grid.Column="1" Grid.Row="2" Margin="2.5,5,0,0" />
+
+                            <Button Grid.Column="0" Grid.Row="4" Margin="0,0,2.5,0">Add</Button>
+                            <Button Grid.Column="1" Grid.Row="4" Margin="2.5,0,0,0">Clear</Button>
+
+                            <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2">Total: $0.00</Label>
+                        </Grid>
+
+                        <DataGrid Grid.Column="1" Grid.Row="1" />
+                    </Grid>
+
+                </TabItem>
+                <TabItem Header="Cash Tips" Name="CashTipsTab">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <ToolBarPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+                            <ToolBar ToolBarTray.IsLocked="True" ToolBar.OverflowMode="Never">
+                                <Menu ToolBar.OverflowMode="Never"></Menu>
+                                <Label>Select Event</Label>
+                                <ComboBox Width="200">
+                                    <ComboBoxItem>(No Events)</ComboBoxItem>
+                                </ComboBox>
+                                <Separator />
+                                <Button ToolTip="Opens a dialog to add, edit, or delete events">
+                                    <StackPanel Orientation="Horizontal">
+                                        <!--<Image Source="Resources/book_open.png" />-->
+                                        <Label Padding="4,0">Manage Events</Label>
+                                    </StackPanel>
+                                </Button>
+                            </ToolBar>
+                        </ToolBarPanel>
+
+                        <Grid Grid.Column="0" Grid.Row="1" Margin="5,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom">Server</Label>
+                            <ComboBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" IsEditable="True" Height="25" />
+
+                            <Label Grid.Column="0" Grid.Row="2" Margin="0,5,0,0" VerticalContentAlignment="Center">Tip Amount</Label>
+                            <TextBox Grid.Column="1" Grid.Row="2" Margin="2.5,5,0,0" />
+
+                            <Button Grid.Column="0" Grid.Row="4" Margin="0,0,2.5,0">Add</Button>
+                            <Button Grid.Column="1" Grid.Row="4" Margin="2.5,0,0,0">Clear</Button>
+
+                            <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2">Total: $0.00</Label>
+                        </Grid>
+
+                        <DataGrid Grid.Column="1" Grid.Row="1" />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Event Tips" Name="EventTipsTab">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <ToolBarPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+                            <ToolBar ToolBarTray.IsLocked="True" ToolBar.OverflowMode="Never">
+                                <Menu ToolBar.OverflowMode="Never"></Menu>
+                                <Label>Select Event</Label>
+                                <ComboBox Width="200">
+                                    <ComboBoxItem>(No Events)</ComboBoxItem>
+                                </ComboBox>
+                                <Separator />
+                                <Button>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets"></TextBlock>
+                                        <TextBlock>Manage Events</TextBlock>
+                                    </StackPanel>
+                                </Button>
+                                <!--<Button ToolTip="Opens a dialog to add, edit, or delete events">
+                                    <StackPanel Orientation="Horizontal">
+                                        --><!--<fa5:ImageAwesome Icon="Brands_Accusoft" Foreground="#FFFF7400" Width="16" Height="16" />--><!--
+                                        <Label Padding="4,0">Manage Events</Label>
+                                    </StackPanel>
+                                </Button>-->
+                            </ToolBar>
+                        </ToolBarPanel>
+
+                        <Grid Grid.Column="0" Grid.Row="1" Margin="5,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom">Server</Label>
+                            <ComboBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" IsEditable="True" Height="25" />
+
+                            <Label Grid.Column="0" Grid.Row="2" Margin="0,5,0,0" VerticalContentAlignment="Center">Tip Amount</Label>
+                            <TextBox Grid.Column="1" Grid.Row="2" Margin="2.5,5,0,0" />
+
+                            <Button Grid.Column="0" Grid.Row="4" Margin="0,0,2.5,0">Add</Button>
+                            <Button Grid.Column="1" Grid.Row="4" Margin="2.5,0,0,0">Clear</Button>
+
+                            <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2">Total: $0.00</Label>
+                        </Grid>
+
+                        <DataGrid Grid.Column="1" Grid.Row="1" />
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <GroupBox Grid.Column="2" Header="Servers">
+                
+            </GroupBox>
+        </Grid>
+        <StatusBar Grid.Row="2">
+            <Label>Business Date: 00/00/0000</Label>
+            <Label>Pay Period Start: 00/00/0000</Label>
+            <Label>Pay Period End: 00/00/0000</Label>
+        </StatusBar>
+    </Grid>
+</Window>
