@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:TipTracker.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="TipTracker.Views.MainWindow"
+        x:DataType="viewModels:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Ui.Avalonia">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<DockPanel>
+		<!-- Main Menu -->
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="_File">
+				<MenuItem Header="_New" />
+				<MenuItem Header="_Open" />
+				<Separator />
+				<MenuItem Header="Close" />
+				<Separator />
+				<MenuItem Header="_Save" />
+				<MenuItem Header="Save As..." />
+				<Separator />
+				<MenuItem Header="E_xit" />
+			</MenuItem>
+			<MenuItem Header="_Edit">
+				<MenuItem Header="Undo" />
+				<MenuItem Header="Redo" />
+				<Separator />
+			</MenuItem>
+			<MenuItem Header="Tools">
+				<MenuItem Header="Manage Servers..." />
+				<MenuItem Header="Manage Functions..." />
+				<MenuItem Header="Export Tips..." />
+				<MenuItem Header="Auto Add Servers" />
+				<MenuItem Header="Optimize File" />
+				<MenuItem Header="Settings..." />
+			</MenuItem>
+			<MenuItem Header="Reports">
+				<MenuItem Header="Tip Chits" />
+				<MenuItem Header="Tip Reports" />
+				<MenuItem Header="Special Function Detail" />
+				<MenuItem Header="Payroll Balancing Report" />
+				<MenuItem Header="Server List" />
+			</MenuItem>
+			<MenuItem Header="Help">
+				<MenuItem Header="Contents" />
+				<MenuItem Header="Index" />
+				<MenuItem Header="About Tip Tracker" />
+			</MenuItem>
+		</Menu>
+
+		<!-- Status Bar -->
+		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+			<Label>Business Date:</Label>
+			<Label>Pay Period Start:</Label>
+			<Label>Pay Period End:</Label>
+		</StackPanel>
+
+		<!-- Main Content -->
+		<StackPanel Orientation="Horizontal">
+			<TextBlock>Tip Entry/List</TextBlock>
+			<TextBlock>Server List</TextBlock>
+		</StackPanel>
+	</DockPanel>
+</Window>
