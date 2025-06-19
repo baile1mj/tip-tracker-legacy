@@ -3,11 +3,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:TipTracker.ViewModels"
+        xmlns:tipTracker="clr-namespace:TipTracker"
+        xmlns:controls="clr-namespace:TipTracker.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         x:Class="TipTracker.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Ui.Avalonia">
+        Title="Tip Tracker">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -35,7 +37,7 @@
 				<Separator />
 			</MenuItem>
 			<MenuItem Header="Tools">
-				<MenuItem Header="Manage Servers..." />
+				<MenuItem Header="Manage Servers..." Command="{Binding AddServers}" />
 				<MenuItem Header="Manage Functions..." />
 				<MenuItem Header="Export Tips..." />
 				<MenuItem Header="Auto Add Servers" />
@@ -64,9 +66,19 @@
 		</StackPanel>
 
 		<!-- Main Content -->
-		<StackPanel Orientation="Horizontal">
-			<TextBlock>Tip Entry/List</TextBlock>
-			<TextBlock>Server List</TextBlock>
-		</StackPanel>
+		<Grid Margin="5">
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="5" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			
+            <TextBlock Grid.Column="0">Tip Entry/List</TextBlock>
+			<GridSplitter Grid.Column="1" />
+            <controls:ServerLookupList Grid.Column="2"
+                                       Width="250"
+                                       Servers="{Binding Servers}" />
+		</Grid>
 	</DockPanel>
 </Window>
