@@ -9,6 +9,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TT Debug", "TT Debug\TT Deb
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Tip Tracker Setup", "Tip Tracker Setup\Tip Tracker Setup.vdproj", "{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui.WinForms", "Ui.WinForms\Ui.WinForms.csproj", "{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,18 @@ Global
 		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|Mixed Platforms.Build.0 = Release
 		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|x86.ActiveCfg = Release
 		{D1EC7B30-BE8E-4C74-A365-8C4C5FE70000}.Release|x86.Build.0 = Release
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Debug|x86.Build.0 = Debug|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Release|x86.ActiveCfg = Release|Any CPU
+		{C318BEB0-4A28-BA35-1C0F-8B4EF813DAB7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
