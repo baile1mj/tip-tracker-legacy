@@ -1,5 +1,6 @@
 using TipTracker.Ui.Controls;
 using TipTracker.Ui.DataObjects;
+using TipTracker.Ui.ViewData;
 
 namespace TipTracker.Ui;
 
@@ -24,6 +25,11 @@ public partial class MainForm : Form
         InitializeComponent();
         tipEditor2.ErrorOccurred += HandleError;
         tipEditor2.LookupServer = LookupServer;
+
+        foreach(var server in _servers.OrderBy(x => x.PosId))
+        {
+            serverListBindingSource.Add(new ServerView(server));
+        }
 
     }
 

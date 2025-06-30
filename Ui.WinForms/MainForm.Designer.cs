@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             mnuMainMenu = new MenuStrip();
             mnuFile = new ToolStripMenuItem();
             mnuNew = new ToolStripMenuItem();
@@ -68,21 +69,26 @@
             lblBusinessDate = new ToolStripStatusLabel();
             lblPeriodDates = new ToolStripStatusLabel();
             spMainSplitContainer = new SplitContainer();
-            grpServerList = new GroupBox();
-            dgvServers = new DataGridView();
+            tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             tipEditor2 = new TipTracker.Ui.Controls.QuickTipEditor();
-            tabControl1 = new TabControl();
+            grpServerList = new GroupBox();
+            dgvServers = new DataGridView();
+            serverListBindingSource = new BindingSource(components);
+            Number = new DataGridViewTextBoxColumn();
+            lastNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            firstNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             mnuMainMenu.SuspendLayout();
             strMainStatusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)spMainSplitContainer).BeginInit();
             spMainSplitContainer.Panel1.SuspendLayout();
             spMainSplitContainer.Panel2.SuspendLayout();
             spMainSplitContainer.SuspendLayout();
+            tabControl1.SuspendLayout();
+            tabPage1.SuspendLayout();
             grpServerList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvServers).BeginInit();
-            tabPage1.SuspendLayout();
-            tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)serverListBindingSource).BeginInit();
             SuspendLayout();
             // 
             // mnuMainMenu
@@ -342,32 +348,15 @@
             spMainSplitContainer.SplitterDistance = 705;
             spMainSplitContainer.TabIndex = 2;
             // 
-            // grpServerList
+            // tabControl1
             // 
-            grpServerList.Controls.Add(dgvServers);
-            grpServerList.Dock = DockStyle.Fill;
-            grpServerList.Location = new Point(0, 0);
-            grpServerList.Name = "grpServerList";
-            grpServerList.Size = new Size(299, 683);
-            grpServerList.TabIndex = 0;
-            grpServerList.TabStop = false;
-            grpServerList.Text = "Servers";
-            // 
-            // dgvServers
-            // 
-            dgvServers.BackgroundColor = SystemColors.Control;
-            dgvServers.BorderStyle = BorderStyle.Fixed3D;
-            dgvServers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvServers.Dock = DockStyle.Fill;
-            dgvServers.Location = new Point(3, 19);
-            dgvServers.Name = "dgvServers";
-            dgvServers.RowHeadersVisible = false;
-            dgvServers.ShowCellErrors = false;
-            dgvServers.ShowCellToolTips = false;
-            dgvServers.ShowEditingIcon = false;
-            dgvServers.ShowRowErrors = false;
-            dgvServers.Size = new Size(293, 661);
-            dgvServers.TabIndex = 0;
+            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Dock = DockStyle.Fill;
+            tabControl1.Location = new Point(0, 0);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(705, 683);
+            tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -388,15 +377,74 @@
             tipEditor2.Size = new Size(691, 649);
             tipEditor2.TabIndex = 0;
             // 
-            // tabControl1
+            // grpServerList
             // 
-            tabControl1.Controls.Add(tabPage1);
-            tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Location = new Point(0, 0);
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(705, 683);
-            tabControl1.TabIndex = 0;
+            grpServerList.Controls.Add(dgvServers);
+            grpServerList.Dock = DockStyle.Fill;
+            grpServerList.Location = new Point(0, 0);
+            grpServerList.Name = "grpServerList";
+            grpServerList.Size = new Size(299, 683);
+            grpServerList.TabIndex = 0;
+            grpServerList.TabStop = false;
+            grpServerList.Text = "Servers";
+            // 
+            // dgvServers
+            // 
+            dgvServers.AllowUserToAddRows = false;
+            dgvServers.AllowUserToDeleteRows = false;
+            dgvServers.AllowUserToResizeColumns = false;
+            dgvServers.AllowUserToResizeRows = false;
+            dgvServers.AutoGenerateColumns = false;
+            dgvServers.BackgroundColor = SystemColors.Control;
+            dgvServers.BorderStyle = BorderStyle.Fixed3D;
+            dgvServers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvServers.Columns.AddRange(new DataGridViewColumn[] { Number, lastNameDataGridViewTextBoxColumn, firstNameDataGridViewTextBoxColumn });
+            dgvServers.DataSource = serverListBindingSource;
+            dgvServers.Dock = DockStyle.Fill;
+            dgvServers.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dgvServers.Location = new Point(3, 19);
+            dgvServers.MultiSelect = false;
+            dgvServers.Name = "dgvServers";
+            dgvServers.ReadOnly = true;
+            dgvServers.RowHeadersVisible = false;
+            dgvServers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvServers.ShowCellErrors = false;
+            dgvServers.ShowCellToolTips = false;
+            dgvServers.ShowEditingIcon = false;
+            dgvServers.ShowRowErrors = false;
+            dgvServers.Size = new Size(293, 661);
+            dgvServers.TabIndex = 0;
+            // 
+            // serverListBindingSource
+            // 
+            serverListBindingSource.DataSource = typeof(ViewData.ServerView);
+            // 
+            // Number
+            // 
+            Number.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Number.DataPropertyName = "Number";
+            Number.FillWeight = 25F;
+            Number.HeaderText = "No";
+            Number.Name = "Number";
+            Number.ReadOnly = true;
+            // 
+            // lastNameDataGridViewTextBoxColumn
+            // 
+            lastNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            lastNameDataGridViewTextBoxColumn.DataPropertyName = "LastName";
+            lastNameDataGridViewTextBoxColumn.FillWeight = 40F;
+            lastNameDataGridViewTextBoxColumn.HeaderText = "Last Name";
+            lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
+            lastNameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // firstNameDataGridViewTextBoxColumn
+            // 
+            firstNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            firstNameDataGridViewTextBoxColumn.DataPropertyName = "FirstName";
+            firstNameDataGridViewTextBoxColumn.FillWeight = 35F;
+            firstNameDataGridViewTextBoxColumn.HeaderText = "First Name";
+            firstNameDataGridViewTextBoxColumn.Name = "firstNameDataGridViewTextBoxColumn";
+            firstNameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // MainForm
             // 
@@ -418,10 +466,11 @@
             spMainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)spMainSplitContainer).EndInit();
             spMainSplitContainer.ResumeLayout(false);
+            tabControl1.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
             grpServerList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvServers).EndInit();
-            tabPage1.ResumeLayout(false);
-            tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)serverListBindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -473,5 +522,10 @@
         private TabControl tabControl1;
         private TabPage tabPage1;
         private Controls.QuickTipEditor tipEditor2;
+        private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private BindingSource serverListBindingSource;
+        private DataGridViewTextBoxColumn Number;
+        private DataGridViewTextBoxColumn lastNameDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn firstNameDataGridViewTextBoxColumn;
     }
 }
