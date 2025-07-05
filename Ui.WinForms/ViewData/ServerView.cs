@@ -33,4 +33,10 @@ public class ServerView
         ArgumentNullException.ThrowIfNull(server);
         _server = server;
     }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return _server.ToString();
+    }
 }
