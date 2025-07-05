@@ -24,6 +24,8 @@ public partial class QuickTipEditor : UserControl
         tipEntryForm.ServerNumberEntered += TipEntryForm_ServerNumberEntered;
         tipEntryForm.TipAmountEntered += TipEntryForm_TipAmountEntered;
         tipEntryForm.NewTipEntered += TipEntryForm_NewTipEntered;
+        tipBindingSource.DataSource = new SortableBindingList<TipView>(new List<TipView>(), 
+            TipViewSortComparer.Create);
     }
 
     /// <summary>
@@ -32,7 +34,7 @@ public partial class QuickTipEditor : UserControl
     public event EventHandler<Error> ErrorOccurred;
 
     /// <summary>
-    /// Updates the total of all tips entered in the control.
+    /// Updates the total of all tips that have been entered.
     /// </summary>
     private void UpdateTotal()
     {

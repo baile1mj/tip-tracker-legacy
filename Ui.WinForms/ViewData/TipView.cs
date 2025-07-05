@@ -54,4 +54,134 @@ public class TipView
         Number = number;
         _tip = tip;
     }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="TipView.Number"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByEntryOrder(TipView x, TipView y)
+    {
+        return y.Number - x.Number;
+    }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="TipView.Amount"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByAmount(TipView x, TipView y)
+    {
+        return decimal.Compare(x.Amount, y.Amount);
+    }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="TipView.ServerNumber"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByServerNumber(TipView x, TipView y)
+    {
+        return Server.CompareByNumber(x._tip.Server, y._tip.Server);
+    }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="TipView.LastName"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByServerLastName(TipView x, TipView y)
+    {
+        return Server.CompareByLastName(x._tip.Server, y._tip.Server);
+    }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="TipView.FirstName"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByServerFirstName(TipView x, TipView y)
+    {
+        return Server.CompareByFirstName(x._tip.Server, y._tip.Server);
+    }
 }
