@@ -58,12 +58,14 @@
             // 
             splTipEntrySplitter.Panel1.Controls.Add(lblTotal);
             splTipEntrySplitter.Panel1.Controls.Add(tipEntryForm);
+            splTipEntrySplitter.Panel1MinSize = 175;
             // 
             // splTipEntrySplitter.Panel2
             // 
             splTipEntrySplitter.Panel2.Controls.Add(dgvTips);
+            splTipEntrySplitter.Panel2MinSize = 200;
             splTipEntrySplitter.Size = new Size(640, 480);
-            splTipEntrySplitter.SplitterDistance = 222;
+            splTipEntrySplitter.SplitterDistance = 215;
             splTipEntrySplitter.TabIndex = 0;
             // 
             // lblTotal
@@ -82,7 +84,7 @@
             tipEntryForm.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tipEntryForm.Location = new Point(3, 3);
             tipEntryForm.Name = "tipEntryForm";
-            tipEntryForm.Size = new Size(216, 120);
+            tipEntryForm.Size = new Size(209, 120);
             tipEntryForm.TabIndex = 0;
             // 
             // dgvTips
@@ -105,7 +107,7 @@
             dgvTips.ShowCellToolTips = false;
             dgvTips.ShowEditingIcon = false;
             dgvTips.ShowRowErrors = false;
-            dgvTips.Size = new Size(408, 474);
+            dgvTips.Size = new Size(415, 474);
             dgvTips.TabIndex = 0;
             // 
             // Number

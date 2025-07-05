@@ -344,8 +344,9 @@
             // spMainSplitContainer.Panel2
             // 
             spMainSplitContainer.Panel2.Controls.Add(grpServerList);
+            spMainSplitContainer.Panel2MinSize = 270;
             spMainSplitContainer.Size = new Size(1008, 683);
-            spMainSplitContainer.SplitterDistance = 705;
+            spMainSplitContainer.SplitterDistance = 727;
             spMainSplitContainer.TabIndex = 2;
             // 
             // tabControl1
@@ -355,7 +356,7 @@
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(705, 683);
+            tabControl1.Size = new Size(727, 683);
             tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -364,7 +365,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(697, 655);
+            tabPage1.Size = new Size(719, 655);
             tabPage1.TabIndex = 1;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
@@ -374,7 +375,7 @@
             tipEditor2.Dock = DockStyle.Fill;
             tipEditor2.Location = new Point(3, 3);
             tipEditor2.Name = "tipEditor2";
-            tipEditor2.Size = new Size(691, 649);
+            tipEditor2.Size = new Size(713, 649);
             tipEditor2.TabIndex = 0;
             // 
             // grpServerList
@@ -383,7 +384,7 @@
             grpServerList.Dock = DockStyle.Fill;
             grpServerList.Location = new Point(0, 0);
             grpServerList.Name = "grpServerList";
-            grpServerList.Size = new Size(299, 683);
+            grpServerList.Size = new Size(277, 683);
             grpServerList.TabIndex = 0;
             grpServerList.TabStop = false;
             grpServerList.Text = "Servers";
@@ -412,7 +413,7 @@
             dgvServers.ShowCellToolTips = false;
             dgvServers.ShowEditingIcon = false;
             dgvServers.ShowRowErrors = false;
-            dgvServers.Size = new Size(293, 661);
+            dgvServers.Size = new Size(271, 661);
             dgvServers.TabIndex = 0;
             // 
             // serverListBindingSource
