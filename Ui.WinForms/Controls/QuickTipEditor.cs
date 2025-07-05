@@ -1,5 +1,4 @@
-﻿using TipTracker.Ui.DataObjects;
-using TipTracker.Ui.ViewData;
+﻿using TipTracker.Ui.ViewData;
 
 namespace TipTracker.Ui.Controls;
 
@@ -9,11 +8,6 @@ namespace TipTracker.Ui.Controls;
 public partial class QuickTipEditor : UserControl
 {
     private readonly bool _autoInsertDecimal = true;
-
-    /// <summary>
-    /// Delegate method to find a server based on a server number.
-    /// </summary>
-    public Func<string, Server?> LookupServer;
 
     /// <summary>
     /// Creates a new instance of the form.
@@ -34,6 +28,12 @@ public partial class QuickTipEditor : UserControl
     public event EventHandler<Error> ErrorOccurred;
 
     /// <summary>
+    /// The event that is fired when a server number needs to be resolved to a 
+    /// server instance.
+    /// </summary>
+    public event EventHandler<ServerQueryEventArgs> ServerQuery;
+
+    /// <summary>
     /// Updates the total of all tips that have been entered.
     /// </summary>
     private void UpdateTotal()
@@ -51,7 +51,9 @@ public partial class QuickTipEditor : UserControl
     /// <param name="e">The server number that was entered.</param>
     private void TipEntryForm_ServerNumberEntered(object? sender, InputValidationEventArgs<string> e)
     {
-        var server = LookupServer(e.Input);
+        var query = new ServerQueryEventArgs(e.Input);
+        ServerQuery.Invoke(this, query);
+        var server = query.LookupResult;
 
         if (server == null)
         {

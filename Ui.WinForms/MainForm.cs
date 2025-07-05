@@ -24,7 +24,7 @@ public partial class MainForm : Form
     {
         InitializeComponent();
         tipEditor2.ErrorOccurred += HandleError;
-        tipEditor2.LookupServer = LookupServer;
+        tipEditor2.ServerQuery += ResolveServerQuery;
 
         var serverViews = _servers
             .Select(x => new ServerView(x))
@@ -41,8 +41,8 @@ public partial class MainForm : Form
         MessageBox.Show(error.Message, error.Summary, MessageBoxButtons.OK);
     }
 
-    private Server LookupServer(string posId)
+    private void ResolveServerQuery(object sender, ServerQueryEventArgs e)
     {
-        return _servers.FirstOrDefault(s => s.PosId == posId);
+        e.LookupResult = _servers.FirstOrDefault(s => s.PosId == e.ServerNumber);
     }
 }
