@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using TipTracker.Ui.ViewData;
 
 namespace TipTracker.Ui.Controls;
 
@@ -6,9 +7,8 @@ namespace TipTracker.Ui.Controls;
 /// Provides a generic collection that supports data binding and sorting.
 /// </summary>
 /// <typeparam name="T">The type of elements in the list.</typeparam>
-public class SortableBindingList<T> : BindingList<T>
+public class SortableBindingList<T> : BindingList<T> where T : ISortableCollectionMember
 {
-    private readonly List<T> _unordered = [];
     private readonly Func<PropertyDescriptor, IComparer<T>> _comparerFactory;
 
     /// <summary>
@@ -20,7 +20,6 @@ public class SortableBindingList<T> : BindingList<T>
         : base(unorderedValues)
     {
         _comparerFactory = comparerFactory;
-        _unordered.AddRange(unorderedValues);
         ListChanged += HandleNewItems;
     }
 
@@ -32,7 +31,6 @@ public class SortableBindingList<T> : BindingList<T>
     private void HandleNewItems(object? sender, ListChangedEventArgs e)
     {
         if (e.ListChangedType != ListChangedType.ItemAdded) { return; }
-        _unordered.Add(Items[e.NewIndex]);
     }
 
     /// <summary>
@@ -59,12 +57,7 @@ public class SortableBindingList<T> : BindingList<T>
     /// <inheritdoc />
     protected override void RemoveSortCore()
     {
-        // Some items from the internal list may have been deleted since the binding list was created.  Before
-        // resetting the sort order, remove any of the originals that are no longer in the binding list.
-        var remaining = _unordered.Intersect(Items).ToArray();
-        _unordered.Clear();
-        _unordered.AddRange(remaining);
-        SortItems(_unordered);
+        SortItems(Items.OrderBy(x => x.OrdinalId).ToList());
     }
 
     /// <inheritdoc />

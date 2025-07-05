@@ -27,7 +27,7 @@ public partial class MainForm : Form
         tipEditor2.ServerQuery += ResolveServerQuery;
 
         var serverViews = _servers
-            .Select(x => new ServerView(x))
+            .Select((s, i) => new ServerView(i, s))
             .Order(ServerViewSortComparer.DefaultComparer)
             .ToList();
 

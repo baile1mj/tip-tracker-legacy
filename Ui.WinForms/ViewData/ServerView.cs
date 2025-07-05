@@ -5,9 +5,12 @@ namespace TipTracker.Ui.ViewData;
 /// <summary>
 /// Represents a server to display on the UI form.
 /// </summary>
-public class ServerView
+public class ServerView : ISortableCollectionMember
 {
     private readonly Server _server;
+
+    /// <inheritdoc />
+    public int OrdinalId { get; }
 
     /// <summary>
     /// Gets the server's server number.
@@ -27,10 +30,12 @@ public class ServerView
     /// <summary>
     /// Creates a new instance of the view data model.
     /// </summary>
+    /// <param name="ordinalId">The ordinal identifier for the server.</param>
     /// <param name="server">The underlying business object containing the server's data.</param>
-    public ServerView(Server server)
+    public ServerView(int ordinalId, Server server)
     {
         ArgumentNullException.ThrowIfNull(server);
+        this.OrdinalId = ordinalId;
         _server = server;
     }
 

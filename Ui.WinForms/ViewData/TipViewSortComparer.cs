@@ -55,6 +55,6 @@ public class TipViewSortComparer : SortComparerBase<TipView>
     {
         return TypeDescriptor
             .GetProperties(typeof(TipView))
-            .Find(nameof(TipView.Number), false)!;
+            .Find(nameof(TipView.OrdinalId), false)!;
     }
 }
