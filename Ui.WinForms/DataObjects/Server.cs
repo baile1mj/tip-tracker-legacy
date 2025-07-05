@@ -1,4 +1,6 @@
-﻿namespace TipTracker.Ui.DataObjects;
+﻿using TipTracker.Ui.ViewData;
+
+namespace TipTracker.Ui.DataObjects;
 
 /// <summary>
 /// Contains data about a server.
@@ -83,5 +85,110 @@
         yield return ToString();
         yield return $"{FirstName} {LastName}";
         yield return $"{LastName}, {FirstName}";
+    }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="Server.PosId"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByNumber(Server x, Server y)
+    {
+        var numberRelation = string.Compare(x.PosId, y.PosId, StringComparison.Ordinal);
+        if (numberRelation != 0) { return numberRelation; }
+
+        // Numbers are the same, so now let's compare last names.
+        var lastNameRelation = string.CompareOrdinal(x.LastName, y.LastName);
+        if (lastNameRelation != 0) { return lastNameRelation; }
+
+        // Both the server number and last name are the same, so now let's check by first name.
+        var firstNameRelation = string.CompareOrdinal(x.FirstName, y.FirstName);
+        return firstNameRelation;
+    }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="Server.LastName"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByLastName(Server x, Server y)
+    {
+        var lastNameRelation = string.CompareOrdinal(x.LastName, y.LastName);
+        if (lastNameRelation != 0) { return lastNameRelation; }
+
+        // Last names are the same, so now let's compare first names.
+        var firstNameRelation = string.CompareOrdinal(x.FirstName, y.FirstName);
+        if (firstNameRelation != 0) { return firstNameRelation; }
+
+        // Servers have the same name, so try to distinguish by server number.
+        var numberRelation = string.Compare(x.PosId, y.PosId, StringComparison.Ordinal);
+        return numberRelation;
+    }
+
+    /// <summary>Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other, based
+    /// on the <see cref="Server.FirstName"/> property.</summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.
+    /// <list type="table">
+    ///     <listheader><term> Value</term><description> Meaning</description></listheader>
+    ///     <item>
+    ///         <term> Less than zero</term>
+    ///         <description><paramref name="x" /> is less than <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Zero</term>
+    ///         <description><paramref name="x" /> equals <paramref name="y" />.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term> Greater than zero</term>
+    ///         <description><paramref name="x" /> is greater than <paramref name="y" />.</description>
+    ///     </item>
+    /// </list>
+    /// </returns>
+    public static int CompareByFirstName(Server x, Server y)
+    {
+        var firstNameRelation = string.CompareOrdinal(x.FirstName, y.FirstName);
+        if (firstNameRelation != 0) { return firstNameRelation; }
+
+        // First names are the same, so now let's compare last names.
+        var lastNameRelation = string.CompareOrdinal(x.LastName, y.LastName);
+        if (lastNameRelation != 0) { return lastNameRelation; }
+
+        // Servers have the same name, so try to distinguish by server number.
+        var numberRelation = string.Compare(x.PosId, y.PosId, StringComparison.Ordinal);
+        return numberRelation;
     }
 }

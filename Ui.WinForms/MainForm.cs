@@ -19,18 +19,20 @@ public partial class MainForm : Form
         new Server("1011", "Melior", "Renate"),
         new Server("1017", "Garshore", "Wilmar"),
     };
-
+    
     public MainForm()
     {
         InitializeComponent();
         tipEditor2.ErrorOccurred += HandleError;
         tipEditor2.LookupServer = LookupServer;
 
-        foreach(var server in _servers.OrderBy(x => x.PosId))
-        {
-            serverListBindingSource.Add(new ServerView(server));
-        }
+        var serverViews = _servers
+            .Select(x => new ServerView(x))
+            .Order(ServerViewSortComparer.DefaultComparer)
+            .ToList();
 
+        var serversBindingList = new SortableBindingList<ServerView>(serverViews, ServerViewSortComparer.Create);
+        serverListBindingSource.DataSource = serversBindingList;
     }
 
     private void HandleError(object sender, Error error)
