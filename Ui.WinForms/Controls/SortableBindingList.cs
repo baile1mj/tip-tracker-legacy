@@ -15,6 +15,14 @@ public class SortableBindingList<T> : BindingList<T> where T : ISortableCollecti
     private ListSortDirection _sortDirection;
 
     /// <summary>
+    /// Creates a new instance of the binding list class with no items.
+    /// </summary>
+    /// <param name="comparerFactory">A factory method used to create a comparer for instances of <see cref="T"/>.</param>
+    public SortableBindingList(Func<PropertyDescriptor, IComparer<T>> comparerFactory)
+        : this(new List<T>(), comparerFactory)
+    { }
+
+    /// <summary>
     /// Creates a new instance of the binding list class initialized with the specified list.
     /// </summary>
     /// <param name="unorderedValues">The values to store in the binding list.</param>
