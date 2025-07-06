@@ -34,12 +34,12 @@
             lblTotal = new Label();
             tipEntryForm = new QuickEntryForm();
             dgvTips = new DataGridView();
-            Number = new DataGridViewTextBoxColumn();
+            tipBindingSource = new BindingSource(components);
+            OrdinalId = new DataGridViewTextBoxColumn();
             serverNumberDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             lastNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             firstNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             amountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            tipBindingSource = new BindingSource(components);
             ((System.ComponentModel.ISupportInitialize)splTipEntrySplitter).BeginInit();
             splTipEntrySplitter.Panel1.SuspendLayout();
             splTipEntrySplitter.Panel2.SuspendLayout();
@@ -96,7 +96,7 @@
             dgvTips.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvTips.AutoGenerateColumns = false;
             dgvTips.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvTips.Columns.AddRange(new DataGridViewColumn[] { Number, serverNumberDataGridViewTextBoxColumn, lastNameDataGridViewTextBoxColumn, firstNameDataGridViewTextBoxColumn, amountDataGridViewTextBoxColumn });
+            dgvTips.Columns.AddRange(new DataGridViewColumn[] { OrdinalId, serverNumberDataGridViewTextBoxColumn, lastNameDataGridViewTextBoxColumn, firstNameDataGridViewTextBoxColumn, amountDataGridViewTextBoxColumn });
             dgvTips.DataSource = tipBindingSource;
             dgvTips.Location = new Point(3, 3);
             dgvTips.Name = "dgvTips";
@@ -110,14 +110,18 @@
             dgvTips.Size = new Size(415, 474);
             dgvTips.TabIndex = 0;
             // 
-            // Number
+            // tipBindingSource
             // 
-            Number.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            Number.DataPropertyName = "Number";
-            Number.FillWeight = 10F;
-            Number.HeaderText = "No.";
-            Number.Name = "Number";
-            Number.ReadOnly = true;
+            tipBindingSource.DataSource = typeof(ViewData.TipView);
+            // 
+            // OrdinalId
+            // 
+            OrdinalId.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            OrdinalId.DataPropertyName = "OrdinalId";
+            OrdinalId.FillWeight = 10F;
+            OrdinalId.HeaderText = "No.";
+            OrdinalId.Name = "OrdinalId";
+            OrdinalId.ReadOnly = true;
             // 
             // serverNumberDataGridViewTextBoxColumn
             // 
@@ -159,10 +163,6 @@
             amountDataGridViewTextBoxColumn.Name = "amountDataGridViewTextBoxColumn";
             amountDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // tipBindingSource
-            // 
-            tipBindingSource.DataSource = typeof(ViewData.TipView);
-            // 
             // QuickTipEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -187,7 +187,7 @@
         private QuickEntryForm tipEntryForm;
         private Label lblTotal;
         private BindingSource tipBindingSource;
-        private DataGridViewTextBoxColumn Number;
+        private DataGridViewTextBoxColumn OrdinalId;
         private DataGridViewTextBoxColumn serverNumberDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn lastNameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn firstNameDataGridViewTextBoxColumn;
