@@ -33,7 +33,38 @@ public class SortableBindingList<T> : BindingList<T> where T : ISortableCollecti
     /// <param name="e">Arguments associated with the event.</param>
     private void HandleNewItems(object? sender, ListChangedEventArgs e)
     {
-        if (e.ListChangedType != ListChangedType.ItemAdded) { return; }
+        // If there's not a new item or the list is unsorted, there's nothing to do.
+        if (e.ListChangedType != ListChangedType.ItemAdded || !IsSortedCore) { return; }
+
+        int belongsAt;
+        var newItem = Items[e.NewIndex];
+
+        for (belongsAt = 0; belongsAt < Items.Count; belongsAt++)
+        {
+            // We don't need to compare the new item to itself.
+            if (newItem.Equals(Items[belongsAt])) { continue; }
+
+            // Compare the new item to this item to see if the new item should take its place.
+            var comparison = _currentComparer.Compare(newItem, Items[belongsAt]);
+            if (SortDirectionCore == ListSortDirection.Descending) { comparison = -comparison; }
+
+            if (comparison < 0) { break; }  // new item belongs here
+        }
+
+        // Item is already where it belongs.
+        if (belongsAt == e.NewIndex) { return; }
+
+        // Now pull the item out of its current position and put it where it belongs.
+        Items.RemoveAt(e.NewIndex);
+
+        if (belongsAt >= Items.Count)
+        {
+            Items.Add(newItem);
+        }
+        else
+        {
+            Items.Insert(belongsAt, newItem);
+        }
     }
 
     /// <summary>
