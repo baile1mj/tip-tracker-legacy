@@ -42,4 +42,28 @@ public static class DataGridViewExtensions
             currentSelection = null;
         };
     }
+
+    /// <summary>
+    /// Adds a handler to the DataGridView to select the appropriate row on right-click and to display
+    /// an associated context menu.
+    /// </summary>
+    /// <param name="gridView">The DataGridView for which to handle right-clicks.</param>
+    /// <param name="contextMenu">The context menu to display.</param>
+    public static void AddRightClickHandling(this DataGridView gridView, ContextMenuStrip? contextMenu = null)
+    {
+        gridView.MouseClick += (sender, e) =>
+        {
+            // Left clicks can be ignored.
+            if (e.Button != MouseButtons.Right) { return; }
+
+            var hitTestInfo = gridView.HitTest(e.X, e.Y);
+
+            // Ignore any right-clicks that aren't on a row.
+            if (hitTestInfo == null || hitTestInfo.RowIndex == -1) { return; }
+
+            // Set the selected row, then show the context menu.
+            ((BindingSource)gridView.DataSource).Position = hitTestInfo.RowIndex;
+            contextMenu?.Show(gridView, e.Location);
+        };
+    }
 }
