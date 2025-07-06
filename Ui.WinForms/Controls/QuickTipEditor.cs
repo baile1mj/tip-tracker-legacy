@@ -1,4 +1,5 @@
-﻿using TipTracker.Ui.ViewData;
+﻿using System.Diagnostics;
+using TipTracker.Ui.ViewData;
 
 namespace TipTracker.Ui.Controls;
 
@@ -8,6 +9,7 @@ namespace TipTracker.Ui.Controls;
 public partial class QuickTipEditor : UserControl
 {
     private readonly bool _autoInsertDecimal = true;
+    private TipView? _currentSelection = null;
 
     /// <summary>
     /// Creates a new instance of the form.
@@ -18,8 +20,9 @@ public partial class QuickTipEditor : UserControl
         tipEntryForm.ServerNumberEntered += TipEntryForm_ServerNumberEntered;
         tipEntryForm.TipAmountEntered += TipEntryForm_TipAmountEntered;
         tipEntryForm.NewTipEntered += TipEntryForm_NewTipEntered;
-        tipBindingSource.DataSource = new SortableBindingList<TipView>(new List<TipView>(), 
-            TipViewSortComparer.Create);
+        
+        tipBindingSource.DataSource = new SortableBindingList<TipView>(TipViewSortComparer.Create);
+        dgvTips.PreserveSelectionOnSort<TipView>();
     }
 
     /// <summary>

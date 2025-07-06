@@ -31,8 +31,8 @@ public partial class MainForm : Form
             .Order(ServerViewSortComparer.DefaultComparer)
             .ToList();
 
-        var serversBindingList = new SortableBindingList<ServerView>(serverViews, ServerViewSortComparer.Create);
-        serverListBindingSource.DataSource = serversBindingList;
+        serverListBindingSource.DataSource = new SortableBindingList<ServerView>(serverViews, ServerViewSortComparer.Create);
+        dgvServers.PreserveSelectionOnSort<ServerView>();
     }
 
     private void HandleError(object sender, Error error)

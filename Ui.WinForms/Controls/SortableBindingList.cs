@@ -107,6 +107,19 @@ public class SortableBindingList<T> : BindingList<T> where T : ISortableCollecti
         }
     }
 
+    /// <summary>
+    /// The event that is raised before the sort mode changes.
+    /// </summary>
+    public event EventHandler SortModeChanging = delegate { };
+
+    /// <summary>
+    /// Raises the <see cref="SortModeChanging"/> event.
+    /// </summary>
+    public void OnSortModeChanging()
+    {
+        SortModeChanging.Invoke(this, EventArgs.Empty);
+    }
+
     /// <inheritdoc />
     protected override bool IsSortedCore => _currentComparer != null;
 
@@ -122,6 +135,7 @@ public class SortableBindingList<T> : BindingList<T> where T : ISortableCollecti
     /// <inheritdoc />
     protected override void RemoveSortCore()
     {
+        OnSortModeChanging();
         _currentComparer = null;
         _sortDirection = ListSortDirection.Ascending;
         _sortProperty = null;
@@ -131,6 +145,7 @@ public class SortableBindingList<T> : BindingList<T> where T : ISortableCollecti
     /// <inheritdoc />
     protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
     {
+        OnSortModeChanging();
         _currentComparer = _comparerFactory.Invoke(prop);
         _sortProperty = prop;
         _sortDirection = direction;
