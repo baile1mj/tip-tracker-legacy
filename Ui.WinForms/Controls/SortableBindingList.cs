@@ -10,6 +10,9 @@ namespace TipTracker.Ui.Controls;
 public class SortableBindingList<T> : BindingList<T> where T : ISortableCollectionMember
 {
     private readonly Func<PropertyDescriptor, IComparer<T>> _comparerFactory;
+    private IComparer<T>? _currentComparer;
+    private PropertyDescriptor? _sortProperty;
+    private ListSortDirection _sortDirection;
 
     /// <summary>
     /// Creates a new instance of the binding list class initialized with the specified list.
@@ -36,12 +39,26 @@ public class SortableBindingList<T> : BindingList<T> where T : ISortableCollecti
     /// <summary>
     /// Sorts the items in the binding list using the order in the specified list.
     /// </summary>
-    /// <param name="orderedItems">A list containing the items in the desired order.</param>
-    private void SortItems(IList<T> orderedItems)
+    private void SortItems()
     {
-        for (var newIndex = 0; newIndex < orderedItems.Count; newIndex++)
+        T[] sortedList;
+
+        if (_currentComparer == null)
         {
-            var newItem = orderedItems[newIndex];
+            sortedList = Items.OrderBy(i => i.OrdinalId).ToArray();
+        }
+        else if (_sortDirection == ListSortDirection.Ascending)
+        {
+            sortedList = Items.Order(_currentComparer).ToArray();
+        }
+        else
+        {
+            sortedList = Items.OrderDescending(_currentComparer).ToArray();
+        }
+
+        for (var newIndex = 0; newIndex < sortedList.Length; newIndex++)
+        {
+            var newItem = sortedList[newIndex];
             var oldIndex = IndexOf(newItem);
 
             if (oldIndex != newIndex)
@@ -52,21 +69,32 @@ public class SortableBindingList<T> : BindingList<T> where T : ISortableCollecti
     }
 
     /// <inheritdoc />
+    protected override bool IsSortedCore => _currentComparer != null;
+
+    /// <inheritdoc />
+    protected override PropertyDescriptor? SortPropertyCore => _sortProperty;
+
+    /// <inheritdoc />
+    protected override ListSortDirection SortDirectionCore => _sortDirection;
+
+    /// <inheritdoc />
     protected override bool SupportsSortingCore => true;
 
     /// <inheritdoc />
     protected override void RemoveSortCore()
     {
-        SortItems(Items.OrderBy(x => x.OrdinalId).ToList());
+        _currentComparer = null;
+        _sortDirection = ListSortDirection.Ascending;
+        _sortProperty = null;
+        SortItems();
     }
 
     /// <inheritdoc />
     protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
     {
-        var comparer = _comparerFactory.Invoke(prop);
-        var sortedList = direction == ListSortDirection.Ascending
-            ? Items.Order(comparer).ToArray()
-            : Items.OrderDescending(comparer).ToArray();
-        SortItems(sortedList);
+        _currentComparer = _comparerFactory.Invoke(prop);
+        _sortProperty = prop;
+        _sortDirection = direction;
+        SortItems();
     }
 }
