@@ -118,7 +118,7 @@
             // 
             OrdinalId.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             OrdinalId.DataPropertyName = "OrdinalId";
-            OrdinalId.FillWeight = 10F;
+            OrdinalId.FillWeight = 12F;
             OrdinalId.HeaderText = "No.";
             OrdinalId.Name = "OrdinalId";
             OrdinalId.ReadOnly = true;
@@ -136,7 +136,7 @@
             // 
             lastNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             lastNameDataGridViewTextBoxColumn.DataPropertyName = "LastName";
-            lastNameDataGridViewTextBoxColumn.FillWeight = 35F;
+            lastNameDataGridViewTextBoxColumn.FillWeight = 28F;
             lastNameDataGridViewTextBoxColumn.HeaderText = "Last Name";
             lastNameDataGridViewTextBoxColumn.Name = "lastNameDataGridViewTextBoxColumn";
             lastNameDataGridViewTextBoxColumn.ReadOnly = true;
@@ -158,7 +158,7 @@
             dataGridViewCellStyle1.Format = "N2";
             dataGridViewCellStyle1.NullValue = null;
             amountDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            amountDataGridViewTextBoxColumn.FillWeight = 15F;
+            amountDataGridViewTextBoxColumn.FillWeight = 20F;
             amountDataGridViewTextBoxColumn.HeaderText = "Amount";
             amountDataGridViewTextBoxColumn.Name = "amountDataGridViewTextBoxColumn";
             amountDataGridViewTextBoxColumn.ReadOnly = true;
