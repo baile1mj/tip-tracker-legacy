@@ -154,7 +154,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v2.0"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.8.1"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481"
                 }
@@ -343,15 +343,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Tip Tracker"
-        "ProductCode" = "8:{59A21C7A-C580-48F2-BD39-C978D29D1750}"
-        "PackageCode" = "8:{B73A0100-84F7-40B1-8512-1176CAE7610A}"
+        "ProductCode" = "8:{BA334D0E-D4CB-4309-9299-4C983EE7FF5B}"
+        "PackageCode" = "8:{E0928C3D-0B5F-46F1-902C-793CAB59ED89}"
         "UpgradeCode" = "8:{06587823-85CD-4DEF-8DB9-FF6EFFB841D0}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:3.1.0"
+        "ProductVersion" = "8:3.2.0"
         "Manufacturer" = "8:MJB"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -783,7 +783,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:1"
+                            "Value" = "3:0"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -903,7 +903,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
             {
-            "SourcePath" = "8:..\\TT Debug\\obj\\Release\\TT Debug.exe"
+            "SourcePath" = "8:..\\TT Debug\\obj\\Debug\\TT Debug.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
@@ -931,7 +931,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4DB9F6FB31F5493EA5E43DDF9FF50AC5"
             {
-            "SourcePath" = "8:..\\Tip Tracker\\obj\\Release\\Tip Tracker.exe"
+            "SourcePath" = "8:..\\Tip Tracker\\obj\\Debug\\Tip Tracker.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
