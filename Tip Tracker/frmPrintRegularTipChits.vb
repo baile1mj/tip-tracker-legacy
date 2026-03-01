@@ -149,13 +149,6 @@ Public Class frmPrintRegularTipChits
         Dim docTipChits As New PrintDocument
         docTipChits.DocumentName = "Tip Chits"
 
-        With docTipChits.DefaultPageSettings.Margins
-            .Top = 75
-            .Bottom = 75
-            .Left = 75
-            .Right = 75
-        End With
-
         AddHandler docTipChits.PrintPage, AddressOf docTipChits_PrintPage
 
         With docTipChits.DefaultPageSettings.Margins
@@ -210,7 +203,7 @@ Public Class frmPrintRegularTipChits
         End With
 
         Try
-            If dlgPrint.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            If dlgPrint.ShowDialog() <> Windows.Forms.DialogResult.OK Then
                 dlgPrint.Dispose()
                 Exit Sub
             End If

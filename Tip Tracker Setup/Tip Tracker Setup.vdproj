@@ -15,13 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_183E16CA4911AA8453770A4F16A2D485"
-        "OwnerKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
+        "MsmKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
+        "MsmKey" = "8:_476F45442C54492D89794B6D6B538EAC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -33,19 +33,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4F827FD218A1462FB04358FB90619404"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4FC47262EAA44467AD7E7373816A0A0C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_501EB7E6E8E14C51B3C3F7346D8E0C68"
+        "MsmKey" = "8:_A83F19CCA222EF1377D0D67B6B815338"
+        "OwnerKey" = "8:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D696B55ACED84D54990F30786D0A509A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_183E16CA4911AA8453770A4F16A2D485"
+        "OwnerKey" = "8:_A83F19CCA222EF1377D0D67B6B815338"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -107,7 +107,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\Tip Tracker Setup.msi"
+        "OutputFilename" = "8:Release\\TipTrackerSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -126,10 +126,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.8.1"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    "Name" = "8:Microsoft .NET Framework 4.8.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.8.1"
                     }
                 }
             }
@@ -154,29 +154,18 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.5"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.8.1"
                 "AllowLaterVersions" = "11:FALSE"
-                "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=395269"
+                "InstallUrl" = "8:https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481"
                 }
             }
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_183E16CA4911AA8453770A4F16A2D485"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_476F45442C54492D89794B6D6B538EAC"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Tip Tracker, Version=3.1.0.0, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_183E16CA4911AA8453770A4F16A2D485"
-                    {
-                    "Name" = "8:Tip Tracker.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Tip Tracker.exe"
-            "TargetName" = "8:"
+            "SourcePath" = "8:InstallerArtifacts\\TTFile.ico"
+            "TargetName" = "8:TTFile.ico"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
             "Condition" = "8:"
@@ -190,26 +179,6 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4F827FD218A1462FB04358FB90619404"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\Visual Studio 2005\\Images\\Tip Tracker\\TTBanner.jpg"
-            "TargetName" = "8:TTBanner.jpg"
-            "Tag" = "8:"
-            "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
@@ -233,10 +202,21 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_501EB7E6E8E14C51B3C3F7346D8E0C68"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A83F19CCA222EF1377D0D67B6B815338"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\Visual Studio 2005\\Icons\\TTFile.ico"
-            "TargetName" = "8:TTFile.ico"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Tip Tracker, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_A83F19CCA222EF1377D0D67B6B815338"
+                    {
+                    "Name" = "8:Tip Tracker.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Tip Tracker.exe"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
             "Condition" = "8:"
@@ -250,6 +230,26 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D696B55ACED84D54990F30786D0A509A"
+            {
+            "SourcePath" = "8:InstallerArtifacts\\TTBanner.jpg"
+            "TargetName" = "8:TTBanner.jpg"
+            "Tag" = "8:"
+            "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:FALSE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
@@ -262,7 +262,7 @@
             "Description" = "8:Tip Tracker Data File"
             "Extensions" = "8:ttd"
             "MIME" = "8:"
-            "Icon" = "8:_501EB7E6E8E14C51B3C3F7346D8E0C68"
+            "Icon" = "8:_476F45442C54492D89794B6D6B538EAC"
             "IconIndex" = "3:0"
                 "Command"
                 {
@@ -294,7 +294,7 @@
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_458834E20B8E4DC0960E0E212F89CEC4"
                     {
                     "Name" = "8:Tip Tracker"
-                    "AlwaysCreate" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_6EC3C26ECAD04F808588C35140F887D0"
@@ -343,8 +343,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Tip Tracker"
-        "ProductCode" = "8:{E6330DB8-095D-42DB-974C-1D9FA257F7F9}"
-        "PackageCode" = "8:{B91CC7FF-8E5E-4C65-9FD7-6C876400D1CA}"
+        "ProductCode" = "8:{BA334D0E-D4CB-4309-9299-4C983EE7FF5B}"
+        "PackageCode" = "8:{E0928C3D-0B5F-46F1-902C-793CAB59ED89}"
         "UpgradeCode" = "8:{06587823-85CD-4DEF-8DB9-FF6EFFB841D0}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -520,7 +520,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -543,7 +543,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -592,7 +592,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -624,7 +624,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -675,7 +675,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -726,7 +726,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -771,7 +771,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -783,7 +783,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:1"
+                            "Value" = "3:0"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -791,7 +791,7 @@
                     }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_A5A164B4601D4B9CBA188A101F5309F8"
                     {
-                    "Sequence" = "3:300"
+                    "Sequence" = "3:400"
                     "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -807,7 +807,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -830,7 +830,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -888,7 +888,7 @@
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
                             "Setting" = "3:2"
-                            "Value" = "8:_4F827FD218A1462FB04358FB90619404"
+                            "Value" = "8:_D696B55ACED84D54990F30786D0A509A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -903,7 +903,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2050D0FF3DDD4A2BBA2C2C0FE6A0F9D4"
             {
-            "SourcePath" = "8:..\\TT Debug\\obj\\x86\\Release\\TT Debug.exe"
+            "SourcePath" = "8:..\\TT Debug\\obj\\Debug\\TT Debug.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
@@ -931,7 +931,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4DB9F6FB31F5493EA5E43DDF9FF50AC5"
             {
-            "SourcePath" = "8:..\\Tip Tracker\\obj\\x86\\Release\\Tip Tracker.exe"
+            "SourcePath" = "8:..\\Tip Tracker\\obj\\Debug\\Tip Tracker.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F29D1FB899674740B672E524B75F28EF"
